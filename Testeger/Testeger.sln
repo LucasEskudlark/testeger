@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.9.34728.123
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Testeger.Server", "Testeger\Server\Testeger.Server.csproj", "{13A90AE9-9B77-476D-9264-E5933EAC6029}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Testeger.Server", "Testeger\Server\Testeger.Server.csproj", "{13A90AE9-9B77-476D-9264-E5933EAC6029}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Testeger.Client", "Testeger\Client\Testeger.Client.csproj", "{75359325-9954-4440-812D-7CA0633D6AB8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Testeger.Client", "Testeger\Client\Testeger.Client.csproj", "{75359325-9954-4440-812D-7CA0633D6AB8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Testeger.Shared", "Testeger\Shared\Testeger.Shared.csproj", "{63D434AB-DCB5-4D8F-B327-7A4E365DCCF6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Testeger.Shared", "Testeger\Shared\Testeger.Shared.csproj", "{63D434AB-DCB5-4D8F-B327-7A4E365DCCF6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
