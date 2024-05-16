@@ -1,0 +1,15 @@
+﻿@page "/project/{Id}"
+@layout DefaultLayout
+@inject ProjectService ProjectService
+
+<h3>@project?.Name</h3>
+
+@code {
+    [Parameter] public string? Id { get; set; }
+    private Project? project;
+
+    protected override void OnParametersSet()
+    {
+        project = ProjectService.GetProjectById(Id);
+    }
+}
