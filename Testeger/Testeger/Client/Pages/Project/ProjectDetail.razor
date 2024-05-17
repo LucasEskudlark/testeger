@@ -1,15 +1,118 @@
 ﻿@page "/project/{Id}"
 @layout DefaultLayout
 @inject ProjectService ProjectService
+@inject TestRequestService TestRequestService
 
-<h3>@project?.Name</h3>
+<div class="row mb-3">
+    <div class="col-6">
+        <h5>Project: @project?.Name</h5>
+    </div>
+    <div class="col-6 d-flex justify-content-end">
+        <RadzenButton Icon="add_circle_outline" Text="Add request" ButtonStyle="ButtonStyle.Primary" />
+    </div>
+</div>
+
+<RadzenCard>
+    @foreach (var status in Enum.GetValues(typeof(RequestStatus)).Cast<RequestStatus>())
+    {
+        <IndividualRow Requests="@GetTestRequestsByStatus(status)">
+            <RowTitle>
+                <h6>@GetStatusName(status)</h6>
+            </RowTitle>
+        </IndividualRow>
+    }
+</RadzenCard>
+
+<EditForm Model="newTask" OnValidSubmit="@HandleValidSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="form-group">
+        <label for="title">Title</label>
+        <InputText id="title" class="form-control" @bind-Value="newTask.Title" />
+    </div>
+
+    <div class="form-group">
+        <label for="description">Description</label>
+        <InputTextArea id="description" class="form-control" @bind-Value="newTask.Description" />
+    </div>
+
+    <div class="form-group">
+        <label for="priority">Priority</label>
+        <InputSelect id="priority" class="form-control" @bind-Value="newTask.PriorityLevel">
+            @foreach (var priority in Enum.GetValues(typeof(PriorityLevel)).Cast<PriorityLevel>())
+            {
+                <option value="@priority">@priority</option>
+            }
+        </InputSelect>
+    </div>
+
+    <div class="form-group">
+        <label for="status">Status</label>
+        <InputSelect id="status" class="form-control" @bind-Value="newTask.Status">
+            @foreach (var status in Enum.GetValues(typeof(RequestStatus)).Cast<RequestStatus>())
+            {
+                <option value="@status">@status</option>
+            }
+        </InputSelect>
+    </div>
+
+    <div class="form-group">
+        <RadzenButton Text="Submit" Type="Submit" Style="margin-right: 10px;" />
+    </div>
+</EditForm>
+
+<RadzenButton Click="Clear" Style="margin-right: 10px;" />
 
 @code {
     [Parameter] public string? Id { get; set; }
     private Project? project;
 
+    private Dictionary<RequestStatus, List<TestRequest>> testRequestsByStatus = new();
+    private TestRequest newTask = new TestRequest();
+
     protected override void OnParametersSet()
     {
         project = ProjectService.GetProjectById(Id);
     }
+
+    protected override async Task OnInitializedAsync()
+    {
+        TestRequestService.OnChange += StateHasChanged;
+        await LoadTestRequests();
+    }
+
+    private async Task LoadTestRequests()
+    {
+        foreach (var status in Enum.GetValues(typeof(RequestStatus)).Cast<RequestStatus>())
+        {
+            testRequestsByStatus[status] = await TestRequestService.GetTestRequestsByProjectIdAndStatus(Id, status);
+        }
+    }
+
+    private List<TestRequest> GetTestRequestsByStatus(RequestStatus status)
+    {
+        return testRequestsByStatus.ContainsKey(status) ? testRequestsByStatus[status] : new List<TestRequest>();
+    }
+
+    private string GetStatusName(RequestStatus status)
+    {
+        string name = status.ToString();
+        return System.Text.RegularExpressions.Regex.Replace(name, "(\\B[A-Z])", " $1");
+    }
+
+    public async Task HandleValidSubmit()
+    {
+        newTask.ProjectId = Id;
+        await TestRequestService.AddTestRequest(newTask);
+        await LoadTestRequests();
+        newTask = new();
+        StateHasChanged();
+    }
+
+    public async Task Clear()
+    {
+        await TestRequestService.ClearStorage();
+    }
 }
+
