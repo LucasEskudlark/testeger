@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace Testeger.Shared.Models;
+﻿namespace Testeger.Shared.Models.Entities;
 
 public class Project
 {
