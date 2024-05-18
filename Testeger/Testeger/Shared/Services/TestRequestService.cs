@@ -11,6 +11,7 @@ public class TestRequestService
     private readonly ILocalStorageService _localStorage;
     private const string StorageKey = "testRequests";
     public event Action? OnChange;
+    public event Action? OnTestRequestAdded;
 
     public TestRequestService(ILocalStorageService localStorage)
     {
@@ -56,7 +57,17 @@ public class TestRequestService
 
         var jsonString = JsonConvert.SerializeObject(testRequests);
         await _localStorage.SetItemAsync(StorageKey, jsonString);
+        OnTestRequestAdded?.Invoke();
         NotifyStateChanged();
+    }
+
+    public async Task<Dictionary<RequestStatus, List<TestRequest>>> GetTestRequestsByProjectIdGroupedByStatus(string projectId)
+    {
+        var testRequests = await GetAllTestRequests();
+        return Enum.GetValues(typeof(RequestStatus)).Cast<RequestStatus>()
+                   .ToDictionary(
+                       status => status,
+                       status => testRequests.Where(tr => tr.Status == status && tr.ProjectId == projectId).ToList());
     }
 
     public async Task ClearStorage()

@@ -30,9 +30,9 @@
 
     public async Task OpenTestRequest()
     {
-        var teste = Request.Id;
-        await DialogService.OpenAsync<DialogTestRequestPage>($"Request {teste}",
-               new Dictionary<string, object>() { { "RequestId", teste } },
+        var requestId = Request.Id;
+        await DialogService.OpenAsync<DialogTestRequestPage>($"Request {requestId}",
+               new Dictionary<string, object>() { { "RequestId", requestId } },
                new DialogOptions() { Width = "700px", Height = "512px", Resizable = false, Draggable = true });
                Console.WriteLine("Order Dialog Opened");
     }
