@@ -11,18 +11,11 @@
 }
 
 
-<RadzenButton Text="Close" Click="CloseDialog" />
-
 @code {
     private TestRequest? Request;
 
     [Parameter]
     public string? RequestId { get; set; }
-
-    private void CloseDialog()
-    {
-        DialogService.Close(true);
-    }
 
     protected override async Task OnInitializedAsync()
     {

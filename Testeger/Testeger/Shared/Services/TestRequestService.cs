@@ -47,6 +47,8 @@ public class TestRequestService
     public async Task AddTestRequest(TestRequest testRequest)
     {
         testRequest.Id = Guid.NewGuid().ToString();
+        testRequest.Number = await GetNextTestRequestNumber(testRequest.ProjectId);
+
         var testRequests = await GetAllTestRequests();
         
         if (testRequests.Contains(testRequest))
@@ -69,6 +71,20 @@ public class TestRequestService
                        status => status,
                        status => testRequests.Where(tr => tr.Status == status && tr.ProjectId == projectId).ToList());
     }
+
+    public async Task<int> GetNextTestRequestNumber(string projectId)
+    {
+        var testRequests = await GetAllTestRequests();
+        var projectRequests = testRequests.Where(tr => tr.ProjectId == projectId).ToList();
+
+        if (!projectRequests.Any())
+        {
+            return 1;
+        }
+
+        return projectRequests.Max(tr => tr.Number) + 1;
+    }
+
 
     public async Task ClearStorage()
     {

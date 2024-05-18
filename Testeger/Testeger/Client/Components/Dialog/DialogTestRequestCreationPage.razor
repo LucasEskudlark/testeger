@@ -41,8 +41,6 @@
     </div>
 </EditForm>
 
-<RadzenButton Text="Close" Click="CloseDialog" />
-
 @code {
     [Parameter]
     public string ProjectId { get; set; }
@@ -59,11 +57,6 @@
         await OnRequestAdded.InvokeAsync();
         newTask = new TestRequest();
         await InvokeAsync(StateHasChanged);
-        DialogService.Close(true);
-    }
-
-    private void CloseDialog()
-    {
         DialogService.Close(true);
     }
 }

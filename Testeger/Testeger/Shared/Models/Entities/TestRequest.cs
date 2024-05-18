@@ -10,6 +10,7 @@ public class TestRequest
         TestCases = new List<TestCase>();
     }
     public string? Id { get; set; }
+    public int Number { get; set; }
     public string? ProjectId { get; set; }
     public string? CreatorId { get; set; }
     public string? Title { get; set; }
