@@ -1,63 +1,21 @@
 ﻿@page "/dialogcard/create-test-request"
-@inject DialogService DialogService
 @inject TestRequestService TestRequestService
 
-<EditForm Model="newTask" OnValidSubmit="@HandleValidSubmit">
-    <DataAnnotationsValidator />
-    <ValidationSummary />
-
-    <div class="form-group">
-        <label for="title">Title</label>
-        <InputText id="title" class="form-control" @bind-Value="newTask.Title" />
-    </div>
-
-    <div class="form-group">
-        <label for="description">Description</label>
-        <InputTextArea id="description" class="form-control" @bind-Value="newTask.Description" />
-    </div>
-
-    <div class="form-group">
-        <label for="priority">Priority</label>
-        <InputSelect id="priority" class="form-control" @bind-Value="newTask.PriorityLevel">
-            @foreach (var priority in Enum.GetValues(typeof(PriorityLevel)).Cast<PriorityLevel>())
-            {
-                <option value="@priority">@priority</option>
-            }
-        </InputSelect>
-    </div>
-
-    <div class="form-group">
-        <label for="status">Status</label>
-        <InputSelect id="status" class="form-control" @bind-Value="newTask.Status">
-            @foreach (var status in Enum.GetValues(typeof(RequestStatus)).Cast<RequestStatus>())
-            {
-                <option value="@status">@status</option>
-            }
-        </InputSelect>
-    </div>
-
-    <div class="form-group">
-        <RadzenButton Text="Submit" Type="Submit" Style="margin-right: 10px;" />
-    </div>
-</EditForm>
+<TestRequestCreationForm OnFormSubmitted="HandleValidSubmit" />
 
 @code {
     [Parameter]
     public string ProjectId { get; set; }
 
-    private TestRequest newTask = new TestRequest();
-
     [Parameter]
     public EventCallback OnRequestAdded { get; set; }
 
-    private async Task HandleValidSubmit()
+    private async Task HandleValidSubmit(TestRequest testRequest)
     {
-        newTask.ProjectId = ProjectId;
-        await TestRequestService.AddTestRequest(newTask);
+        testRequest.ProjectId = ProjectId;
+        await TestRequestService.AddTestRequest(testRequest);
         await OnRequestAdded.InvokeAsync();
-        newTask = new TestRequest();
         await InvokeAsync(StateHasChanged);
-        DialogService.Close(true);
     }
 }
 
