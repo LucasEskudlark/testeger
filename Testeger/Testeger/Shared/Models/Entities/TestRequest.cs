@@ -16,6 +16,7 @@ public class TestRequest
     public string? CreatorId { get; set; }
     public string? Title { get; set; }
     public string? Description { get; set; }
+    public User AssignedTo { get; set; }
     public RequestStatus Status { get; set; }
     public PriorityLevel PriorityLevel { get; set; }
     public DateTime DueDate { get; set; }

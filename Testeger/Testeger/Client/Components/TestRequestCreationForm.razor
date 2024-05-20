@@ -74,7 +74,9 @@
                 Status = testRequestViewModel.Status,
                 PriorityLevel = testRequestViewModel.PriorityLevel,
                 DueDate = testRequestViewModel.DueDate,
-                CreatedDate = DateTime.Now
+                CreatedDate = DateTime.Now,
+                AssignedTo = new User {Name = "Lucas" }, // Temporary
+                CreatorId = "Lucas"
             };
     }
 }

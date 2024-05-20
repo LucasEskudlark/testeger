@@ -1,18 +1,95 @@
 ﻿@page "/dialogcard/{RequestId}"
 @inject DialogService DialogService
-@inject TestRequestService TestRequestService
+@inject TestRequestService RequestService
+@inject TooltipService tooltipService
 
 @if(Request is not null)
 {
-<h3>Order Details</h3>
-<p><b>Request ID:</b> @Request.Id</p>
-<p><b>Request Title:</b> @Request.Title</p>
-<p><b>Request Description:</b> @Request.Description</p>
+    <RadzenContent>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-8">
+                    <RadzenLabel Text="Title" />
+                    <RadzenTextBox @bind-Value="Request.Title" Style="width:100%;" />
+                </div>
+                <div class="col-md-4">
+                    <RadzenLabel Text="Assigned to" />
+                    <RadzenDropDown Data="names"
+                                    @bind-Value="Request.AssignedTo.Name" Style="width:100%;" />
+                </div>
+            </div>
+            <div class="row mt-2">
+                <div class="col-12">
+                    <RadzenLabel Text="Description" />
+                    <RadzenTextArea @bind-Value="Request.Description" Style="width:100%; height:100px;" />
+                </div>
+            </div>
+            <div class="row mt-2">
+                <div class="col-md-4">
+                    <RadzenLabel Text="Status" />
+                    <RadzenDropDown Data="@Enum.GetValues(typeof(RequestStatus))"
+                                    @bind-Value="Request.Status" Style="width:100%;" />
+                </div>
+                <div class="col-md-4">
+                    <RadzenLabel Text="Priority Level" />
+                    <RadzenDropDown Data="@Enum.GetValues(typeof(PriorityLevel))"
+                                    @bind-Value="Request.PriorityLevel" Style="width:100%;" />
+                </div>
+                <div class="col-md-4">
+                    <RadzenLabel Text="Created by" />
+                    <RadzenTextBox Disabled="true" @bind-Value="Request.CreatorId" Style="width:100%;" />
+                </div
+            </div>
+            <div class="row mt-2">
+                <div class="col-md-4">
+                    <RadzenLabel Text="Due Date" />
+                    <RadzenDatePicker @bind-Value="Request.DueDate"
+                    Style="width:100%;" Min="@(DateTime.Today)"
+                    DateFormat="dd/MM/yyyy" />
+                </div>
+                <div class="col-md-4">
+                    <RadzenLabel Text="Created Date" />
+                    <RadzenDatePicker Disabled="true"
+                        @bind-Value="Request.CreatedDate"
+                        Style="width:100%;" Min="@(DateTime.Today)"
+                        DateFormat="dd/MM/yyyy" />
+                </div>
+                <div class="col-md-4">
+                    <RadzenLabel Text="Completed Date" />
+                    @if (@Request.CompletedDate != DateTime.MinValue)
+                    {
+                        <RadzenDatePicker Disabled="true"
+                            @bind-Value="Request.CompletedDate"
+                            Style="width:100%;" Min="@(DateTime.Today)"
+                            DateFormat="dd/MM/yyyy" />
+                    }
+                    else
+                    {
+                        <RadzenDatePicker Disabled="true"
+                            @bind-Value="Request.CompletedDate"
+                            Style="width:100%;" Min="@(DateTime.Today)"
+                            DateFormat="dd/MM/yyyy" MouseEnter="@(args => ShowTooltip(args) )" />
+                    }
+                </div>
+            </div>
+            <div class="row mt-4">
+                <div class="col-md-3">
+                    <RadzenButton Icon="save" Text="Save" ButtonStyle="ButtonStyle.Primary" />
+                </div>
+            </div>
+        </div>
+    </RadzenContent>   
 }
-
 
 @code {
     private TestRequest? Request;
+
+    // Temporary
+    private List<string> names = new()
+    {
+        "Lucas",
+        "Fernando"
+    };
 
     [Parameter]
     public string? RequestId { get; set; }
@@ -21,8 +98,10 @@
     {
         await base.OnInitializedAsync();
 
-        Request = await TestRequestService.GetTestRequestById(RequestId);
+        Request = await RequestService.GetTestRequestById(RequestId);
     }
+
+    void ShowTooltip(ElementReference elementReference, TooltipOptions options = null) => tooltipService.Open(elementReference, "This date will be set when the request is marked as Completed.", options);
 }
 
 
