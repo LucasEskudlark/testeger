@@ -68,7 +68,7 @@
     {
         return new TestRequest
             {
-                Id = "xpto",
+                Id = Guid.NewGuid().ToString(),
                 Title = testRequestViewModel.Title,
                 Description = testRequestViewModel.Description,
                 Status = testRequestViewModel.Status,

@@ -46,7 +46,6 @@ public class TestRequestService
 
     public async Task AddTestRequest(TestRequest testRequest)
     {
-        testRequest.Id = Guid.NewGuid().ToString();
         testRequest.Number = await GetNextTestRequestNumber(testRequest.ProjectId);
 
         var testRequests = await GetAllTestRequests();
