@@ -12,16 +12,65 @@
     </div>
 </div>
 
-<RadzenCard>
-    @foreach (var status in testRequestsByStatus.Keys)
-    {
-        <IndividualRow Requests="@testRequestsByStatus[status]">
-            <RowTitle>
+@foreach (var status in testRequestsByStatus.Keys)
+{
+    var requests = testRequestsByStatus[status];
+    var textColor = GetTextColor(status);
+    var backgroundColor = GetBackgroundColor(status);
+
+    <div class="row">
+        <div class="col-12 px-0 mx-0">
+            <div class="d-flex align-items-center px-2 pt-1 card rz-background-color-base-300">
                 <h6>@GetStatusName(status)</h6>
-            </RowTitle>
-        </IndividualRow>
-    }
-</RadzenCard>
+            </div>
+            <div class="row my-2">
+                    
+                @foreach (var request in requests)
+                {
+                    <RadzenDataList AllowVirtualization="false" AllowPaging="true"
+                                    Data="@requests" TItem="TestRequest" PageSize="5" PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true">
+                        <Template Context="request">
+                            <RadzenCard Style="width: 100%; padding: 0;">
+                                <RadzenRow Gap="0">
+                                    <RadzenColumn Size="12" SizeLG="3" Class="@backgroundColor">
+                                        <RadzenText TextStyle="TextStyle.H6" TagName="TagName.H5" class="@textColor">@(request.Title)</RadzenText>
+                                    </RadzenColumn>
+                                    <RadzenColumn Size="12" SizeLG="7" Class="rz-p-4">
+                                        <RadzenRow Gap="5">
+                                            <RadzenColumn Size="12" SizeMD="6" SizeLG="2">
+                                                <RadzenText TextStyle="TextStyle.H6" TagName="TagName.H5" Class="rz-mb-0">Number</RadzenText>
+                                                <RadzenText TextStyle="TextStyle.Body2">@(request.Number)</RadzenText>
+                                            </RadzenColumn>
+                                            <RadzenColumn Size="12" SizeMD="6" SizeLG="2">
+                                                <RadzenText TextStyle="TextStyle.H6" TagName="TagName.H5" Class="rz-mb-0">Priority</RadzenText>
+                                                <RadzenText TextStyle="TextStyle.Body2">@(request.PriorityLevel)</RadzenText>
+                                            </RadzenColumn>
+                                            <RadzenColumn Size="12" SizeMD="6" SizeLG="2">
+                                                <RadzenText TextStyle="TextStyle.H6" TagName="TagName.H5" Class="rz-mb-0">Status</RadzenText>
+                                                <RadzenText TextStyle="TextStyle.Body2">@(request.Status)</RadzenText>
+                                            </RadzenColumn>
+                                            <RadzenColumn Size="12" SizeMD="6" SizeLG="3">
+                                                <RadzenText TextStyle="TextStyle.H6" TagName="TagName.H5" Class="rz-mb-0">Assigned To</RadzenText>
+                                                <RadzenText TextStyle="TextStyle.Body2">@(request.CreatorId)</RadzenText>
+                                            </RadzenColumn>
+                                            <RadzenColumn Size="12" SizeMD="6" SizeLG="3">
+                                                <RadzenText TextStyle="TextStyle.H6" TagName="TagName.H5" Class="rz-mb-0">Due Date</RadzenText>
+                                                <RadzenText TextStyle="TextStyle.Body2">@(request.DueDate.ToString("dd/MM/YYYY"))</RadzenText>
+                                            </RadzenColumn>
+                                        </RadzenRow>
+                                    </RadzenColumn>
+                                    <RadzenColumn Size="12" SizeLG="2" Class="rz-p-4">
+                                        <RadzenButton Text="View more" Style="width: 100%" />
+                                    </RadzenColumn>
+                                </RadzenRow>
+                            </RadzenCard>
+                        </Template>
+                    </RadzenDataList>
+                }
+            </div>
+        </div>
+    </div>
+}
 
 <RadzenButton Click="Clear" Style="margin-right: 10px;" />
 
@@ -70,5 +119,53 @@
         testRequestsByStatus = await TestRequestService.GetTestRequestsByProjectIdGroupedByStatus(Id);
         StateHasChanged();
     }
+
+    private string GetTextColor(RequestStatus status)
+    {
+        switch(status)
+        {
+            case RequestStatus.InProgress:
+                return "rz-color-secondary";
+            case RequestStatus.ReadyForTesting:
+                return "rz-color-warning";
+            case RequestStatus.FixingIssues:
+                return "rz-color-danger";
+            case RequestStatus.Completed:
+                return "rz-color-success";
+            default:
+                return "rz-color-base-800";
+        }
+    }
+
+    private string GetBackgroundColor(RequestStatus status)
+    {
+        switch (status)
+        {
+            case RequestStatus.InProgress:
+                return "rz-p-4  rz-background-color-secondary-lighter";
+            case RequestStatus.ReadyForTesting:
+                return "rz-p-4  rz-background-color-warning-lighter";
+            case RequestStatus.FixingIssues:
+                return "rz-p-4  rz-background-color-danger-lighter";
+            case RequestStatus.Completed:
+                return "rz-p-4  rz-background-color-success-lighter";
+            default:
+                return "rz-p-4  rz-background-color-base-500";
+        }
+    }
 }
 
+
+<style>
+    .product-title {
+        min-height: 72px;
+        
+    }
+
+    .price-badge {
+        font-size: 16px;
+        font-weight: bold;
+        line-height: 20px;
+        padding: 8px;
+    }
+</style>
