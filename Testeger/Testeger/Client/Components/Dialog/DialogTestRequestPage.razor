@@ -1,6 +1,6 @@
 ﻿@page "/dialogcard/{RequestId}"
 @inject DialogService DialogService
-@inject TestRequestService RequestService
+@inject TestRequestService TestRequestService
 @inject TooltipService TooltipService
 
 @if(Request is not null)
@@ -63,8 +63,9 @@
                 </div>
             </div>
             <div class="row mt-4">
-                <div class="col-md-3">
+                <div class="col-12 d-flex justify-content-between">
                     <RadzenButton Icon="save" Text="Save" ButtonStyle="ButtonStyle.Primary" />
+                    <RadzenButton Icon="delete" Text="Delete" ButtonStyle="ButtonStyle.Danger" Click="@(() => HandleRequestDeletion(Request))" />
                 </div>
             </div>
         </div>
@@ -84,11 +85,22 @@
     [Parameter]
     public string? RequestId { get; set; }
 
+    [Parameter]
+    public EventCallback OnRequestDeleted { get; set; }
+
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
 
-        Request = await RequestService.GetTestRequestById(RequestId);
+        Request = await TestRequestService.GetTestRequestById(RequestId);
+    }
+
+    private async Task HandleRequestDeletion(TestRequest testRequest)
+    {
+        await TestRequestService.RemoveTestRequest(testRequest);
+        DialogService.Close(true);
+        await OnRequestDeleted.InvokeAsync();
+        await InvokeAsync(StateHasChanged);
     }
 
     private void ShowTooltip(ElementReference elementReference, TooltipOptions options = null) => TooltipService.Open(elementReference, "This date will be set when the request is marked as Completed.", options);
