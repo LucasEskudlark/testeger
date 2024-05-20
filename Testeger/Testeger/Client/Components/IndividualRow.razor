@@ -1,21 +1,12 @@
-﻿<div class="row card shadow-sm p-3 mb-4 bg-body-tertiary rounded border">
     <div class="col-12 px-0 mx-0">
-        <div class="d-flex align-items-center px-2 pt-1 card" style="background-color: #262526; color: white;">
             @RowTitle
         </div>
-        <div class="row my-2">
-            @foreach (var request in @Requests)
-            {
-                <IndividualTestRequestCard Request="request" />
-            }
         </div>
     </div>
 </div>
 
-@code {
     [Parameter]
     public List<TestRequest>? Requests { get; set; }
 
     [Parameter]
-    public RenderFragment? RowTitle { get; set; }
 }
