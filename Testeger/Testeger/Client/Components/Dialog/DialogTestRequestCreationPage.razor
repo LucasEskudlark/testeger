@@ -1,0 +1,22 @@
+﻿@page "/dialogcard/create-test-request"
+@inject TestRequestService TestRequestService
+
+<TestRequestCreationForm OnFormSubmitted="HandleValidSubmit" />
+
+@code {
+    [Parameter]
+    public string ProjectId { get; set; }
+
+    [Parameter]
+    public EventCallback OnRequestAdded { get; set; }
+
+    private async Task HandleValidSubmit(TestRequest testRequest)
+    {
+        testRequest.ProjectId = ProjectId;
+        await TestRequestService.AddTestRequest(testRequest);
+        await OnRequestAdded.InvokeAsync();
+        await InvokeAsync(StateHasChanged);
+    }
+}
+
+

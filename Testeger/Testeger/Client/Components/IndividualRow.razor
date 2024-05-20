@@ -1,0 +1,30 @@
+﻿<div class="row">
+    <div class="col-12 px-0 mx-0">
+        <div class="card row-title d-flex flex-column justify-content-center align-items-center" style="min-width: 900px; height: 35px;">
+            @RowTitle
+        </div>
+        <div class="row my-2" style="min-width: 900px;">
+            <IndividualDataList
+                Requests="Requests"
+                Status="Status" />
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public List<TestRequest>? Requests { get; set; }
+
+    [Parameter]
+    public RenderFragment? RowTitle { get; set; }
+
+    [Parameter]
+    public RequestStatus Status { get; set; }
+}
+
+<style>
+    .row-title {
+        background-color: #E9EAED !important;
+        color: #4F4F50;
+    }
+</style>

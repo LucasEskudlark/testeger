@@ -1,15 +1,73 @@
 ﻿@page "/project/{Id}"
 @layout DefaultLayout
 @inject ProjectService ProjectService
+@inject TestRequestService TestRequestService
 
-<h3>@project?.Name</h3>
+<div class="row mb-3">
+    <div class="col-6">
+        <h5>Project: @project?.Name</h5>
+    </div>
+    <div class="col-6 d-flex justify-content-end">
+        <RadzenButton Click="@OpenTestRequestCreationDialog" Icon="add_circle_outline" Text="Add request" ButtonStyle="ButtonStyle.Primary" />
+    </div>
+</div>
+
+@foreach (var status in testRequestsByStatus.Keys)
+{
+    var requests = testRequestsByStatus[status];
+
+    <IndividualRow Requests="requests" Status="@status">
+        <RowTitle>
+            <RadzenText TextStyle="TextStyle.H6" Class="rz-mb-0 rz-color-base-600" TagName="TagName.H6">@GetStatusName(status)</RadzenText>
+        </RowTitle>
+    </IndividualRow>
+}
+
+<RadzenButton Click="Clear" Style="margin-right: 10px;" />
 
 @code {
-    [Parameter] public string? Id { get; set; }
+    [Parameter]
+    public string? Id { get; set; }
+    [Inject]
+    protected DialogService DialogService { get; set; }
     private Project? project;
+    private Dictionary<RequestStatus, List<TestRequest>> testRequestsByStatus = new();
 
     protected override void OnParametersSet()
     {
         project = ProjectService.GetProjectById(Id);
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        TestRequestService.OnChange += StateHasChanged;
+        TestRequestService.OnTestRequestAdded += UpdateTestRequests;
+        testRequestsByStatus = await TestRequestService.GetTestRequestsByProjectIdGroupedByStatus(Id);
+    }
+
+    private string GetStatusName(RequestStatus status)
+    {
+        string name = status.ToString();
+        return System.Text.RegularExpressions.Regex.Replace(name, "(\\B[A-Z])", " $1");
+    }
+
+    public async Task Clear()
+    {
+        await TestRequestService.ClearStorage();
+    }
+
+    public async Task OpenTestRequestCreationDialog()
+    {
+        await DialogService.OpenAsync<DialogTestRequestCreationPage>(
+            "Create Test Request",
+            new Dictionary<string, object>() { { "ProjectId", Id } },
+            new DialogOptions() { Width = "500px", Height = "540px", Resizable = false, Draggable = true }
+        );
+    }
+
+    private async void UpdateTestRequests()
+    {
+        testRequestsByStatus = await TestRequestService.GetTestRequestsByProjectIdGroupedByStatus(Id);
+        StateHasChanged();
     }
 }

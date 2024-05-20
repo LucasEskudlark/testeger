@@ -1,7 +1,7 @@
-﻿using Testeger.Shared.Models;
-using Blazored.LocalStorage;
+﻿using Blazored.LocalStorage;
 using System.Text.Json;
 using Testeger.Shared.Exceptions;
+using Testeger.Shared.Models.Entities;
 
 namespace Testeger.Shared.Services;
 
@@ -20,8 +20,6 @@ public class ProjectService
 
     public IEnumerable<Project> GetProjects() => _projects;
     public int GetProjectCount() => _projects.Count;
-
- 
 
     public void AddProject(Project project)
     {

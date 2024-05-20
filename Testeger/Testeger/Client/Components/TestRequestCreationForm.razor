@@ -1,0 +1,82 @@
+﻿@inject DialogService DialogService
+
+<EditForm Model="@testRequestViewModel" OnValidSubmit="@NotifyParent">
+    <DataAnnotationsValidator />
+    <div class="mb-3 row">
+        <div class="col-8">
+            <label for="title" class="form-label">Title</label>
+            <InputText id="title" class="form-control" @bind-Value="testRequestViewModel.Title" />
+            <ValidationMessage For="@(() => testRequestViewModel.Title)" />
+        </div>
+    </div>
+
+    <div class="mb-3">
+        <label for="description" class="form-label">Description</label>
+        <InputTextArea id="description" class="form-control" @bind-Value="testRequestViewModel.Description" />
+        <ValidationMessage For="@(() => testRequestViewModel.Description)" />
+    </div>
+
+    <div class="mb-3 row">
+        <div class="col-6">
+            <label for="status" class="form-label">Status</label>
+            <InputSelect id="status" class="form-select" @bind-Value="testRequestViewModel.Status">
+                @foreach (var status in Enum.GetValues<RequestStatus>())
+                {
+                    <option value="@status">@status</option>
+                }
+            </InputSelect>
+            <ValidationMessage For="@(() => testRequestViewModel.Status)" />
+        </div>
+        <div class="col-6">
+            <label for="priorityLevel" class="form-label">Priority Level</label>
+            <InputSelect id="priorityLevel" class="form-select" @bind-Value="testRequestViewModel.PriorityLevel">
+                @foreach (var priority in Enum.GetValues<PriorityLevel>())
+                {
+                    <option value="@priority">@priority</option>
+                }
+            </InputSelect>
+            <ValidationMessage For="@(() => testRequestViewModel.PriorityLevel)" />
+        </div>
+    </div>
+
+    <div class="mb-3 row">
+        <div class="col-6">
+            <label for="date" class="form-label">Date</label>
+            <RadzenDatePicker @bind-Value="testRequestViewModel.DueDate" Min="@(DateTime.Today)" DateFormat="dd/MM/yyyy" Class="form-control" />
+            <ValidationMessage For="@(() => testRequestViewModel.DueDate)" />
+        </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Submit</button>
+</EditForm>
+
+@code {
+    [Parameter]
+    public EventCallback<TestRequest> OnFormSubmitted { get; set; }
+
+    private TestRequestCreationViewModel testRequestViewModel = new();
+
+    private async Task NotifyParent()
+    {
+        var testRequestEntity = GetTestRequest();
+        DialogService.Close(true);
+        await OnFormSubmitted.InvokeAsync(testRequestEntity);
+        testRequestViewModel = new();
+    }
+
+    private TestRequest GetTestRequest()
+    {
+        return new TestRequest
+            {
+                Id = Guid.NewGuid().ToString(),
+                Title = testRequestViewModel.Title,
+                Description = testRequestViewModel.Description,
+                Status = testRequestViewModel.Status,
+                PriorityLevel = testRequestViewModel.PriorityLevel,
+                DueDate = testRequestViewModel.DueDate,
+                CreatedDate = DateTime.Now,
+                AssignedTo = new User {Name = "Lucas" }, // Temporary
+                CreatorId = "Lucas"
+            };
+    }
+}
