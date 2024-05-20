@@ -5,20 +5,19 @@
     <Template Context="Request">
         <RadzenCard Style="width: 100%; max-height: 50px !important; margin: 0 !important; padding: 0 !important;">
             <RadzenRow Gap="0" Style="padding: 0;">
-                <RadzenColumn Size="3" SizeLG="3" class="@GetBackgroundColor(Status)" Style="max-height: 50px;">
-                    <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H5" class="@GetTextColor(Status)">@(Request.Title)</RadzenText>
+                <RadzenColumn Size="1" SizeLG="1" Class="d-flex flex-column justify-content-center align-items-center" Style="@GetNumberBackgroundColor(Status)">
+                    <RadzenText TextStyle="TextStyle.H6" TagName="TagName.H6" class="@GetNumberTextColor(Status)">#@(Request.Number)</RadzenText>
+                </RadzenColumn>
+                <RadzenColumn Size="3" SizeLG="3" class="@GetTitleBackgroundColor(Status)" Style="max-height: 50px;">
+                    <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H5" class="@GetTitleTextColor(Status)">@(Request.Title)</RadzenText>
                 </RadzenColumn>
                 <RadzenColumn Size="7" SizeLG="8" Class="rz-p-2" Style="max-height: 50px;">
                     <RadzenRow Gap="5">
-                        <RadzenColumn Size="2" SizeMD="2" SizeLG="2" Class="d-flex flex-column justify-content-center">
-                            <RadzenText TextStyle="TextStyle.Subtitle2" Class="rz-mb-0" TagName="TagName.H5">Number</RadzenText>
-                            <RadzenText TextStyle="TextStyle.Caption">@(Request.Number)</RadzenText>
-                        </RadzenColumn>
-                        <RadzenColumn Size="2" SizeMD="2" SizeLG="2" Class="d-flex flex-column justify-content-center">
+                        <RadzenColumn Size="3" SizeMD="3" SizeLG="3" Class="d-flex flex-column justify-content-center">
                             <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H5" Class="rz-mb-0">Priority</RadzenText>
                             <RadzenText TextStyle="TextStyle.Caption">@(Request.PriorityLevel)</RadzenText>
                         </RadzenColumn>
-                        <RadzenColumn Size="2" SizeMD="2" SizeLG="3" Class="d-flex flex-column justify-content-center">
+                        <RadzenColumn Size="3" SizeMD="3" SizeLG="3" Class="d-flex flex-column justify-content-center">
                             <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H5" Class="rz-mb-0">Status</RadzenText>
                             <RadzenText TextStyle="TextStyle.Caption">@(Request.Status)</RadzenText>
                         </RadzenColumn>
@@ -32,8 +31,8 @@
                         </RadzenColumn>
                     </RadzenRow>
                 </RadzenColumn>
-                <RadzenColumn Size="2" SizeLG="1" Class="rz-p-2 d-flex flex-column justify-content-center" Style="max-height: 50px;">
-                    <RadzenButton Click="@(() => OpenTestRequest(Request))" Text="More" Size="ButtonSize.Small" Style="width: 50%; height: 50%; font-size: 12px !important;" />
+                <RadzenColumn Size="1" SizeLG="1" Class="rz-p-2 d-flex flex-column justify-content-center" Style="max-height: 50px;">
+                    <RadzenButton Click="@(() => OpenTestRequest(Request))" Text="More" Size="ButtonSize.Small" Style="width: 100%; height: 50%; font-size: 12px !important;" />
                 </RadzenColumn>
             </RadzenRow>
         </RadzenCard>
@@ -65,24 +64,58 @@
         return Status;
     }
 
-    private string GetTextColor(RequestStatus status)
+    private string GetTitleTextColor(RequestStatus status)
     {
         switch (status)
         {
             case RequestStatus.InProgress:
-                return "rz-color-secondary";
+                return "rz-color-secondary-darker";
             case RequestStatus.ReadyForTesting:
-                return "rz-color-warning";
+                return "rz-color-warning-darker";
             case RequestStatus.FixingIssues:
-                return "rz-color-danger";
+                return "rz-color-danger-darker";
             case RequestStatus.Completed:
-                return "rz-color-success";
+                return "rz-color-success-darker";
             default:
                 return "rz-color-base-800";
         }
     }
 
-    private string GetBackgroundColor(RequestStatus status)
+    private string GetNumberBackgroundColor(RequestStatus status)
+    {
+        switch (status)
+        {
+            case RequestStatus.InProgress:
+                return "max-height: 50px; background-color: var(--rz-secondary-darker);";
+            case RequestStatus.ReadyForTesting:
+                return "max-height: 50px; background-color: var(--rz-warning-darker);";
+            case RequestStatus.FixingIssues:
+                return "max-height: 50px; background-color: var(--rz-danger-darker);";
+            case RequestStatus.Completed:
+                return "max-height: 50px; background-color: var(--rz-success-darker);";
+            default:
+                return "max-height: 50px; background-color: var(--rz-base-700);";
+        }
+    }
+
+    private string GetNumberTextColor(RequestStatus status)
+    {
+        switch (status)
+        {
+            case RequestStatus.InProgress:
+                return "rz-color-secondary-light";
+            case RequestStatus.ReadyForTesting:
+                return "rz-color-warning-light";
+            case RequestStatus.FixingIssues:
+                return "rz-color-danger-light";
+            case RequestStatus.Completed:
+                return "rz-color-success-light";
+            default:
+                return "rz-color-base-500";
+        }
+    }
+
+    private string GetTitleBackgroundColor(RequestStatus status)
     {
         switch (status)
         {
@@ -98,6 +131,8 @@
                 return "rz-p-4 rz-text-wrap rz-background-color-base-500";
         }
     }
+
+    
 }
 
 <style>

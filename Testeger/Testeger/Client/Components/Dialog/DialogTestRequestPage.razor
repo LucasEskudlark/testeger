@@ -1,7 +1,7 @@
 ﻿@page "/dialogcard/{RequestId}"
 @inject DialogService DialogService
 @inject TestRequestService RequestService
-@inject TooltipService tooltipService
+@inject TooltipService TooltipService
 
 @if(Request is not null)
 {
@@ -38,7 +38,7 @@
                 <div class="col-md-4">
                     <RadzenLabel Text="Created by" />
                     <RadzenTextBox Disabled="true" @bind-Value="Request.CreatorId" Style="width:100%;" />
-                </div
+                </div>
             </div>
             <div class="row mt-2">
                 <div class="col-md-4">
@@ -56,20 +56,10 @@
                 </div>
                 <div class="col-md-4">
                     <RadzenLabel Text="Completed Date" />
-                    @if (@Request.CompletedDate != DateTime.MinValue)
-                    {
-                        <RadzenDatePicker Disabled="true"
-                            @bind-Value="Request.CompletedDate"
-                            Style="width:100%;" Min="@(DateTime.Today)"
-                            DateFormat="dd/MM/yyyy" />
-                    }
-                    else
-                    {
-                        <RadzenDatePicker Disabled="true"
-                            @bind-Value="Request.CompletedDate"
-                            Style="width:100%;" Min="@(DateTime.Today)"
-                            DateFormat="dd/MM/yyyy" MouseEnter="@(args => ShowTooltip(args) )" />
-                    }
+                    <RadzenDatePicker Disabled="true"
+                        @bind-Value="Request.CompletedDate"
+                        Style="width:100%;" Min="@(DateTime.Today)"
+                        DateFormat="dd/MM/yyyy" MouseEnter="@(args => ShowTooltip(args) )" />
                 </div>
             </div>
             <div class="row mt-4">
@@ -101,7 +91,7 @@
         Request = await RequestService.GetTestRequestById(RequestId);
     }
 
-    void ShowTooltip(ElementReference elementReference, TooltipOptions options = null) => tooltipService.Open(elementReference, "This date will be set when the request is marked as Completed.", options);
+    private void ShowTooltip(ElementReference elementReference, TooltipOptions options = null) => TooltipService.Open(elementReference, "This date will be set when the request is marked as Completed.", options);
 }
 
 
