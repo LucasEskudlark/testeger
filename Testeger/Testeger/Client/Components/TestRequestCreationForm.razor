@@ -42,7 +42,7 @@
     <div class="mb-3 row">
         <div class="col-6">
             <label for="date" class="form-label">Date</label>
-            <RadzenDatePicker @bind-Value="testRequestViewModel.DueDate" Min="@(DateTime.Today)" DateFormat="dd/MM/yyyy" Class="form-control" />
+            <RadzenDatePicker @bind-Value="testRequestViewModel.DueDate" Min="@(DateTime.Today)" DateFormat="dd/MM/yyyy" Class="form-control"/>
             <ValidationMessage For="@(() => testRequestViewModel.DueDate)" />
         </div>
     </div>

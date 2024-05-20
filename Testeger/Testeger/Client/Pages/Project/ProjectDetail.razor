@@ -42,6 +42,7 @@
     {
         TestRequestService.OnChange += StateHasChanged;
         TestRequestService.OnTestRequestAdded += UpdateTestRequests;
+        TestRequestService.OnTestRequestDeleted += UpdateTestRequests;
         testRequestsByStatus = await TestRequestService.GetTestRequestsByProjectIdGroupedByStatus(Id);
     }
 

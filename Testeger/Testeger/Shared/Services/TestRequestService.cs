@@ -12,6 +12,7 @@ public class TestRequestService
     private const string StorageKey = "testRequests";
     public event Action? OnChange;
     public event Action? OnTestRequestAdded;
+    public event Action? OnTestRequestDeleted;
 
     public TestRequestService(ILocalStorageService localStorage)
     {
@@ -62,6 +63,23 @@ public class TestRequestService
         NotifyStateChanged();
     }
 
+    public async Task RemoveTestRequest(TestRequest testRequest)
+    {
+        var testRequests = await GetAllTestRequests();
+
+        var testRequestToRemove = testRequests.Find(tr => tr.Id == testRequest.Id);
+
+        if (testRequestToRemove != null)
+        {
+            testRequests.Remove(testRequestToRemove);
+        }
+
+        var jsonString = JsonConvert.SerializeObject(testRequests);
+        await _localStorage.SetItemAsync(StorageKey, jsonString);
+        OnTestRequestDeleted?.Invoke();
+        NotifyStateChanged();
+    }
+
     public async Task<Dictionary<RequestStatus, List<TestRequest>>> GetTestRequestsByProjectIdGroupedByStatus(string projectId)
     {
         var testRequests = await GetAllTestRequests();
@@ -83,7 +101,6 @@ public class TestRequestService
 
         return projectRequests.Max(tr => tr.Number) + 1;
     }
-
 
     public async Task ClearStorage()
     {
