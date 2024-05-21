@@ -14,5 +14,6 @@ builder.Services.AddRadzenComponents();
 builder.Services.AddScoped<ProjectService>();
 builder.Services.AddScoped<TestRequestService>();
 builder.Services.AddBlazoredLocalStorage();
+builder.Services.AddScoped<TestCaseService>();
 
 await builder.Build().RunAsync();
