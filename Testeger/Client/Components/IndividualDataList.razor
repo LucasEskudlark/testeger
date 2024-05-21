@@ -11,7 +11,7 @@
                 <RadzenColumn Size="3" SizeLG="3" class="@GetTitleBackgroundColor(Status)" Style="max-height: 50px;">
                     <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H5" class="@GetTitleTextColor(Status)">@(Request.Title)</RadzenText>
                 </RadzenColumn>
-                <RadzenColumn Size="7" SizeLG="8" Class="rz-p-2" Style="max-height: 50px;">
+                <RadzenColumn Size="7" SizeLG="7" Class="rz-p-2" Style="max-height: 50px;">
                     <RadzenRow Gap="5">
                         <RadzenColumn Size="3" SizeMD="3" SizeLG="3" Class="d-flex flex-column justify-content-center">
                             <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H5" Class="rz-mb-0">Priority</RadzenText>
@@ -55,8 +55,7 @@
     {
         await DialogService.OpenAsync<DialogTestRequestPage>($"Request Number: {testRequest.Number}",
                new Dictionary<string, object>() { { "RequestId", testRequest.Id } },
-               new DialogOptions() { Width = "700px", Height = "512px", Resizable = false, Draggable = true });
-        Console.WriteLine("Order Dialog Opened");
+               new DialogOptions() { Width = "1024px", Height = "512px", Resizable = false, Draggable = true });
     }
 
     public RequestStatus GetStatus()
