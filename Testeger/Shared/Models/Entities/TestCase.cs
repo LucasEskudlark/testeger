@@ -14,5 +14,5 @@ public class TestCase
     public DateTime CreatedDate { get; set; }
     public DateTime? CompletedDate { get; set; }
     public TestCaseStatus Status { get; set; }
-    public bool? NeedCorrection { get; set; }
+    public bool NeedCorrection { get; set; }
 }
