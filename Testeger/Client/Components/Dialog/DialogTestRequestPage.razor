@@ -1,109 +1,73 @@
 ﻿@page "/dialogcard/{RequestId}"
 @inject DialogService DialogService
 @inject TestRequestService TestRequestService
-@inject TooltipService TooltipService
+@inject TestCaseService TestCaseService
 
 @if(Request is not null)
 {
-    <RadzenContent>
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-md-8">
-                    <RadzenLabel Text="Title" />
-                    <RadzenTextBox @bind-Value="Request.Title" Style="width:100%;" />
-                </div>
-                <div class="col-md-4">
-                    <RadzenLabel Text="Assigned to" />
-                    <RadzenDropDown Data="names"
-                                    @bind-Value="Request.AssignedTo.Name" Style="width:100%;" />
-                </div>
+    <div class="container">
+        <div class="row d-flex justify-content-between">
+            <div class="card col-6 pb-2">
+                <TestRequestDetails Request="Request"/>
             </div>
-            <div class="row mt-2">
-                <div class="col-12">
-                    <RadzenLabel Text="Description" />
-                    <RadzenTextArea @bind-Value="Request.Description" Style="width:100%; height:100px;" />
-                </div>
-            </div>
-            <div class="row mt-2">
-                <div class="col-md-4">
-                    <RadzenLabel Text="Status" />
-                    <RadzenDropDown Data="@Enum.GetValues(typeof(RequestStatus))"
-                                    @bind-Value="Request.Status" Style="width:100%;" />
-                </div>
-                <div class="col-md-4">
-                    <RadzenLabel Text="Priority Level" />
-                    <RadzenDropDown Data="@Enum.GetValues(typeof(PriorityLevel))"
-                                    @bind-Value="Request.PriorityLevel" Style="width:100%;" />
-                </div>
-                <div class="col-md-4">
-                    <RadzenLabel Text="Created by" />
-                    <RadzenTextBox Disabled="true" @bind-Value="Request.CreatorId" Style="width:100%;" />
-                </div>
-            </div>
-            <div class="row mt-2">
-                <div class="col-md-4">
-                    <RadzenLabel Text="Due Date" />
-                    <RadzenDatePicker @bind-Value="Request.DueDate"
-                    Style="width:100%;" Min="@(DateTime.Today)"
-                    DateFormat="dd/MM/yyyy" />
-                </div>
-                <div class="col-md-4">
-                    <RadzenLabel Text="Created Date" />
-                    <RadzenDatePicker Disabled="true"
-                        @bind-Value="Request.CreatedDate"
-                        Style="width:100%;" Min="@(DateTime.Today)"
-                        DateFormat="dd/MM/yyyy" />
-                </div>
-                <div class="col-md-4">
-                    <RadzenLabel Text="Completed Date" />
-                    <RadzenDatePicker Disabled="true"
-                        @bind-Value="Request.CompletedDate"
-                        Style="width:100%;" Min="@(DateTime.Today)"
-                        DateFormat="dd/MM/yyyy" MouseEnter="@(args => ShowTooltip(args) )" />
-                </div>
-            </div>
-            <div class="row mt-4">
-                <div class="col-12 d-flex justify-content-between">
-                    <RadzenButton Icon="save" Text="Save" ButtonStyle="ButtonStyle.Primary" />
-                    <RadzenButton Icon="delete" Text="Delete" ButtonStyle="ButtonStyle.Danger" Click="@(() => HandleRequestDeletion(Request))" />
-                </div>
+
+            <div class="card col-6 pb-12">
+                <RadzenContent>
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-12 d-flex justify-content-between">
+                                <RadzenText TextStyle="TextStyle.H6" TagName="TagName.H5">Test Cases</RadzenText>
+                                <RadzenButton Icon="add_circle" Text="Add case" ButtonStyle="ButtonStyle.Primary" Size="ButtonSize.Small" Click="OpenTestCaseCreationDialog" />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12 p-0 mt-2" style="min-width: 400px;">
+                                <TestCaseIndividualDataList TestCases="TestCases" />
+                            </div>
+                        </div>
+                    </div>
+                </RadzenContent>
             </div>
         </div>
-    </RadzenContent>   
+    </div>
 }
 
 @code {
     private TestRequest? Request;
 
-    // Temporary
-    private List<string> names = new()
-    {
-        "Lucas",
-        "Fernando"
-    };
+    private List<TestCase> TestCases = new();
+
+    private TestCase TestCase { get; set; }
 
     [Parameter]
     public string? RequestId { get; set; }
-
-    [Parameter]
-    public EventCallback OnRequestDeleted { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
 
         Request = await TestRequestService.GetTestRequestById(RequestId);
+
+        TestRequestService.OnChange += StateHasChanged;
+        TestCaseService.OnTestCaseAdded += UpdateTestCases;
+        TestCaseService.OnTestCasetDeleted += UpdateTestCases;
+
+        TestCases = await TestCaseService.GetTestCasesByRequestId(Request.Id);
     }
 
-    private async Task HandleRequestDeletion(TestRequest testRequest)
+    public async Task OpenTestCaseCreationDialog()
     {
-        await TestRequestService.RemoveTestRequest(testRequest);
-        DialogService.Close(true);
-        await OnRequestDeleted.InvokeAsync();
-        await InvokeAsync(StateHasChanged);
+        await DialogService.OpenAsync<DialogTestCaseCreationPage>("Create Test Case",
+               new Dictionary<string, object>() { { "RequestId", RequestId } },
+               new DialogOptions() { Width = "500px", Height = "540px", Resizable = false, Draggable = true });
     }
 
-    private void ShowTooltip(ElementReference elementReference, TooltipOptions options = null) => TooltipService.Open(elementReference, "This date will be set when the request is marked as Completed.", options);
+    private async void UpdateTestCases()
+    {
+        TestCases = await TestCaseService.GetTestCasesByRequestId(Request.Id);
+        StateHasChanged();
+    }
 }
+
 
 

@@ -1,0 +1,55 @@
+﻿
+<RadzenDataList AllowVirtualization="false" AllowPaging="true"
+                Data="@TestCases" TItem="TestCase" PageSize="6" PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true">
+    <Template Context="TestCase">
+        <RadzenCard Style="width: 100%; max-height: 50px !important; margin: 0; padding: 0 !important;">
+            <RadzenRow Gap="0" Style="padding: 0;">
+                <RadzenColumn Size="4" SizeLG="4" Class="d-flex flex-column justify-content-center rz-background-color-secondary-lighter ps-2" Style="max-height: 50px;">
+                    <RadzenText TextStyle="TextStyle.Subtitle2" class="rz-color-primary" TagName="TagName.H5">@(TestCase.Title)</RadzenText>
+                </RadzenColumn>
+                <RadzenColumn Size="6" SizeLG="6" Class="rz-p-2" Style="max-height: 50px;">
+                    <RadzenRow Gap="5">
+                        <RadzenColumn Size="4" SizeMD="4" SizeLG="4" Class="d-flex flex-column justify-content-center">
+                            <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H5" Class="rz-mb-0" Style="align-self: center;">Status</RadzenText>
+                            <RadzenText TextStyle="TextStyle.Caption" Style="align-self: center;">@(TestCase.Status)</RadzenText>
+                        </RadzenColumn>
+                        <RadzenColumn Size="8" SizeMD="8" SizeLG="8" Class="d-flex flex-column justify-content-center">
+                            <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H5" Class="rz-mb-0" Style="align-self: center;">Completed Date</RadzenText>
+                            @if (@TestCase.CompletedDate != null)
+                            {
+                                <RadzenText TextStyle="TextStyle.Caption" Style="align-self: center;">@(TestCase.CompletedDate)</RadzenText>
+                            }
+                            else
+                            {
+                                <RadzenText TextStyle="TextStyle.Caption" Style="align-self: center;">Not yet</RadzenText>
+                            }
+                        </RadzenColumn>
+                    </RadzenRow>
+                </RadzenColumn>
+                <RadzenColumn Size="2" SizeLG="2" Class="rz-p-2 d-flex flex-column justify-content-center" Style="max-height: 50px;">
+                    <RadzenButton Text="Details" Size="ButtonSize.Small" Style="font-size: 10px !important; border: 50%;" />
+                </RadzenColumn>
+            </RadzenRow>
+        </RadzenCard>
+    </Template>
+</RadzenDataList>
+@code {
+    [Parameter]
+    public List<TestCase> TestCases { get; set; }
+
+    [Inject]
+    protected DialogService DialogService { get; set; }
+
+    private TestCase TestCase { get; set; }
+}
+
+
+<style>
+    li {
+        padding: 0px !important;
+    }
+
+    ul {
+        padding: 5px 0px 5px 0px!important;
+    }
+</style>

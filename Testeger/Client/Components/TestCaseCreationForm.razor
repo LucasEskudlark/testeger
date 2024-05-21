@@ -1,0 +1,74 @@
+﻿@inject DialogService DialogService
+
+<EditForm Model="@testCaseCreationViewModel" OnValidSubmit="@NotifyParent">
+    <DataAnnotationsValidator />
+    <div class="container-fluid">
+        <div class="row mb-3">
+            <div class="col-8">
+                <label for="title" class="form-label">Title</label>
+                <InputText id="title" class="form-control" @bind-Value="testCaseCreationViewModel.Title" />
+                <ValidationMessage For="@(() => testCaseCreationViewModel.Title)" />
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-12">
+                <label for="description" class="form-label">Description</label>
+                <InputTextArea id="description" class="form-control" @bind-Value="testCaseCreationViewModel.Description" />
+                <ValidationMessage For="@(() => testCaseCreationViewModel.Description)" />
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-12">
+                <label for="preconditions" class="form-label">Pre Conditions</label>
+                <InputTextArea id="preconditions" class="form-control" @bind-Value="testCaseCreationViewModel.PreConditions" />
+                <ValidationMessage For="@(() => testCaseCreationViewModel.PreConditions)" />
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-12">
+                <label for="steps" class="form-label">Steps</label>
+                <InputTextArea id="steps" class="form-control" @bind-Value="testCaseCreationViewModel.Steps" />
+                <ValidationMessage For="@(() => testCaseCreationViewModel.Steps)" />
+            </div>
+        </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Submit</button>
+</EditForm>
+
+@code {
+    [Parameter]
+    public EventCallback<TestCase> OnFormSubmitted { get; set; }
+
+    private TestCaseCreationViewModel testCaseCreationViewModel = new();
+
+    private async Task NotifyParent()
+    {
+        var testCase = GetTestCase();
+        DialogService.Close(true);
+        await OnFormSubmitted.InvokeAsync(testCase);
+        testCaseCreationViewModel = new();
+    }
+
+    private TestCase GetTestCase()
+    {
+        return new TestCase
+            {
+                Id = Guid.NewGuid().ToString(),
+                Title = testCaseCreationViewModel.Title,
+                Status = TestCaseStatus.Pending,
+                Details = new TestCaseDetails
+                {
+                    Description = testCaseCreationViewModel.Description,
+                    PreConditions = testCaseCreationViewModel.PreConditions,
+                    Steps = testCaseCreationViewModel.Steps
+                },
+                Results = new TestCaseResults(),
+                CreatedDate = DateTime.Now,
+                CreatedBy = "Lucas" // Temporary
+            };
+    }
+}
