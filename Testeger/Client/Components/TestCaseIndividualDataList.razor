@@ -27,7 +27,7 @@
                     </RadzenRow>
                 </RadzenColumn>
                 <RadzenColumn Size="2" SizeLG="2" Class="rz-p-2 d-flex flex-column justify-content-center" Style="max-height: 50px;">
-                    <RadzenButton Text="Details" Size="ButtonSize.Small" Style="font-size: 10px !important; border: 50%;" />
+                    <RadzenButton Click="@(() => OpenTestCaseDetails(TestCase))" Text="Details" Size="ButtonSize.Small" Style="font-size: 10px !important;" />
                 </RadzenColumn>
             </RadzenRow>
         </RadzenCard>
@@ -41,8 +41,14 @@
     protected DialogService DialogService { get; set; }
 
     private TestCase TestCase { get; set; }
-}
 
+    public async Task OpenTestCaseDetails(TestCase testCase)
+    {
+        await DialogService.OpenAsync<TestCaseDetailsDialog>($"Test Case",
+               new Dictionary<string, object>() { { "TestCaseId", testCase.Id } },
+               new DialogOptions() { Width = "1024px", Height = "512px", Resizable = false, Draggable = true });
+    }
+}
 
 <style>
     li {
