@@ -50,7 +50,7 @@
 
         TestRequestService.OnChange += StateHasChanged;
         TestCaseService.OnTestCaseAdded += UpdateTestCases;
-        TestCaseService.OnTestCasetDeleted += UpdateTestCases;
+        TestCaseService.OnTestCaseDeleted += UpdateTestCases;
 
         TestCases = await TestCaseService.GetTestCasesByRequestId(Request.Id);
     }
