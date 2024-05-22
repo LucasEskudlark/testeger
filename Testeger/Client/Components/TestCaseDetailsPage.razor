@@ -1,4 +1,6 @@
 ﻿@inject TooltipService TooltipService
+@inject TestCaseService TestCaseService
+@inject DialogService DialogService
 
 <div class="row d-flex justify-content-between">
     <div class="col-6">
@@ -79,7 +81,7 @@
             <div class="row">
                 <div class="col-12 d-flex justify-content-between">
                     <RadzenButton Icon="save" Text="Save" ButtonStyle="ButtonStyle.Primary" Size="ButtonSize.Small" />
-                    <RadzenButton Icon="delete" Text="Delete" ButtonStyle="ButtonStyle.Danger" Size="ButtonSize.Small" />
+                    <RadzenButton Icon="delete" Text="Delete" ButtonStyle="ButtonStyle.Danger" Size="ButtonSize.Small" Click="@(()=> HandleTestCaseDeletion(TestCase))"/>
                 </div>
             </div>
         </div>
@@ -90,10 +92,21 @@
     [Parameter]
     public TestCase TestCase { get; set; }
 
+    [Parameter]
+    public EventCallback OnTestCaseDeleted { get; set; }
+
     private string NeedCorrectionString
     {
         get => TestCase.NeedCorrection ? "True" : "False";
         set => TestCase.NeedCorrection = value.Equals("True", StringComparison.OrdinalIgnoreCase);
+    }
+
+    private async Task HandleTestCaseDeletion(TestCase testCase)
+    {
+        await TestCaseService.RemoveTestCase(testCase);
+        DialogService.Close(true);
+        await OnTestCaseDeleted.InvokeAsync();
+        await InvokeAsync(StateHasChanged);
     }
 
     private void ShowCompletedDateTooltip(ElementReference elementReference, TooltipOptions options = null) => TooltipService.Open(elementReference, "This date will be set when the test case is marked as Completed.", options);

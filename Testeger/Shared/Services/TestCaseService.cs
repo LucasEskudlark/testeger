@@ -2,7 +2,6 @@
 using Newtonsoft.Json;
 using Testeger.Shared.Exceptions;
 using Testeger.Shared.Models.Entities;
-using Testeger.Shared.Models.Enumerations;
 
 namespace Testeger.Shared.Services;
 
@@ -13,7 +12,7 @@ public class TestCaseService
 
     public event Action? OnChange;
     public event Action? OnTestCaseAdded;
-    public event Action? OnTestCasetDeleted;
+    public event Action? OnTestCaseDeleted;
 
     public TestCaseService(ILocalStorageService localStorage)
     {
@@ -60,6 +59,23 @@ public class TestCaseService
         var jsonString = JsonConvert.SerializeObject(testCases);
         await _localStorage.SetItemAsync(StorageKey, jsonString);
         OnTestCaseAdded?.Invoke();
+        NotifyStateChanged();
+    }
+
+    public async Task RemoveTestCase(TestCase testCase)
+    {
+        var testCases = await GetAllTestCases();
+
+        var testCaseToRemove = testCases.Find(tc => tc.Id == testCase.Id);
+
+        if (testCaseToRemove != null)
+        {
+            testCases.Remove(testCaseToRemove);
+        }
+
+        var jsonString = JsonConvert.SerializeObject(testCases);
+        await _localStorage.SetItemAsync(StorageKey, jsonString);
+        OnTestCaseDeleted?.Invoke();
         NotifyStateChanged();
     }
 
