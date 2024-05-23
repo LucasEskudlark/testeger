@@ -16,10 +16,11 @@ public class TestRequest
     public string? CreatorId { get; set; }
     public string? Title { get; set; }
     public string? Description { get; set; }
-    public User AssignedTo { get; set; }
+    public string? StoryLink { get; set; }
+    public User? AssignedTo { get; set; }
     public RequestStatus Status { get; set; }
     public PriorityLevel PriorityLevel { get; set; }
-    public DateTime DueDate { get; set; }
+    public DateTime? DueDate { get; set; }
     public DateTime CreatedDate { get; set; }
     public DateTime? CompletedDate { get; set; }
     public TestRequestHistory? History { get; set; }

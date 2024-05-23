@@ -15,14 +15,13 @@ public class TestRequestCreationViewModel
     [MaxLength(1500, ErrorMessage = "Title must be at 1500 characters at most")]
     public string? Description { get; set; }
 
-    [Required(ErrorMessage = "Status is required")]
-    [EnumDataType(typeof(RequestStatus))]
-    public RequestStatus Status { get; set; }
+    [Url(ErrorMessage = "Story Link must be a valid URL")]
+    public string? StoryLink { get; set; }
 
     [Required(ErrorMessage = "Priority Level is required")]
     [EnumDataType(typeof(PriorityLevel))]
     public PriorityLevel PriorityLevel { get; set; }
 
     [Required(ErrorMessage = "Due Date is required")]
-    public DateTime DueDate { get; set; }
+    public DateTime? DueDate { get; set; }
 }
