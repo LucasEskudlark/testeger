@@ -6,65 +6,60 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-md-8">
-                <RadzenLabel Text="Title" />
+                <RadzenLabel Text="Title" Style="@LabelStyle" />
                 <RadzenTextBox @bind-Value="Request.Title" Style="width:100%;" />
             </div>
             <div class="col-md-4">
-                <RadzenLabel Text="Assigned to" />
+                <RadzenLabel Text="Assigned to" Style="@LabelStyle" />
                 <RadzenDropDown Data="names"
                                 @bind-Value="Request.AssignedTo.Name" Style="width:100%;" />
             </div>
         </div>
         <div class="row mt-2">
             <div class="col-12">
-                <RadzenLabel Text="Description" />
-                <RadzenTextArea @bind-Value="Request.Description" Style="width:100%; height:100px;" />
+                <RadzenLabel Text="Description" Style="@LabelStyle" />
+                <RadzenTextArea @bind-Value="Request.Description" Style="width:100%; height:100px; resize: none;" />
             </div>
         </div>
         <div class="row mt-2">
             <div class="col-md-4">
-                <RadzenLabel Text="Status" />
+                <RadzenLabel Text="Status" Style="@LabelStyle"  />
                 <RadzenDropDown Data="@Enum.GetValues(typeof(RequestStatus))"
                                 @bind-Value="Request.Status" Style="width:100%;" />
             </div>
             <div class="col-md-4">
-                <RadzenLabel Text="Priority Level" />
+                <RadzenLabel Text="Priority Level" Style="@LabelStyle" />
                 <RadzenDropDown Data="@Enum.GetValues(typeof(PriorityLevel))"
                                 @bind-Value="Request.PriorityLevel" Style="width:100%;" />
             </div>
             <div class="col-md-4">
-                <RadzenLabel Text="Created by" />
+                <RadzenLabel Text="Created by" Style="@LabelStyle"  />
                 <RadzenTextBox Disabled="true" @bind-Value="Request.CreatorId" Style="width:100%;" />
             </div>
         </div>
         <div class="row mt-2">
             <div class="col-md-4">
-                <RadzenLabel Text="Due Date" />
+                <RadzenLabel Text="Due Date" Style="@LabelStyle"  />
                 <RadzenDatePicker @bind-Value="Request.DueDate"
                                   Style="width:100%;" Min="@(DateTime.Today)"
                                   DateFormat="dd/MM/yyyy" />
             </div>
             <div class="col-md-4">
-                <RadzenLabel Text="Created Date" />
+                <RadzenLabel Text="Created Date" Style="@LabelStyle" />
                 <RadzenDatePicker Disabled="true"
                                   @bind-Value="Request.CreatedDate"
                                   Style="width:100%;" Min="@(DateTime.Today)"
                                   DateFormat="dd/MM/yyyy" />
             </div>
             <div class="col-md-4">
-                <RadzenLabel Text="Completed Date" />
+                <RadzenLabel Text="Completed Date" Style="@LabelStyle" />
                 <RadzenDatePicker Disabled="true"
                                   @bind-Value="Request.CompletedDate"
                                   Style="width:100%;" Min="@(DateTime.Today)"
                                   DateFormat="dd/MM/yyyy" MouseEnter="@(args => ShowTooltip(args) )" />
             </div>
         </div>
-        <div class="row mt-4">
-            <div class="col-12 d-flex justify-content-between">
-                <RadzenButton Icon="save" Text="Save" ButtonStyle="ButtonStyle.Primary" />
-                <RadzenButton Icon="delete" Text="Delete" ButtonStyle="ButtonStyle.Danger" Click="@(() => HandleRequestDeletion(Request))" />
-            </div>
-        </div>
+        
     </div>
 </RadzenContent>
 
@@ -72,8 +67,7 @@
     [Parameter]
     public TestRequest Request { get; set; }
 
-    [Parameter]
-    public EventCallback OnRequestDeleted { get; set; }
+    private string LabelStyle = "font-weight: 600 !important; color: #333 !important;";
 
     // Temporary
     private List<string> names = new()
@@ -81,14 +75,6 @@
         "Lucas",
         "Fernando"
     };
-
-    private async Task HandleRequestDeletion(TestRequest testRequest)
-    {
-        await TestRequestService.RemoveTestRequest(testRequest);
-        DialogService.Close(true);
-        await OnRequestDeleted.InvokeAsync();
-        await InvokeAsync(StateHasChanged);
-    }
 
     private void ShowTooltip(ElementReference elementReference, TooltipOptions options = null) => TooltipService.Open(elementReference, "This date will be set when the request is marked as Completed.", options);
 }
