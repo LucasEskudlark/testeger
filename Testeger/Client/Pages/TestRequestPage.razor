@@ -12,12 +12,12 @@
             <div class="col-auto">
                 <RadzenBreadCrumb>
                     <RadzenBreadCrumbItem Path="@GetProjectUrl()" Text="Project" />
-                    <RadzenBreadCrumbItem Text="Request" />
+                    <RadzenBreadCrumbItem Text="@GetRequestBreadCrumb()" />
                 </RadzenBreadCrumb>
             </div>
             <div class="col-auto d-flex">
-                <RadzenButton Icon="save" Text="Save" ButtonStyle="ButtonStyle.Primary" class="me-2" />
-                <RadzenButton Icon="delete" Text="Delete" ButtonStyle="ButtonStyle.Danger" />
+                <RadzenButton Icon="save" Text="Save" ButtonStyle="ButtonStyle.Primary" class="me-2" Click="HandleTestRequestUpdate" />
+                <RadzenButton Icon="delete" Text="Delete" ButtonStyle="ButtonStyle.Danger" Click="HandleTestRequestDeletion" />
             </div>
         </div>
     </div>
@@ -47,9 +47,6 @@
                 </RadzenContent>
             </div>
         </div>
-        <div class="row">
-
-        </div>
     </div>
 }
 
@@ -58,6 +55,9 @@
 
     [Parameter]
     public EventCallback OnRequestDeleted { get; set; }
+
+    [Parameter]
+    public EventCallback OnRequestUpdated { get; set; }
 
     [Parameter]
     public string? RequestId { get; set; }
@@ -70,7 +70,12 @@
     {
         return $"/project/{Request.ProjectId}";
     }
-    
+
+    private string GetRequestBreadCrumb()
+    {
+        return $"Request N°{Request.Number}";
+    }
+
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
@@ -90,12 +95,25 @@
         StateHasChanged();
     }
 
-    private async Task HandleRequestDeletion(TestRequest testRequest)
+    private async Task HandleTestRequestDeletion()
     {
-        await TestRequestService.RemoveTestRequest(testRequest);
-        NavigationManager.NavigateTo(GetProjectUrl());
-        await OnRequestDeleted.InvokeAsync();
-        await InvokeAsync(StateHasChanged);
+        if (Request != null)
+        {
+            await TestRequestService.RemoveTestRequest(Request);
+            NavigationManager.NavigateTo(GetProjectUrl());
+            await OnRequestDeleted.InvokeAsync();
+            await InvokeAsync(StateHasChanged);
+        }
+    }
+
+    private async Task HandleTestRequestUpdate()
+    {
+        if (Request != null)
+        {
+            await TestRequestService.UpdateTestRequest(Request);
+            await OnRequestUpdated.InvokeAsync();
+            await InvokeAsync(StateHasChanged); 
+        }
     }
 
     public async Task OpenTestCaseCreationDialog()

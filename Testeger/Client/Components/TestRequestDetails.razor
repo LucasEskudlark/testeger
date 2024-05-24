@@ -18,19 +18,20 @@
         <div class="row mt-2">
             <div class="col-12">
                 <RadzenLabel Text="Description" Style="@LabelStyle" />
-                <RadzenTextArea @bind-Value="Request.Description" Style="width:100%; height:100px; resize: none;" />
+                <RadzenTextArea @bind-Value="Request.Description" Style="width:100%; height:170px; resize: none;" />
             </div>
         </div>
         <div class="row mt-2">
             <div class="col-md-4">
                 <RadzenLabel Text="Status" Style="@LabelStyle"  />
-                <RadzenDropDown Data="@Enum.GetValues(typeof(RequestStatus))"
-                                @bind-Value="Request.Status" Style="width:100%;" />
+                <RadzenDropDown Data="@EnumHelper.GetSpacedNames(typeof(RequestStatus))"
+                                @bind-Value="StatusAsString"
+                                Style="width:100%;" />
             </div>
             <div class="col-md-4">
                 <RadzenLabel Text="Priority Level" Style="@LabelStyle" />
-                <RadzenDropDown Data="@Enum.GetValues(typeof(PriorityLevel))"
-                                @bind-Value="Request.PriorityLevel" Style="width:100%;" />
+                <RadzenDropDown Data="@EnumHelper.GetSpacedNames(typeof(PriorityLevel))"
+                                @bind-Value="PriorityAsString" Style="width:100%;" />
             </div>
             <div class="col-md-4">
                 <RadzenLabel Text="Created by" Style="@LabelStyle"  />
@@ -59,7 +60,15 @@
                                   DateFormat="dd/MM/yyyy" MouseEnter="@(args => ShowTooltip(args) )" />
             </div>
         </div>
-        
+        <div class="row mt-4 p-2 ps-0 d-flex justify-content-center test-schedule">
+            <div class="col-md-4 d-flex flex-column align-items-center">
+                <RadzenLabel Text="Scheduled Date" Style="@GetScheduleLabelStyleBasedOnStatus()" />
+                <RadzenDatePicker @bind-Value="Request.ScheduledDate"
+                                    Disabled="@(StatusAsString != "Ready For Testing")"
+                                    Style="width:100%;" Min="@(DateTime.Today)"
+                                    DateFormat="dd/MM/yyyy" />
+            </div>
+        </div>
     </div>
 </RadzenContent>
 
@@ -68,6 +77,12 @@
     public TestRequest Request { get; set; }
 
     private string LabelStyle = "font-weight: 600 !important; color: #333 !important;";
+    private string DisabledLabelStyle = "font-weight: 600 !important; color: #808080 !important;";
+
+    private string GetScheduleLabelStyleBasedOnStatus()
+    {
+        return StatusAsString == "Ready For Testing" ? LabelStyle : DisabledLabelStyle;
+    }
 
     // Temporary
     private List<string> names = new()
@@ -76,5 +91,26 @@
         "Fernando"
     };
 
+    public string PriorityAsString
+    {
+        get => Request.PriorityLevel.ToString().Replace("_", " ");
+        set => Request.PriorityLevel = Enum.Parse<PriorityLevel>(value.Replace(" ", "_"));
+    }
+
+    public string StatusAsString
+    {
+        get => EnumHelper.AddSpacesToEnumName(Request.Status.ToString());
+        set => Request.Status = Enum.Parse<RequestStatus>(value.Replace(" ", ""), true);
+    }
+
     private void ShowTooltip(ElementReference elementReference, TooltipOptions options = null) => TooltipService.Open(elementReference, "This date will be set when the request is marked as Completed.", options);
+
 }
+
+<style>
+    .test-schedule
+    {
+        border-radius: 0.5rem;
+        background-color: var(--rz-warning-lighter)
+    }
+</style>
