@@ -1,4 +1,5 @@
 ﻿@inject TestRequestService TestRequestService
+@inject NavigationManager NavigationManager
 
 <RadzenDataList AllowVirtualization="false" AllowPaging="true"
                 Data="@Requests" TItem="TestRequest" PageSize="5" PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true" >
@@ -48,14 +49,9 @@
     [Parameter]
     public RequestStatus Status { get; set; }
 
-    [Inject]
-    protected DialogService DialogService { get; set; }
-
-    public async Task OpenTestRequest(TestRequest testRequest)
+    public void OpenTestRequest(TestRequest testRequest)
     {
-        await DialogService.OpenAsync<DialogTestRequestPage>($"Request Number: {testRequest.Number}",
-               new Dictionary<string, object>() { { "RequestId", testRequest.Id } },
-               new DialogOptions() { Width = "1024px", Height = "512px", Resizable = false, Draggable = true });
+        NavigationManager.NavigateTo($"/test-request/{testRequest.Id}");
     }
 
     public RequestStatus GetStatus()
