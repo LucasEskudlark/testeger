@@ -1,0 +1,115 @@
+﻿@page "/test-request/{RequestId}"
+@layout DefaultLayout
+@inject DialogService DialogService
+@inject TestRequestService TestRequestService
+@inject TestCaseService TestCaseService
+@inject NavigationManager NavigationManager
+
+@if(Request is not null)
+{
+    <div class="rz-m-12 p-0 m-0">
+        <div class="row justify-content-between">
+            <div class="col-auto">
+                <RadzenBreadCrumb>
+                    <RadzenBreadCrumbItem Path="@GetProjectUrl()" Text="Project" />
+                    <RadzenBreadCrumbItem Text="Request" />
+                </RadzenBreadCrumb>
+            </div>
+            <div class="col-auto d-flex">
+                <RadzenButton Icon="save" Text="Save" ButtonStyle="ButtonStyle.Primary" class="me-2" />
+                <RadzenButton Icon="delete" Text="Delete" ButtonStyle="ButtonStyle.Danger" />
+            </div>
+        </div>
+    </div>
+
+
+    <div class="container">
+        <div class="row d-flex justify-content-between">
+            <div class="col-6 pb-2 right-divider">
+                <TestRequestDetails Request="Request"/>
+            </div>
+
+            <div class="col-6 pb-2">
+                <RadzenContent>
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-12 d-flex justify-content-between">
+                                <RadzenText TextStyle="TextStyle.H6" TagName="TagName.H5">Test Cases</RadzenText>
+                                <RadzenButton Icon="add_circle" Text="Add case" ButtonStyle="ButtonStyle.Primary" Size="ButtonSize.Small" Click="OpenTestCaseCreationDialog" />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12 p-0 mt-2" style="min-width: 400px;">
+                                <TestCaseIndividualDataList TestCases="TestCases" />
+                            </div>
+                        </div>
+                    </div>
+                </RadzenContent>
+            </div>
+        </div>
+        <div class="row">
+
+        </div>
+    </div>
+}
+
+@code {
+    private TestRequest? Request;
+
+    [Parameter]
+    public EventCallback OnRequestDeleted { get; set; }
+
+    [Parameter]
+    public string? RequestId { get; set; }
+
+    private List<TestCase> TestCases = new();
+
+    private TestCase TestCase { get; set; }
+
+    private string GetProjectUrl()
+    {
+        return $"/project/{Request.ProjectId}";
+    }
+    
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+
+        Request = await TestRequestService.GetTestRequestById(RequestId);
+
+        TestRequestService.OnChange += StateHasChanged;
+        TestCaseService.OnTestCaseAdded += UpdateTestCases;
+        TestCaseService.OnTestCaseDeleted += UpdateTestCases;
+
+        TestCases = await TestCaseService.GetTestCasesByRequestId(Request.Id);
+    }
+
+    private async void UpdateTestCases()
+    {
+        TestCases = await TestCaseService.GetTestCasesByRequestId(Request.Id);
+        StateHasChanged();
+    }
+
+    private async Task HandleRequestDeletion(TestRequest testRequest)
+    {
+        await TestRequestService.RemoveTestRequest(testRequest);
+        NavigationManager.NavigateTo(GetProjectUrl());
+        await OnRequestDeleted.InvokeAsync();
+        await InvokeAsync(StateHasChanged);
+    }
+
+    public async Task OpenTestCaseCreationDialog()
+    {
+        await DialogService.OpenAsync<DialogTestCaseCreationPage>("Create Test Case",
+               new Dictionary<string, object>() { { "RequestId", RequestId } },
+               new DialogOptions() { Width = "500px", Height = "540px", Resizable = false, Draggable = true });
+    }
+}
+
+<style>
+    .right-divider {
+        border-right: 1px solid #4F4F50;
+    }
+</style>
+
+
