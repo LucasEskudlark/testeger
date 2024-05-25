@@ -6,63 +6,68 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-md-8">
-                <RadzenLabel Text="Title" />
+                <RadzenLabel Text="Title" Style="@LabelStyle" />
                 <RadzenTextBox @bind-Value="Request.Title" Style="width:100%;" />
             </div>
             <div class="col-md-4">
-                <RadzenLabel Text="Assigned to" />
+                <RadzenLabel Text="Assigned to" Style="@LabelStyle" />
                 <RadzenDropDown Data="names"
                                 @bind-Value="Request.AssignedTo.Name" Style="width:100%;" />
             </div>
         </div>
         <div class="row mt-2">
             <div class="col-12">
-                <RadzenLabel Text="Description" />
-                <RadzenTextArea @bind-Value="Request.Description" Style="width:100%; height:100px;" />
+                <RadzenLabel Text="Description" Style="@LabelStyle" />
+                <RadzenTextArea @bind-Value="Request.Description" Style="width:100%; height:170px; resize: none;" />
             </div>
         </div>
         <div class="row mt-2">
             <div class="col-md-4">
-                <RadzenLabel Text="Status" />
-                <RadzenDropDown Data="@Enum.GetValues(typeof(RequestStatus))"
-                                @bind-Value="Request.Status" Style="width:100%;" />
+                <RadzenLabel Text="Status" Style="@LabelStyle"  />
+                <RadzenDropDown Data="@EnumHelper.GetSpacedNames(typeof(RequestStatus))"
+                                @bind-Value="StatusAsString"
+                                Style="width:100%;" />
             </div>
             <div class="col-md-4">
-                <RadzenLabel Text="Priority Level" />
-                <RadzenDropDown Data="@Enum.GetValues(typeof(PriorityLevel))"
-                                @bind-Value="Request.PriorityLevel" Style="width:100%;" />
+                <RadzenLabel Text="Priority Level" Style="@LabelStyle" />
+                <RadzenDropDown Data="@EnumHelper.GetSpacedNames(typeof(PriorityLevel))"
+                                @bind-Value="PriorityAsString" Style="width:100%;" />
             </div>
             <div class="col-md-4">
-                <RadzenLabel Text="Created by" />
+                <RadzenLabel Text="Created by" Style="@LabelStyle"  />
                 <RadzenTextBox Disabled="true" @bind-Value="Request.CreatorId" Style="width:100%;" />
             </div>
         </div>
         <div class="row mt-2">
             <div class="col-md-4">
-                <RadzenLabel Text="Due Date" />
+                <RadzenLabel Text="Due Date" Style="@LabelStyle"  />
                 <RadzenDatePicker @bind-Value="Request.DueDate"
                                   Style="width:100%;" Min="@(DateTime.Today)"
                                   DateFormat="dd/MM/yyyy" />
             </div>
             <div class="col-md-4">
-                <RadzenLabel Text="Created Date" />
+                <RadzenLabel Text="Created Date" Style="@LabelStyle" />
                 <RadzenDatePicker Disabled="true"
                                   @bind-Value="Request.CreatedDate"
                                   Style="width:100%;" Min="@(DateTime.Today)"
                                   DateFormat="dd/MM/yyyy" />
             </div>
             <div class="col-md-4">
-                <RadzenLabel Text="Completed Date" />
+                <RadzenLabel Text="Completed Date" Style="@LabelStyle" />
                 <RadzenDatePicker Disabled="true"
                                   @bind-Value="Request.CompletedDate"
                                   Style="width:100%;" Min="@(DateTime.Today)"
-                                  DateFormat="dd/MM/yyyy" MouseEnter="@(args => ShowTooltip(args) )" />
+                                  DateFormat="dd/MM/yyyy" MouseEnter="@(args => ShowCompletedDateTooltip(args) )" />
             </div>
         </div>
-        <div class="row mt-4">
-            <div class="col-12 d-flex justify-content-between">
-                <RadzenButton Icon="save" Text="Save" ButtonStyle="ButtonStyle.Primary" />
-                <RadzenButton Icon="delete" Text="Delete" ButtonStyle="ButtonStyle.Danger" Click="@(() => HandleRequestDeletion(Request))" />
+        <div class="row mt-4 p-2 ps-0 d-flex justify-content-center test-schedule">
+            <div class="col-md-4 d-flex flex-column align-items-center">
+                <RadzenLabel Text="Scheduled Date" Style="@GetScheduleLabelStyleBasedOnStatus()" />
+                <RadzenDatePicker @bind-Value="Request.ScheduledDate"
+                                    Disabled="@(StatusAsString != "Ready For Testing")"
+                                    Style="width:100%;" Min="@(DateTime.Today)"
+                                    DateFormat="dd/MM/yyyy"
+                                    MouseEnter="@(args => ShowScheduledDateTooltip(args) )" />
             </div>
         </div>
     </div>
@@ -72,8 +77,13 @@
     [Parameter]
     public TestRequest Request { get; set; }
 
-    [Parameter]
-    public EventCallback OnRequestDeleted { get; set; }
+    private string LabelStyle = "font-weight: 600 !important; color: #333 !important;";
+    private string DisabledLabelStyle = "font-weight: 600 !important; color: #808080 !important;";
+
+    private string GetScheduleLabelStyleBasedOnStatus()
+    {
+        return StatusAsString == "Ready For Testing" ? LabelStyle : DisabledLabelStyle;
+    }
 
     // Temporary
     private List<string> names = new()
@@ -82,13 +92,37 @@
         "Fernando"
     };
 
-    private async Task HandleRequestDeletion(TestRequest testRequest)
+    public string PriorityAsString
     {
-        await TestRequestService.RemoveTestRequest(testRequest);
-        DialogService.Close(true);
-        await OnRequestDeleted.InvokeAsync();
-        await InvokeAsync(StateHasChanged);
+        get => Request.PriorityLevel.ToString().Replace("_", " ");
+        set => Request.PriorityLevel = Enum.Parse<PriorityLevel>(value.Replace(" ", "_"));
     }
 
-    private void ShowTooltip(ElementReference elementReference, TooltipOptions options = null) => TooltipService.Open(elementReference, "This date will be set when the request is marked as Completed.", options);
+    public string StatusAsString
+    {
+        get => EnumHelper.AddSpacesToEnumName(Request.Status.ToString());
+        set => Request.Status = Enum.Parse<RequestStatus>(value.Replace(" ", ""), true);
+    }
+
+    private void ShowCompletedDateTooltip(ElementReference elementReference, TooltipOptions options = null)
+                    => TooltipService.Open(elementReference, "This date will be set when the request is marked as completed.", options);
+
+    private void ShowScheduledDateTooltip(ElementReference elementReference, TooltipOptions options = null)
+                    => TooltipService.Open(elementReference, "You can only set this date when the request is ready for testing. ", options);
 }
+
+<style>
+    .test-schedule
+    {
+        border-radius: 0.5rem;
+        background-color: var(--rz-warning-lighter)
+    }
+
+    .rz-inputtext, .rz-textarea, .rz-datepicker .rz-textbox input {
+        cursor: pointer;
+    }
+
+    input:hover{
+        cursor: pointer;
+    }
+</style>

@@ -13,6 +13,7 @@ public class TestRequestService
     public event Action? OnChange;
     public event Action? OnTestRequestAdded;
     public event Action? OnTestRequestDeleted;
+    public event Action? OnTestRequestUpdated;
 
     public TestRequestService(ILocalStorageService localStorage)
     {
@@ -34,50 +35,8 @@ public class TestRequestService
 
     public async Task<List<TestRequest>> GetAllTestRequests()
     {
-        var json = await _localStorage.GetItemAsStringAsync(StorageKey);
-
-        if (string.IsNullOrEmpty(json))
-        {
-            return new List<TestRequest>();
-        }
-
-        var innerJson = JsonConvert.DeserializeObject<string>(json);
-        return JsonConvert.DeserializeObject<List<TestRequest>>(innerJson) ?? new List<TestRequest>();
-    }
-
-    public async Task AddTestRequest(TestRequest testRequest)
-    {
-        testRequest.Number = await GetNextTestRequestNumber(testRequest.ProjectId);
-
-        var testRequests = await GetAllTestRequests();
-        
-        if (testRequests.Contains(testRequest))
-        {
-            testRequests.Remove(testRequest);
-        }
-        testRequests.Add(testRequest);
-
-        var jsonString = JsonConvert.SerializeObject(testRequests);
-        await _localStorage.SetItemAsync(StorageKey, jsonString);
-        OnTestRequestAdded?.Invoke();
-        NotifyStateChanged();
-    }
-
-    public async Task RemoveTestRequest(TestRequest testRequest)
-    {
-        var testRequests = await GetAllTestRequests();
-
-        var testRequestToRemove = testRequests.Find(tr => tr.Id == testRequest.Id);
-
-        if (testRequestToRemove != null)
-        {
-            testRequests.Remove(testRequestToRemove);
-        }
-
-        var jsonString = JsonConvert.SerializeObject(testRequests);
-        await _localStorage.SetItemAsync(StorageKey, jsonString);
-        OnTestRequestDeleted?.Invoke();
-        NotifyStateChanged();
+        var testRequests = await ReadFromStorage<List<TestRequest>>(StorageKey);
+        return testRequests ?? new List<TestRequest>();
     }
 
     public async Task<Dictionary<RequestStatus, List<TestRequest>>> GetTestRequestsByProjectIdGroupedByStatus(string projectId)
@@ -100,6 +59,75 @@ public class TestRequestService
         }
 
         return projectRequests.Max(tr => tr.Number) + 1;
+    }
+
+
+    public async Task AddTestRequest(TestRequest testRequest)
+    {
+        testRequest.Number = await GetNextTestRequestNumber(testRequest.ProjectId);
+
+        var testRequests = await GetAllTestRequests();
+        
+        if (testRequests.Contains(testRequest))
+        {
+            testRequests.Remove(testRequest);
+        }
+        testRequests.Add(testRequest);
+
+        await WriteToStorage(StorageKey, testRequests);
+        OnTestRequestAdded?.Invoke();
+        NotifyStateChanged();
+    }
+
+    public async Task RemoveTestRequest(TestRequest testRequest)
+    {
+        var testRequests = await GetAllTestRequests();
+
+        var testRequestToRemove = testRequests.Find(tr => tr.Id == testRequest.Id);
+
+        if (testRequestToRemove != null)
+        {
+            testRequests.Remove(testRequestToRemove);
+        }
+
+        await WriteToStorage(StorageKey, testRequests);
+        OnTestRequestDeleted?.Invoke();
+        NotifyStateChanged();
+    }
+
+    public async Task UpdateTestRequest(TestRequest testRequest)
+    {
+        var testRequests = await GetAllTestRequests();
+        var index = testRequests.FindIndex(tr => tr.Id == testRequest.Id);
+
+        if (index == -1)
+        {
+            throw new TestRequestNotFoundException($"Test Request with id {testRequest.Id} was not found.");
+        }
+
+        testRequests[index] = testRequest;
+        await WriteToStorage(StorageKey, testRequests);
+        OnTestRequestUpdated?.Invoke();
+        NotifyStateChanged();
+    }
+
+
+    private async Task<T?> ReadFromStorage<T>(string key)
+    {
+        var json = await _localStorage.GetItemAsStringAsync(key);
+        if (string.IsNullOrEmpty(json))
+        {
+            return default;
+        }
+
+        var innerJson = JsonConvert.DeserializeObject<string>(json);
+        return JsonConvert.DeserializeObject<T>(innerJson);
+    }
+
+    private async Task WriteToStorage<T>(string key, T data)
+    {
+        var jsonString = JsonConvert.SerializeObject(data);
+        await _localStorage.SetItemAsync(key, jsonString);
     }
 
     public async Task ClearStorage()
