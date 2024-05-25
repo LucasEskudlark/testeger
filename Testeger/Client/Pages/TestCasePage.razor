@@ -1,0 +1,77 @@
+﻿@page "/test-case/{TestCaseId}"
+@layout DefaultLayout
+@inject DialogService DialogService
+@inject TestCaseService TestCaseService
+@inject TestRequestService TestRequestService
+@inject NavigationManager NavigationManager
+@inject TooltipService TooltipService
+
+@if(TestCase is not null)
+{
+    <div class="rz-m-12 p-0 m-0">
+        <div class="row justify-content-between">
+            <div class="col-auto">
+                <RadzenBreadCrumb>
+                    <RadzenBreadCrumbItem Path="@BreadCrumbHelper.GetProjectUrl(Request)" Text="Project" />
+                    <RadzenBreadCrumbItem Path="@BreadCrumbHelper.GetRequestUrl(Request)" Text="Request" />
+                    <RadzenBreadCrumbItem Text="Test Case" />
+                </RadzenBreadCrumb>
+            </div>
+            <div class="col-auto d-flex">
+                <RadzenButton Icon="save"
+                              Text="Save"
+                              ButtonStyle="ButtonStyle.Primary"
+                              Size="ButtonSize.Medium"
+                              MouseEnter="@(args => ShowSaveTestCaseButtonTooltip(args) )"
+                              class="me-2" />
+                <RadzenButton Icon="delete"
+                              Text="Delete"
+                              ButtonStyle="ButtonStyle.Danger"
+                              Size="ButtonSize.Medium"
+                              Click="HandleTestCaseDeletion"
+                              MouseEnter="@(args => ShowDeleteTestCaseButtonTooltip(args) )" />
+            </div>
+        </div>
+    </div>
+
+    <TestCaseDetailsPage TestCase="TestCase"/>
+}
+
+@code {
+    [Parameter]
+    public string TestCaseId { get; set; }
+
+    [Parameter]
+    public EventCallback OnTestCaseDeleted { get; set; }
+
+    public TestRequest Request { get; set; }
+
+    private TestCase TestCase { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+
+        TestCase = await TestCaseService.GetTestCaseById(TestCaseId);
+        Request = await TestRequestService.GetTestRequestById(TestCase.RequestId);
+
+        TestCaseService.OnChange += StateHasChanged;
+    }
+
+    private async Task HandleTestCaseDeletion()
+    {
+        if (TestCase != null)
+        {
+            await TestCaseService.RemoveTestCase(TestCase);
+            DialogService.Close(true);
+            await OnTestCaseDeleted.InvokeAsync();
+            await InvokeAsync(StateHasChanged);
+        }
+    }
+
+    private void ShowSaveTestCaseButtonTooltip(ElementReference elementReference, TooltipOptions options = null)
+                    => TooltipService.Open(elementReference, "Save the changes made in this request", options);
+
+    private void ShowDeleteTestCaseButtonTooltip(ElementReference elementReference, TooltipOptions options = null)
+                    => TooltipService.Open(elementReference, "Delete this entire request", options);
+}

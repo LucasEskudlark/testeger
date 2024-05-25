@@ -1,4 +1,5 @@
-﻿
+﻿@inject NavigationManager NavigationManager
+
 <RadzenDataList AllowVirtualization="false" AllowPaging="true"
                 Data="@TestCases" TItem="TestCase" PageSize="6" PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true">
     <Template Context="TestCase">
@@ -37,16 +38,11 @@
     [Parameter]
     public List<TestCase> TestCases { get; set; }
 
-    [Inject]
-    protected DialogService DialogService { get; set; }
-
     private TestCase TestCase { get; set; }
 
-    public async Task OpenTestCaseDetails(TestCase testCase)
+    public void OpenTestCaseDetails(TestCase testCase)
     {
-        await DialogService.OpenAsync<TestCaseDetailsDialog>($"Test Case",
-               new Dictionary<string, object>() { { "TestCaseId", testCase.Id } },
-               new DialogOptions() { Width = "1024px", Height = "512px", Resizable = false, Draggable = true });
+        NavigationManager.NavigateTo($"/test-case/{testCase.Id}");
     }
 }
 
