@@ -13,7 +13,7 @@
             <div class="col-auto">
                 <RadzenBreadCrumb>
                     <RadzenBreadCrumbItem Path="@BreadCrumbHelper.GetProjectUrl(Request)" Text="Project" />
-                    <RadzenBreadCrumbItem Path="@BreadCrumbHelper.GetRequestUrl(Request)" Text="Request" />
+                    <RadzenBreadCrumbItem Path="@BreadCrumbHelper.GetRequestUrl(Request)" Text="@BreadCrumbHelper.GetRequestText(Request)" />
                     <RadzenBreadCrumbItem Text="Test Case" />
                 </RadzenBreadCrumb>
             </div>
@@ -22,6 +22,7 @@
                               Text="Save"
                               ButtonStyle="ButtonStyle.Primary"
                               Size="ButtonSize.Medium"
+                              Click="HandleTestCaseUpdate"
                               MouseEnter="@(args => ShowSaveTestCaseButtonTooltip(args) )"
                               class="me-2" />
                 <RadzenButton Icon="delete"
@@ -34,7 +35,16 @@
         </div>
     </div>
 
-    <TestCaseDetailsPage TestCase="TestCase"/>
+    <div class="container">
+        <div class="row d-flex justify-content-between">
+            <div class="col-7 pb-2 right-divider">
+                <TestCaseDetailsPage TestCase="TestCase" />
+            </div>
+
+            <div class="col-5 pb-2">
+            </div>
+        </div>
+    </div>
 }
 
 @code {
@@ -43,6 +53,9 @@
 
     [Parameter]
     public EventCallback OnTestCaseDeleted { get; set; }
+
+    [Parameter]
+    public EventCallback OnTestCaseUpdated { get; set; }
 
     public TestRequest Request { get; set; }
 
@@ -69,9 +82,25 @@
         }
     }
 
+    private async Task HandleTestCaseUpdate()
+    {
+        if (TestCase != null)
+        {
+            await TestCaseService.UpdateTestCase(TestCase);
+            await OnTestCaseUpdated.InvokeAsync();
+            await InvokeAsync(StateHasChanged);
+        }
+    }
+
     private void ShowSaveTestCaseButtonTooltip(ElementReference elementReference, TooltipOptions options = null)
                     => TooltipService.Open(elementReference, "Save the changes made in this request", options);
 
     private void ShowDeleteTestCaseButtonTooltip(ElementReference elementReference, TooltipOptions options = null)
                     => TooltipService.Open(elementReference, "Delete this entire request", options);
 }
+
+<style>
+    .right-divider {
+        border-right: 1px solid #4F4F50;
+    }
+</style>
