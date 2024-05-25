@@ -1,80 +1,68 @@
 ﻿@inject TooltipService TooltipService
 @inject DialogService DialogService
 
-<div class="row d-flex justify-content-between">
-    <div class="col-6">
-        <div class="container-fluid py-2 px-0">
-            <div class="row">
-                <div class="col-md-8">
-                    <RadzenLabel Text="Title" />
-                    <RadzenTextBox @bind-Value="TestCase.Title" Style="width:100%;" />
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-12">
-                    <RadzenLabel Text="Description" />
-                    <RadzenTextArea @bind-Value="TestCase.Details.Description" Style="width:100%; height: 200px; resize: none;" />
-                </div>
-            </div>
+
+<div class="container-fluid py-2 px-0">
+    <div class="row my-2">
+        <div class="col-7">
+            <RadzenLabel Text="Title" />
+            <RadzenTextBox @bind-Value="TestCase.Title" Style="width:100%;" />
+        </div>
+        <div class="col-3">
+            <RadzenLabel Text="Environment" />
+            <RadzenTextBox @bind-Value="TestCase.Details.Environment" Style="width:100%;" />
         </div>
     </div>
-    <div class="col-6">
-        <div class="container-fluid py-2 px-0">
-            <div class="row">
-                <div class="col-6">
-                    <RadzenLabel Text="Pre Conditions" />
-                    <RadzenTextArea @bind-Value="TestCase.Details.PreConditions" Style="width: 100%; height: 260px; resize: none;" />
-                </div>
-                <div class="col-6">
-                    <RadzenLabel Text="Steps" />
-                    <RadzenTextArea @bind-Value="TestCase.Details.Steps" Style="width: 100%; height: 260px; resize: none;" />
-                </div>
-            </div>
+
+    <div class="row my-2">
+        <div class="col-4">
+            <RadzenLabel Text="Description" />
+            <RadzenTextArea @bind-Value="TestCase.Details.Description" Style="width:100%; height: 200px; resize: none;" />
+        </div>
+        <div class="col-4">
+            <RadzenLabel Text="Pre Conditions" />
+            <RadzenTextArea @bind-Value="TestCase.Details.PreConditions" Style="width: 100%; height: 200px; resize: none;" />
+        </div>
+        <div class="col-4">
+            <RadzenLabel Text="Steps" />
+            <RadzenTextArea @bind-Value="TestCase.Details.Steps" Style="width: 100%; height: 200px; resize: none;" />
         </div>
     </div>
-    <div class="col-12 pb-2 mb-3">
-        <div class="container-fluid py-1 px-0">
-            <div class="row d-flex justify-content-evenly">
-                <div class="col-2">
-                    <RadzenLabel Text="Status" />
-                    <RadzenDropDown Disabled="true" Data="@Enum.GetValues(typeof(TestCaseStatus))"
-                                    @bind-Value="TestCase.Status" Style="width:100%;"
-                                    MouseEnter="@(args => ShowStatusTooltip(args) )" />
-                </div>
-                <div class="col-2">
-                    <RadzenLabel Text="Need Correction?" />
-                    <RadzenTextBox Disabled="true" @bind-Value="NeedCorrectionString" Style="width:100%;" />
-                </div>
-                <div class="col-2">
-                    <RadzenLabel Text="Created Date" />
-                    <RadzenDatePicker Disabled="true"
-                                      @bind-Value="TestCase.CreatedDate"
-                                      Style="width:100%;" Min="@(DateTime.Today)"
-                                      DateFormat="dd/MM/yyyy" />
-                </div>
-                <div class="col-2">
-                    <RadzenLabel Text="Completed Date" />
-                    <RadzenDatePicker Disabled="true"
-                                      @bind-Value="TestCase.CompletedDate"
-                                      Style="width:100%;" Min="@(DateTime.Today)"
-                                      DateFormat="dd/MM/yyyy" MouseEnter="@(args => ShowCompletedDateTooltip(args) )" />
-                </div>
-                <div class="col-2">
-                    <RadzenLabel Text="Created by" />
-                    <RadzenTextBox Disabled="true" @bind-Value="TestCase.CreatedBy" Style="width:100%;" />
-                </div>
-            </div>
+
+    <div class="row my-2">
+        <div class="col-2">
+            <RadzenLabel Text="Status" />
+            <RadzenDropDown Disabled="true" Data="@Enum.GetValues(typeof(TestCaseStatus))"
+                            @bind-Value="TestCase.Status" Style="width:100%;"
+                            MouseEnter="@(args => ShowStatusTooltip(args) )" />
+        </div>
+        <div class="col-2">
+            <RadzenLabel Text="Need Correction?" />
+            <RadzenTextBox Disabled="true" @bind-Value="NeedCorrectionString" Style="width:100%;" />
+        </div>
+
+        <div class="col-2">
+            <RadzenLabel Text="Created by" />
+            <RadzenTextBox Disabled="true" @bind-Value="TestCase.CreatedBy" Style="width:100%;" />
+        </div>
+
+        <div class="col-3">
+            <RadzenLabel Text="Created Date" />
+            <RadzenDatePicker Disabled="true"
+                              @bind-Value="TestCase.CreatedDate"
+                              Style="width:100%;" Min="@(DateTime.Today)"
+                              DateFormat="dd/MM/yyyy" />
+        </div>
+        <div class="col-3">
+            <RadzenLabel Text="Completed Date" />
+            <RadzenDatePicker Disabled="true"
+                              @bind-Value="TestCase.CompletedDate"
+                              Style="width:100%;" Min="@(DateTime.Today)"
+                              DateFormat="dd/MM/yyyy" MouseEnter="@(args => ShowCompletedDateTooltip(args) )" />
         </div>
     </div>
-    <div class="col-12 mb-4">
-        <div class="container-fluid py-1 px-0">
-            <div class="row">
-                <div class="col-2">
-                    <RadzenButton Icon="play_arrow" Text="Start test" ButtonStyle="ButtonStyle.Success" Size="ButtonSize.Small" />
-                </div>
-            </div>
-        </div>
-    </div>
+
+    <RadzenButton Icon="play_arrow" Text="Start test" ButtonStyle="ButtonStyle.Success" Size="ButtonSize.Small" />
 </div>
 
 @code {
