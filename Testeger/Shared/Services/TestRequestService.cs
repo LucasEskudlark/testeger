@@ -8,16 +8,16 @@ namespace Testeger.Shared.Services;
 
 public class TestRequestService
 {
-    private readonly ILocalStorageService _localStorage;
+    private readonly LocalStorageService _localStorageService;
     private const string StorageKey = "testRequests";
     public event Action? OnChange;
     public event Action? OnTestRequestAdded;
     public event Action? OnTestRequestDeleted;
     public event Action? OnTestRequestUpdated;
 
-    public TestRequestService(ILocalStorageService localStorage)
+    public TestRequestService(LocalStorageService localStorage)
     {
-        _localStorage = localStorage;
+        _localStorageService = localStorage;
     }
 
     public async Task<List<TestRequest>> GetTestRequestsByProjectIdAndStatus(string id, RequestStatus status)
@@ -35,7 +35,7 @@ public class TestRequestService
 
     public async Task<List<TestRequest>> GetAllTestRequests()
     {
-        var testRequests = await ReadFromStorage<List<TestRequest>>(StorageKey);
+        var testRequests = await _localStorageService.ReadFromStorage<List<TestRequest>>(StorageKey);
         return testRequests ?? new List<TestRequest>();
     }
 
@@ -74,7 +74,7 @@ public class TestRequestService
         }
         testRequests.Add(testRequest);
 
-        await WriteToStorage(StorageKey, testRequests);
+        await _localStorageService.WriteToStorage(StorageKey, testRequests);
         OnTestRequestAdded?.Invoke();
         NotifyStateChanged();
     }
@@ -90,7 +90,7 @@ public class TestRequestService
             testRequests.Remove(testRequestToRemove);
         }
 
-        await WriteToStorage(StorageKey, testRequests);
+        await _localStorageService.WriteToStorage(StorageKey, testRequests);
         OnTestRequestDeleted?.Invoke();
         NotifyStateChanged();
     }
@@ -106,33 +106,14 @@ public class TestRequestService
         }
 
         testRequests[index] = testRequest;
-        await WriteToStorage(StorageKey, testRequests);
+        await _localStorageService.WriteToStorage(StorageKey, testRequests);
         OnTestRequestUpdated?.Invoke();
         NotifyStateChanged();
     }
 
-
-    private async Task<T?> ReadFromStorage<T>(string key)
-    {
-        var json = await _localStorage.GetItemAsStringAsync(key);
-        if (string.IsNullOrEmpty(json))
-        {
-            return default;
-        }
-
-        var innerJson = JsonConvert.DeserializeObject<string>(json);
-        return JsonConvert.DeserializeObject<T>(innerJson);
-    }
-
-    private async Task WriteToStorage<T>(string key, T data)
-    {
-        var jsonString = JsonConvert.SerializeObject(data);
-        await _localStorage.SetItemAsync(key, jsonString);
-    }
-
     public async Task ClearStorage()
     {
-        await _localStorage.ClearAsync();
+        await _localStorageService.ClearStorage();
     }
 
     private void NotifyStateChanged() => OnChange?.Invoke();

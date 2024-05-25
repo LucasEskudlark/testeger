@@ -15,5 +15,6 @@ builder.Services.AddScoped<ProjectService>();
 builder.Services.AddScoped<TestRequestService>();
 builder.Services.AddBlazoredLocalStorage();
 builder.Services.AddScoped<TestCaseService>();
+builder.Services.AddScoped<LocalStorageService>();
 
 await builder.Build().RunAsync();
