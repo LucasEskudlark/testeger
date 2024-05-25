@@ -63,7 +63,7 @@
         if (TestCase != null)
         {
             await TestCaseService.RemoveTestCase(TestCase);
-            DialogService.Close(true);
+            NavigationManager.NavigateTo(BreadCrumbHelper.GetRequestUrl(Request));
             await OnTestCaseDeleted.InvokeAsync();
             await InvokeAsync(StateHasChanged);
         }
