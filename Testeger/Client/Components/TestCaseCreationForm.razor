@@ -3,40 +3,70 @@
 <EditForm Model="@testCaseCreationViewModel" OnValidSubmit="@NotifyParent">
     <DataAnnotationsValidator />
     <div class="container-fluid">
-        <div class="row mb-3">
-            <div class="col-8">
+        <div class="row mb-3 mt-2">
+            <div class="col-5">
                 <label for="title" class="form-label">Title</label>
-                <InputText id="title" class="form-control" @bind-Value="testCaseCreationViewModel.Title" />
+                <InputText id="title"
+                           class="form-control inputtext"
+                           placeholder="Enter a concise title for the test case."
+                           @bind-Value="testCaseCreationViewModel.Title" />
                 <ValidationMessage For="@(() => testCaseCreationViewModel.Title)" />
             </div>
+
+            <div class="col-3 ms-4">
+                <label for="environment" class="form-label">Environment</label>
+                <InputText id="environment"
+                           class="form-control inputtext"
+                           placeholder="Where the test will be executed."
+                           @bind-Value="testCaseCreationViewModel.Environment" />
+                <ValidationMessage For="@(() => testCaseCreationViewModel.Environment)" />
+            </div>
         </div>
 
         <div class="row mb-3">
-            <div class="col-12">
+            <div class="col-3">
                 <label for="description" class="form-label">Description</label>
-                <InputTextArea id="description" class="form-control" @bind-Value="testCaseCreationViewModel.Description" />
+                <InputTextArea id="description"
+                               class="form-control textarea"
+                               placeholder="Provide a detailed description of the test case."
+                               @bind-Value="testCaseCreationViewModel.Description"/>
                 <ValidationMessage For="@(() => testCaseCreationViewModel.Description)" />
             </div>
-        </div>
 
-        <div class="row mb-3">
-            <div class="col-12">
+            <div class="col-3">
                 <label for="preconditions" class="form-label">Pre Conditions</label>
-                <InputTextArea id="preconditions" class="form-control" @bind-Value="testCaseCreationViewModel.PreConditions" />
+                <InputTextArea id="preconditions"
+                               class="form-control textarea"
+                               placeholder="List any conditions that must be met before the test is executed."
+                               @bind-Value="testCaseCreationViewModel.PreConditions" />
                 <ValidationMessage For="@(() => testCaseCreationViewModel.PreConditions)" />
             </div>
+
+            <div class="col-3">
+                <label for="steps" class="form-label">Steps</label>
+                <InputTextArea id="steps"
+                               class="form-control textarea"
+                               placeholder="Detail each step required to perform the test."
+                               @bind-Value="testCaseCreationViewModel.Steps" />
+                <ValidationMessage For="@(() => testCaseCreationViewModel.Steps)" />
+            </div>
+
+            <div class="col-3">
+                <label for="expectedresult" class="form-label">Expected Result</label>
+                <InputTextArea id="expectedresult"
+                               class="form-control textarea"
+                               placeholder="Describe the expected outcome of the test."
+                               @bind-Value="testCaseCreationViewModel.ExpectedResult" />
+                <ValidationMessage For="@(() => testCaseCreationViewModel.ExpectedResult)" />
+            </div> 
         </div>
 
-        <div class="row mb-3">
-            <div class="col-12">
-                <label for="steps" class="form-label">Steps</label>
-                <InputTextArea id="steps" class="form-control" @bind-Value="testCaseCreationViewModel.Steps" />
-                <ValidationMessage For="@(() => testCaseCreationViewModel.Steps)" />
+        <div class="row mb-3 mt-4 d-flex justify-content-end">
+            <div class="col-3 d-flex justify-content-end">
+                <button type="submit" class="btn btn-primary">Submit</button>
             </div>
         </div>
     </div>
-
-    <button type="submit" class="btn btn-primary">Submit</button>
 </EditForm>
 
 @code {
@@ -64,7 +94,9 @@
                 {
                     Description = testCaseCreationViewModel.Description,
                     PreConditions = testCaseCreationViewModel.PreConditions,
-                    Steps = testCaseCreationViewModel.Steps
+                    Steps = testCaseCreationViewModel.Steps,
+                    ExpectedResult = testCaseCreationViewModel.ExpectedResult,
+                    Environment = testCaseCreationViewModel.Environment
                 },
                 Results = new TestCaseResults(),
                 CreatedDate = DateTime.Now,
@@ -73,3 +105,74 @@
             };
     }
 }
+
+<style>
+    .rz-dialog {
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .rz-dialog-title {
+        color: white;
+        padding: 10px 15px;
+        border-top-left-radius: 8px;
+        border-top-right-radius: 8px;
+    }
+
+    .rz-dialog-titlebar {
+        background-color: var(--rz-primary);
+    }
+
+    .rz-dialog-content {
+        padding: 10px;
+    }
+
+    .rz-dialog-footer {
+        padding: 10px 20px;
+        background-color: #f8f9fa;
+    }
+
+    .form-label {
+        font-weight: 600;
+        color: #333;
+    }
+
+    .input {
+        border-radius: 5px;
+    }
+
+    .btn-primary {
+        background-color: var(--rz-primary);
+        border-color: var(--rz-primary);
+    }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+            border-color: #004085;
+        }
+
+    .validation-message {
+        color: #dc3545;
+        font-size: 0.875em;
+    }
+
+    #description {
+        resize: none;
+        height: 200px;
+    }
+
+    #duedate {
+        border: 1px solid #ced4da;
+        border-radius: .25rem;
+    }
+
+    .textarea {
+        height: 200px;
+        resize: none;
+        font-size: 13px;
+    }
+
+    .inputtext {
+        font-size: 13px;
+    }
+</style>
