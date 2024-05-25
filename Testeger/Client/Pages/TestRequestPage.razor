@@ -12,13 +12,13 @@
         <div class="row justify-content-between">
             <div class="col-auto">
                 <RadzenBreadCrumb>
-                    <RadzenBreadCrumbItem Path="@GetProjectUrl()" Text="Project" />
-                    <RadzenBreadCrumbItem Text="@GetRequestBreadCrumb()" />
+                    <RadzenBreadCrumbItem Path="@BreadCrumbHelper.GetProjectUrl(Request)" Text="Project" />
+                    <RadzenBreadCrumbItem Text="@BreadCrumbHelper.GetRequestText(Request)" />
                 </RadzenBreadCrumb>
             </div>
             <div class="col-auto d-flex">
-                <RadzenButton Icon="save" Text="Save" ButtonStyle="ButtonStyle.Primary" class="me-2" Click="HandleTestRequestUpdate" MouseEnter="@(args => ShowSaveButtonTooltip(args) )" />
-                <RadzenButton Icon="delete" Text="Delete" ButtonStyle="ButtonStyle.Danger" Click="HandleTestRequestDeletion" MouseEnter="@(args => ShowDeleteButtonTooltip(args) )" />
+                <RadzenButton Icon="save" Text="Save" ButtonStyle="ButtonStyle.Primary" class="me-2" Click="HandleTestRequestUpdate" MouseEnter="@(args => ShowSaveRequestButtonTooltip(args) )" />
+                <RadzenButton Icon="delete" Text="Delete" ButtonStyle="ButtonStyle.Danger" Click="HandleTestRequestDeletion" MouseEnter="@(args => ShowDeleteRequestButtonTooltip(args) )" />
             </div>
         </div>
     </div>
@@ -67,16 +67,6 @@
 
     private TestCase TestCase { get; set; }
 
-    private string GetProjectUrl()
-    {
-        return $"/project/{Request.ProjectId}";
-    }
-
-    private string GetRequestBreadCrumb()
-    {
-        return $"Request N°{Request.Number}";
-    }
-
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
@@ -101,7 +91,7 @@
         if (Request != null)
         {
             await TestRequestService.RemoveTestRequest(Request);
-            NavigationManager.NavigateTo(GetProjectUrl());
+            NavigationManager.NavigateTo(BreadCrumbHelper.GetProjectUrl(Request));
             await OnRequestDeleted.InvokeAsync();
             await InvokeAsync(StateHasChanged);
         }
@@ -124,10 +114,10 @@
                new DialogOptions() { Width = "1024px", Height = "480px", Resizable = false, Draggable = true });
     }
 
-    private void ShowSaveButtonTooltip(ElementReference elementReference, TooltipOptions options = null)
+    private void ShowSaveRequestButtonTooltip(ElementReference elementReference, TooltipOptions options = null)
                     => TooltipService.Open(elementReference, "Save the changes made in this request", options);
 
-    private void ShowDeleteButtonTooltip(ElementReference elementReference, TooltipOptions options = null)
+    private void ShowDeleteRequestButtonTooltip(ElementReference elementReference, TooltipOptions options = null)
                     => TooltipService.Open(elementReference, "Delete this entire request", options);
 }
 
