@@ -66,3 +66,11 @@ a, .btn-link {
     .blazor-error-boundary::after {
         content: "An error has occurred."
     }
+
+.rz-inputtext, .rz-textarea, .rz-datepicker .rz-textbox input {
+    cursor: pointer;
+}
+
+input:hover {
+    cursor: pointer;
+}
