@@ -4,6 +4,7 @@
 @inject TestRequestService TestRequestService
 @inject TestCaseService TestCaseService
 @inject NavigationManager NavigationManager
+@inject TooltipService TooltipService
 
 @if(Request is not null)
 {
@@ -16,8 +17,8 @@
                 </RadzenBreadCrumb>
             </div>
             <div class="col-auto d-flex">
-                <RadzenButton Icon="save" Text="Save" ButtonStyle="ButtonStyle.Primary" class="me-2" Click="HandleTestRequestUpdate" />
-                <RadzenButton Icon="delete" Text="Delete" ButtonStyle="ButtonStyle.Danger" Click="HandleTestRequestDeletion" />
+                <RadzenButton Icon="save" Text="Save" ButtonStyle="ButtonStyle.Primary" class="me-2" Click="HandleTestRequestUpdate" MouseEnter="@(args => ShowSaveButtonTooltip(args) )" />
+                <RadzenButton Icon="delete" Text="Delete" ButtonStyle="ButtonStyle.Danger" Click="HandleTestRequestDeletion" MouseEnter="@(args => ShowDeleteButtonTooltip(args) )" />
             </div>
         </div>
     </div>
@@ -122,6 +123,12 @@
                new Dictionary<string, object>() { { "RequestId", RequestId } },
                new DialogOptions() { Width = "500px", Height = "540px", Resizable = false, Draggable = true });
     }
+
+    private void ShowSaveButtonTooltip(ElementReference elementReference, TooltipOptions options = null)
+                    => TooltipService.Open(elementReference, "Save the changes made in this request", options);
+
+    private void ShowDeleteButtonTooltip(ElementReference elementReference, TooltipOptions options = null)
+                    => TooltipService.Open(elementReference, "Delete this entire request", options);
 }
 
 <style>

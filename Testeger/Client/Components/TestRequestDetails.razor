@@ -57,7 +57,7 @@
                 <RadzenDatePicker Disabled="true"
                                   @bind-Value="Request.CompletedDate"
                                   Style="width:100%;" Min="@(DateTime.Today)"
-                                  DateFormat="dd/MM/yyyy" MouseEnter="@(args => ShowTooltip(args) )" />
+                                  DateFormat="dd/MM/yyyy" MouseEnter="@(args => ShowCompletedDateTooltip(args) )" />
             </div>
         </div>
         <div class="row mt-4 p-2 ps-0 d-flex justify-content-center test-schedule">
@@ -66,7 +66,8 @@
                 <RadzenDatePicker @bind-Value="Request.ScheduledDate"
                                     Disabled="@(StatusAsString != "Ready For Testing")"
                                     Style="width:100%;" Min="@(DateTime.Today)"
-                                    DateFormat="dd/MM/yyyy" />
+                                    DateFormat="dd/MM/yyyy"
+                                    MouseEnter="@(args => ShowScheduledDateTooltip(args) )" />
             </div>
         </div>
     </div>
@@ -103,8 +104,11 @@
         set => Request.Status = Enum.Parse<RequestStatus>(value.Replace(" ", ""), true);
     }
 
-    private void ShowTooltip(ElementReference elementReference, TooltipOptions options = null) => TooltipService.Open(elementReference, "This date will be set when the request is marked as Completed.", options);
+    private void ShowCompletedDateTooltip(ElementReference elementReference, TooltipOptions options = null)
+                    => TooltipService.Open(elementReference, "This date will be set when the request is marked as completed.", options);
 
+    private void ShowScheduledDateTooltip(ElementReference elementReference, TooltipOptions options = null)
+                    => TooltipService.Open(elementReference, "You can only set this date when the request is ready for testing. ", options);
 }
 
 <style>
@@ -112,5 +116,13 @@
     {
         border-radius: 0.5rem;
         background-color: var(--rz-warning-lighter)
+    }
+
+    .rz-inputtext, .rz-textarea, .rz-datepicker .rz-textbox input {
+        cursor: pointer;
+    }
+
+    input:hover{
+        cursor: pointer;
     }
 </style>
