@@ -17,8 +17,19 @@
                 </RadzenBreadCrumb>
             </div>
             <div class="col-auto d-flex">
-                <RadzenButton Icon="save" Text="Save" ButtonStyle="ButtonStyle.Primary" class="me-2" Click="HandleTestRequestUpdate" MouseEnter="@(args => ShowSaveRequestButtonTooltip(args) )" />
-                <RadzenButton Icon="delete" Text="Delete" ButtonStyle="ButtonStyle.Danger" Click="HandleTestRequestDeletion" MouseEnter="@(args => ShowDeleteRequestButtonTooltip(args) )" />
+                <RadzenButton Icon="save"
+                              Text="Save"
+                              ButtonStyle="ButtonStyle.Primary"
+                              Size="ButtonSize.Small"
+                              Click="HandleTestRequestUpdate"
+                              MouseEnter="@(args => ShowSaveRequestButtonTooltip(args) )"
+                              class="me-2" />
+                <RadzenButton Icon="delete"
+                              Text="Delete"
+                              ButtonStyle="ButtonStyle.Danger"
+                              Size="ButtonSize.Small"
+                              Click="HandleTestRequestDeletion"
+                              MouseEnter="@(args => ShowDeleteRequestButtonTooltip(args) )" />
             </div>
         </div>
     </div>
@@ -124,7 +135,7 @@
 
 <style>
     .right-divider {
-        border-right: 1px solid #4F4F50;
+        border-right: 1px solid #ced4da;
     }
 </style>
 
