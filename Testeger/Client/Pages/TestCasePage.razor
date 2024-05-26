@@ -1,6 +1,5 @@
 ﻿@page "/test-case/{TestCaseId}"
 @layout DefaultLayout
-@inject DialogService DialogService
 @inject TestCaseService TestCaseService
 @inject TestRequestService TestRequestService
 @inject NavigationManager NavigationManager
@@ -14,10 +13,17 @@
                 <RadzenBreadCrumb>
                     <RadzenBreadCrumbItem Path="@BreadCrumbHelper.GetProjectUrl(Request)" Text="Project" />
                     <RadzenBreadCrumbItem Path="@BreadCrumbHelper.GetRequestUrl(Request)" Text="@BreadCrumbHelper.GetRequestText(Request)" />
-                    <RadzenBreadCrumbItem Text="Test Case" />
+                    <RadzenBreadCrumbItem Text="@TestCase.Title" />
                 </RadzenBreadCrumb>
             </div>
             <div class="col-auto d-flex">
+                <RadzenButton Icon="play_arrow"
+                              Text="Start test"
+                              ButtonStyle="ButtonStyle.Success"
+                              Size="ButtonSize.Small"
+                              Click="OpenTestCaseTestingDialog"
+                              class="me-2" />
+
                 <RadzenButton Icon="save"
                               Text="Save"
                               ButtonStyle="ButtonStyle.Primary"
@@ -25,6 +31,7 @@
                               Click="HandleTestCaseUpdate"
                               MouseEnter="@(args => ShowSaveTestCaseButtonTooltip(args) )"
                               class="me-2" />
+
                 <RadzenButton Icon="delete"
                               Text="Delete"
                               ButtonStyle="ButtonStyle.Danger"
@@ -37,20 +44,12 @@
 
     <div class="container">
         <div class="row d-flex justify-content-between">
-            <div class="col-7 pb-2 right-divider">
+            <div class="col-6 pb-2 right-divider">
                 <TestCaseDetailsPage TestCase="TestCase" />
             </div>
 
-            <div class="col-5 pb-2">
-                <p @onclick="ToggleContent" style="cursor: pointer; color: blue; text-decoration: underline;">Click to toggle content</p>
-
-                @if (isContentVisible)
-                {
-                    <div>
-                        <p>Here is some HTML content that can be toggled.</p>
-                        <button class="btn btn-secondary">Button inside toggled content</button>
-                    </div>
-                }
+            <div class="col-6 pb-2">
+                <TestCaseTestingDetails TestCase="TestCase" />
             </div>
         </div>
     </div>
@@ -65,6 +64,9 @@
 
     [Parameter]
     public EventCallback OnTestCaseUpdated { get; set; }
+
+    [Inject]
+    public DialogService DialogService { get; set; }
 
     public TestRequest Request { get; set; }
 
@@ -101,22 +103,27 @@
         }
     }
 
+    public async Task OpenTestCaseTestingDialog()
+    {
+        await DialogService.OpenAsync<TestCaseTestingDialog>(
+            "Testing",
+            new Dictionary<string, object>() { { "TestCaseId", TestCaseId } },
+            new DialogOptions() { Width = "700px", Height = "630px", Resizable = false, Draggable = true }
+        );
+    }
+
+    private void ShowStartTestButtonTooltip(ElementReference elementReference, TooltipOptions options = null)
+                    => TooltipService.Open(elementReference, "Open the menu to start the test for this test case", options);
+
     private void ShowSaveTestCaseButtonTooltip(ElementReference elementReference, TooltipOptions options = null)
                     => TooltipService.Open(elementReference, "Save the changes made in this request", options);
 
     private void ShowDeleteTestCaseButtonTooltip(ElementReference elementReference, TooltipOptions options = null)
                     => TooltipService.Open(elementReference, "Delete this entire request", options);
-
-    private bool isContentVisible = false;
-
-    private void ToggleContent(MouseEventArgs e)
-    {
-        isContentVisible = !isContentVisible;
-    }
 }
 
 <style>
     .right-divider {
-        border-right: 1px solid #4F4F50;
+        border-right: 1px solid #ced4da;
     }
 </style>

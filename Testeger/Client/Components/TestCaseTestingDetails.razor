@@ -1,0 +1,43 @@
+﻿<div class="accordion" id="accordionExample">
+    <div class="accordion-item">
+        <h5 class="accordion-header" style="height: 40px;">
+            <button class="accordion-button" style="height: 40px;" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                Testing Details
+            </button>
+        </h5>
+        <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#accordionExample">
+            <div class="accordion-body">
+                <div class="container-fluid p-1">
+
+                    <div class="row mb-2">
+                        <div class="col-7">
+                            <RadzenLabel Text="Expected Result" />
+                            <RadzenTextArea @bind-Value="TestCase.Details.ExpectedResult" Style="width:100%; height: 100px; resize: none;" />
+                        </div>
+                        <div class="col-5">
+                            <RadzenLabel Text="Environment" />
+                            <RadzenTextBox @bind-Value="TestCase.Details.Environment" Style="width:100%;" />
+                        </div>
+                    </div>
+
+                    <div class="row my-2 top-divider">
+                        <div class="col-12">
+                            <small><i>Tests results will be shown here after the test is done.</i></small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public TestCase TestCase { get; set; }
+}
+
+<style>
+    .top-divider {
+        border-top: 1px solid #ced4da;
+    }
+</style>
