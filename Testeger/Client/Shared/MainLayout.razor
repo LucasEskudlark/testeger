@@ -1,4 +1,7 @@
 ﻿@inherits LayoutComponentBase
+@inject ThemeService ThemeService
+@inject NavigationManager NavigationManager
+
 <RadzenDialog />
 <RadzenTooltip />
 
@@ -9,3 +12,10 @@
         </article>
     </main>
 </div>
+
+@code {
+    protected override void OnInitialized()
+    {
+        //ThemeService.SetDefaultTheme(NavigationManager);
+    }
+}

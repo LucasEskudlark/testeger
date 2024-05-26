@@ -1,5 +1,8 @@
 ﻿@inherits LayoutComponentBase
 @inject ProjectService ProjectService
+@inject ThemeService ThemeService
+@inject NavigationManager NavigationManager
+
 <RadzenDialog />
 <RadzenTooltip />
 
@@ -42,6 +45,7 @@
     protected override void OnInitialized()
     {
         ProjectService.OnChange += StateHasChanged;
+        //ThemeService.SetDefaultThemeIfNotSet(NavigationManager);
     }
 
     public void Dispose()
