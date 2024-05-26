@@ -17,7 +17,7 @@
                             @bind-Value="TestCase.Status" Style="width:100%;"
                             MouseEnter="@(args => ShowStatusTooltip(args) )" />
         </div>
-        <div class="col-3">
+        <div class="col-4">
             <RadzenLabel Text="Need Correction?" />
             <RadzenTextBox Disabled="true" @bind-Value="NeedCorrectionString" Style="width:100%;" />
         </div>
@@ -39,7 +39,7 @@
     </div>
 
     <div class="row my-2">
-        <div class="col-2">
+        <div class="col-3">
             <RadzenLabel Text="Created by" />
             <RadzenTextBox Disabled="true" @bind-Value="TestCase.CreatedBy" Style="width:100%;" />
         </div>
@@ -58,8 +58,6 @@
                               DateFormat="dd/MM/yyyy" MouseEnter="@(args => ShowCompletedDateTooltip(args) )" />
         </div>
     </div>
-
-    <RadzenButton Icon="play_arrow" Text="Start test" ButtonStyle="ButtonStyle.Success" Size="ButtonSize.Small" />
 </div>
 
 @code {
