@@ -21,14 +21,14 @@
                 <RadzenButton Icon="save"
                               Text="Save"
                               ButtonStyle="ButtonStyle.Primary"
-                              Size="ButtonSize.Medium"
+                              Size="ButtonSize.Small"
                               Click="HandleTestCaseUpdate"
                               MouseEnter="@(args => ShowSaveTestCaseButtonTooltip(args) )"
                               class="me-2" />
                 <RadzenButton Icon="delete"
                               Text="Delete"
                               ButtonStyle="ButtonStyle.Danger"
-                              Size="ButtonSize.Medium"
+                              Size="ButtonSize.Small"
                               Click="HandleTestCaseDeletion"
                               MouseEnter="@(args => ShowDeleteTestCaseButtonTooltip(args) )" />
             </div>
@@ -42,6 +42,15 @@
             </div>
 
             <div class="col-5 pb-2">
+                <p @onclick="ToggleContent" style="cursor: pointer; color: blue; text-decoration: underline;">Click to toggle content</p>
+
+                @if (isContentVisible)
+                {
+                    <div>
+                        <p>Here is some HTML content that can be toggled.</p>
+                        <button class="btn btn-secondary">Button inside toggled content</button>
+                    </div>
+                }
             </div>
         </div>
     </div>
@@ -97,6 +106,13 @@
 
     private void ShowDeleteTestCaseButtonTooltip(ElementReference elementReference, TooltipOptions options = null)
                     => TooltipService.Open(elementReference, "Delete this entire request", options);
+
+    private bool isContentVisible = false;
+
+    private void ToggleContent(MouseEventArgs e)
+    {
+        isContentVisible = !isContentVisible;
+    }
 }
 
 <style>

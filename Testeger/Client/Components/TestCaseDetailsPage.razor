@@ -4,13 +4,22 @@
 
 <div class="container-fluid py-2 px-0">
     <div class="row my-2">
-        <div class="col-7">
+        <div class="col-8">
             <RadzenLabel Text="Title" />
             <RadzenTextBox @bind-Value="TestCase.Title" Style="width:100%;" />
         </div>
+    </div
+
+    <div class="row my-2">
         <div class="col-3">
-            <RadzenLabel Text="Environment" />
-            <RadzenTextBox @bind-Value="TestCase.Details.Environment" Style="width:100%;" />
+            <RadzenLabel Text="Status" />
+            <RadzenDropDown Disabled="true" Data="@Enum.GetValues(typeof(TestCaseStatus))"
+                            @bind-Value="TestCase.Status" Style="width:100%;"
+                            MouseEnter="@(args => ShowStatusTooltip(args) )" />
+        </div>
+        <div class="col-3">
+            <RadzenLabel Text="Need Correction?" />
+            <RadzenTextBox Disabled="true" @bind-Value="NeedCorrectionString" Style="width:100%;" />
         </div>
     </div>
 
@@ -31,21 +40,9 @@
 
     <div class="row my-2">
         <div class="col-2">
-            <RadzenLabel Text="Status" />
-            <RadzenDropDown Disabled="true" Data="@Enum.GetValues(typeof(TestCaseStatus))"
-                            @bind-Value="TestCase.Status" Style="width:100%;"
-                            MouseEnter="@(args => ShowStatusTooltip(args) )" />
-        </div>
-        <div class="col-2">
-            <RadzenLabel Text="Need Correction?" />
-            <RadzenTextBox Disabled="true" @bind-Value="NeedCorrectionString" Style="width:100%;" />
-        </div>
-
-        <div class="col-2">
             <RadzenLabel Text="Created by" />
             <RadzenTextBox Disabled="true" @bind-Value="TestCase.CreatedBy" Style="width:100%;" />
         </div>
-
         <div class="col-3">
             <RadzenLabel Text="Created Date" />
             <RadzenDatePicker Disabled="true"
