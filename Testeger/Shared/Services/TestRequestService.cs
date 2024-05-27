@@ -66,8 +66,12 @@ public class TestRequestService
     {
         testRequest.Number = await GetNextTestRequestNumber(testRequest.ProjectId);
 
+        Console.WriteLine($"Adding Test Request: {JsonConvert.SerializeObject(testRequest)}");
+
         var testRequests = await GetAllTestRequests();
-        
+
+        Console.WriteLine($"Existing requests: {JsonConvert.SerializeObject(testRequests)}");
+
         if (testRequests.Contains(testRequest))
         {
             testRequests.Remove(testRequest);

@@ -1,0 +1,125 @@
+﻿@inject ProjectService ProjectService
+@inject DialogService DialogService
+
+<EditForm Model="newProject" OnValidSubmit="NotifyParent">
+    <DataAnnotationsValidator />
+
+    <div class="row mb-4">
+        <div class="col-9">
+            <label for="name" class="form-label mb-1 label">Name</label>
+            <InputText id="name"
+                       class="form-control"
+                       placeholder="Enter the project name"
+                       @bind-Value="newProject.ProjectName" />
+            <ValidationMessage For="@(() => newProject.ProjectName)" />
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <div class="col-12 d-flex justify-content-between align-items-center">
+            <div class="d-flex flex-column">
+                <h6 class="label">Project Members</h6>
+                <small style="font-size: 11px;">When creating, you will be automatically assigned the role of project manager.</small>
+            </div>
+
+            <RadzenButton Icon="add" Text="Add member" Size="ButtonSize.Small" ButtonStyle="ButtonStyle.Primary" Click="AddMember"></RadzenButton>
+        </div>
+    </div>
+
+    <div class="row mb-2 d-flex flex-column justify-content-start" style="min-height: 250px;">
+        @foreach (var member in newProject.Members)
+        {
+            <div class="row mb-2">
+                <div class="col-8 mb-0 pb-0">
+                    <label class="form-label mb-1 label">E-mail</label>
+                    <InputText @bind-Value="member.Email" placeholder="E-mail" class="form-control" />
+                    <ValidationMessage For="@(() => member.Email)" />
+
+
+                </div>
+                <div class="col-4 m-0 pb-0">
+                    <label class="form-label mb-1 label">Role</label>
+                    <InputSelect @bind-Value="member.Role" class="form-control">
+                        @foreach (var role in Enum.GetValues<RoleType>())
+                        {
+                            if (CanDisplayRole(role))
+                            {
+                                <option value="@role">@role</option>
+                            }
+                        }
+                    </InputSelect>
+                    <ValidationMessage For="@(() => member.Role)" />
+                </div>
+            </div>
+
+        }
+    </div>
+
+    <div class="row">
+        <div class="col-4">
+            <RadzenButton ButtonType="ButtonType.Submit"
+                          Text="Create project"
+                          Size="ButtonSize.Medium"
+                          ButtonStyle="ButtonStyle.Primary" />
+        </div>
+    </div>
+
+</EditForm>
+@code {
+    [Parameter]
+    public EventCallback<Project> OnFormSubmitted { get; set; }
+
+    private ProjectCreationViewModel newProject = new();
+
+    //private bool IsAbleToProjectCreation => ProjectService.GetProjectCount() < 2;
+
+    private async Task NotifyParent()
+    {
+        var projectEntity = GetProject();
+        DialogService.Close(true);
+        await OnFormSubmitted.InvokeAsync(projectEntity);
+        newProject = new();
+    }
+
+    private Project GetProject()
+    {
+        return new Project
+            {
+                Id = Guid.NewGuid().ToString(),
+                Name = newProject.ProjectName,
+                Members = GetMembers()
+            };
+    }
+
+    private List<User> GetMembers()
+    {
+        var members = new List<User>();
+
+        foreach (UserViewModel memberVM in newProject.Members)
+        {
+            var user = new User
+            {
+                Email = memberVM.Email,
+                Role = memberVM.Role
+            };
+
+            members.Add(user);
+        }
+
+        return members;
+    }
+
+    private void AddMember()
+    {
+        newProject.Members.Add(new UserViewModel());
+    }
+
+    private bool CanDisplayRole(RoleType role) => role != RoleType.ProjectManager;
+}
+
+<style>
+    .label {
+        font-weight: 600 !important;
+        color: #333 !important;
+    }
+</style>

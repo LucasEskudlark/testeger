@@ -7,56 +7,65 @@ namespace Testeger.Shared.Services;
 
 public class ProjectService
 {
-    private readonly ILocalStorageService _localStorage;
-    private List<Project> _projects = new();
-    private const string ProjectsKey = "projects";
+    private readonly LocalStorageService _localStorage;
+    private const string StorageKey = "projects";
     public event Action? OnChange;
+    public event Action? OnProjectAdded;
+    public event Action? OnProjectDeleted;
 
-    public ProjectService(ILocalStorageService localStorage)
+    public ProjectService(LocalStorageService localStorage)
     {
         _localStorage = localStorage;
-        LoadProjects();
     }
 
-    public IEnumerable<Project> GetProjects() => _projects;
-    public int GetProjectCount() => _projects.Count;
-
-    public void AddProject(Project project)
+    public async Task<List<Project>> GetAllProjects()
     {
-        project.Id = Guid.NewGuid().ToString();
-        _projects.Add(project);
-        SaveProjects();
-        NotifyStateChanged();
+        var projects = await _localStorage.ReadFromStorage<List<Project>>(StorageKey);
+        return projects ?? new List<Project>();
+    }
+    
+    public async Task<int> GetProjectCount()
+    {
+        var projects = await GetAllProjects();
+        return projects.Count;
     }
 
-    public void DeleteProject(string id)
+    public async Task AddProject(Project project)
     {
-        var project = GetProjectById(id);
+        var projects = await GetAllProjects();
 
-        _projects.Remove(project);
-        SaveProjects();
-        NotifyStateChanged();
-    }
-
-    public Project GetProjectById(string id)
-    {
-        var project = _projects.FirstOrDefault(p => p.Id == id) ?? throw new ProjectNotFoundException($"Project with id {id} was not found.");
-        return project;
-    }
-
-    private async void LoadProjects()
-    {
-        var projectsJson = await _localStorage.GetItemAsync<string>(ProjectsKey);
-        if (!string.IsNullOrEmpty(projectsJson))
+        if (projects.Contains(project))
         {
-            _projects = JsonSerializer.Deserialize<List<Project>>(projectsJson) ?? new List<Project>();
+            projects.Remove(project);
         }
+        projects.Add(project);
+
+        await _localStorage.WriteToStorage(StorageKey, projects);
+        OnProjectAdded?.Invoke();
+        NotifyStateChanged();
     }
 
-    private async void SaveProjects()
+    public async Task RemoveProject(Project project)
     {
-        var projectsJson = JsonSerializer.Serialize(_projects);
-        await _localStorage.SetItemAsync(ProjectsKey, projectsJson);
+        var projects = await GetAllProjects();
+
+        var projectToRemove = projects.Find(p => p.Id == project.Id);
+
+        if (projectToRemove != null)
+        {
+            projects.Remove(projectToRemove);
+        }
+
+        await _localStorage.WriteToStorage(StorageKey, projects);
+        OnProjectDeleted?.Invoke();
+        NotifyStateChanged();
+    }
+
+    public async Task<Project> GetProjectById(string id)
+    {
+        var projects = await GetAllProjects();
+
+        return projects.Find(p => p.Id == id) ?? throw new ProjectNotFoundException($"Project with id {id} was not found.");
     }
 
     private void NotifyStateChanged() => OnChange?.Invoke();
