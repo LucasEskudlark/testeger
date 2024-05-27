@@ -5,8 +5,8 @@
     <Template Context="TestCase">
         <RadzenCard Style="width: 100%; max-height: 50px !important; margin: 0; padding: 0 !important;">
             <RadzenRow Gap="0" Style="padding: 0;">
-                <RadzenColumn Size="4" SizeLG="4" Class="d-flex flex-column justify-content-center rz-background-color-secondary-lighter ps-2" Style="max-height: 50px;">
-                    <RadzenText TextStyle="TextStyle.Subtitle2" class="rz-color-primary" TagName="TagName.H5">@(TestCase.Title)</RadzenText>
+                <RadzenColumn Size="4" SizeLG="4" class="@GetTitleBackgroundColor(TestCase.Status)" Style="max-height: 50px;">
+                    <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H5" class="@GetTitleTextColor(TestCase.Status)">@(TestCase.Title)</RadzenText>
                 </RadzenColumn>
                 <RadzenColumn Size="6" SizeLG="6" Class="rz-p-2" Style="max-height: 50px;">
                     <RadzenRow Gap="5">
@@ -43,6 +43,32 @@
     public void OpenTestCaseDetails(TestCase testCase)
     {
         NavigationManager.NavigateTo($"/test-case/{testCase.Id}");
+    }
+
+    private string GetTitleTextColor(TestCaseStatus status)
+    {
+        switch (status)
+        {
+            case TestCaseStatus.Failed:
+                return "rz-color-danger-darker";
+            case TestCaseStatus.Completed:
+                return "rz-color-success-darker";
+            default:
+                return "rz-color-secondary-darker";
+        }
+    }
+
+    private string GetTitleBackgroundColor(TestCaseStatus status)
+    {
+        switch (status)
+        {
+            case TestCaseStatus.Failed:
+                return "d-flex flex-column justify-content-center rz-background-color-danger-lighter ps-2";
+            case TestCaseStatus.Completed:
+                return "d-flex flex-column justify-content-center rz-background-color-success-lighter ps-2";
+            default:
+                return "d-flex flex-column justify-content-center rz-background-color-secondary-lighter ps-2";
+        }
     }
 }
 

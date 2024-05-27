@@ -63,11 +63,6 @@
         NavigationManager.NavigateTo($"/test-request/{testRequest.Id}");
     }
 
-    public RequestStatus GetStatus()
-    {
-        return Status;
-    }
-
     private string GetTitleTextColor(RequestStatus status)
     {
         switch (status)
@@ -135,8 +130,6 @@
                 return "rz-p-4 rz-text-wrap rz-background-color-base-500";
         }
     }
-
-    
 }
 
 <style>
