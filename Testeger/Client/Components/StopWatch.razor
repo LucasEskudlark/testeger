@@ -1,0 +1,93 @@
+﻿@inject TestCaseService TestCaseService
+@using System.Timers
+
+@code {
+    [Parameter]
+    public TestCase TestCase { get; set; }
+
+    [Parameter]
+    public EventCallback OnStopwatchStopped { get; set; }
+
+    private bool IsStartButtonDisabled = false;
+    private bool IsStopButtonDisabled = true;
+
+    protected override void OnInitialized()
+    {
+        timer = new Timer(1000);
+        timer.Elapsed += (sender, e) => UpdateElapsedTime();
+    }
+
+    private Timer timer;
+    private TimeSpan elapsedTime => TestCase.ElapsedTime;
+
+    private void StartStopwatch()
+    {
+        timer.Start();
+        IsStartButtonDisabled = true;
+        IsStopButtonDisabled = false;
+    }
+
+    private async void StopStopwatch()
+    {
+        timer.Stop();
+        IsStartButtonDisabled = false;
+        IsStopButtonDisabled = true;
+        await SaveTime();
+        await OnStopwatchStopped.InvokeAsync();
+    }
+
+    private async Task SaveTime()
+    {
+        TestCase.SavedTimes.Add(elapsedTime.ToString(@"hh\:mm\:ss"));
+        await SaveTask();
+    }
+
+    private void UpdateElapsedTime()
+    {
+        TestCase.ElapsedTime = TestCase.ElapsedTime.Add(TimeSpan.FromSeconds(1));
+        InvokeAsync(StateHasChanged);
+    }
+
+    private void ClearSavedTimes()
+    {
+        TestCase.SavedTimes.Clear();
+    }
+
+    private async Task SaveTask()
+    {
+        TestCaseService.UpdateTestCase(TestCase);
+    }
+}
+
+@if (TestCase is not null)
+{
+    <div class="container card" style="height: 120px; width: 250px;">
+        <div class="row mt-2">
+            <div class="col-12 d-flex justify-content-center align-items-center">
+                <h6 class="m-0">Test StopWatch</h6>
+            </div>
+        </div>
+        <div class="row p-2">
+            <div class="col-12 d-flex justify-content-center align-items-center m-0">
+                <h2 class="m-0">@elapsedTime.ToString(@"hh\:mm\:ss")</h2>
+            </div>
+        </div>
+        <div class="row mb-2 d-flex justify-content-center align-items-center">
+            <div class="col-12 d-flex justify-content-evenly">
+                <RadzenButton Icon="play_arrow"
+                              Text="Iniciar"
+                              ButtonStyle="ButtonStyle.Success"
+                              Size="ButtonSize.Small"
+                              Click="StartStopwatch"
+                              Disabled="IsStartButtonDisabled" />
+                <RadzenButton Icon="stop"
+                              Text="Parar"
+                              ButtonStyle="ButtonStyle.Danger"
+                              Size="ButtonSize.Small"
+                              Click="StopStopwatch"
+                              Disabled="IsStopButtonDisabled" />
+            </div>
+        </div>
+    </div>
+}
+

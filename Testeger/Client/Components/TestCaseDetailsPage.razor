@@ -1,89 +1,75 @@
 ﻿@inject TooltipService TooltipService
-@inject TestCaseService TestCaseService
 @inject DialogService DialogService
 
-<div class="row d-flex justify-content-between">
-    <div class="col-6">
-        <div class="container-fluid py-2 px-0">
-            <div class="row">
-                <div class="col-md-8">
-                    <RadzenLabel Text="Title" />
-                    <RadzenTextBox @bind-Value="TestCase.Title" Style="width:100%;" />
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-12">
-                    <RadzenLabel Text="Description" />
-                    <RadzenTextArea @bind-Value="TestCase.Details.Description" Style="width:100%; height: 200px; resize: none;" />
-                </div>
-            </div>
+
+<div class="container-fluid py-2 px-0">
+    <div class="row my-2">
+        <div class="col-8">
+            <RadzenLabel Text="Title" Style="@LabelStyle" />
+            <RadzenTextBox @bind-Value="TestCase.Title" Style="width:100%;" />
+        </div>
+    </div
+
+    <div class="row my-2">
+        <div class="col-3">
+            <RadzenLabel Text="Status" Style="@LabelStyle" />
+            <RadzenDropDown Disabled="true" Data="@Enum.GetValues(typeof(TestCaseStatus))"
+                            @bind-Value="TestCase.Status" Style="width:100%;"
+                            MouseEnter="@(args => ShowStatusTooltip(args) )" />
+        </div>
+        <div class="col-4">
+            <RadzenLabel Text="Need Correction?" Style="@LabelStyle" />
+            <RadzenTextBox Disabled="true" @bind-Value="NeedCorrectionString" Style="width:100%;" />
+        </div>
+
+        <div class="col-3">
+            <RadzenLabel Text="Created by" Style="@LabelStyle" />
+            <RadzenTextBox Disabled="true" @bind-Value="TestCase.CreatedBy" Style="width:100%;" />
         </div>
     </div>
-    <div class="col-6">
-        <div class="container-fluid py-2 px-0">
-            <div class="row">
-                <div class="col-6">
-                    <RadzenLabel Text="Pre Conditions" />
-                    <RadzenTextArea @bind-Value="TestCase.Details.PreConditions" Style="width: 100%; height: 260px; resize: none;" />
-                </div>
-                <div class="col-6">
-                    <RadzenLabel Text="Steps" />
-                    <RadzenTextArea @bind-Value="TestCase.Details.Steps" Style="width: 100%; height: 260px; resize: none;" />
-                </div>
-            </div>
+
+    <div class="row my-2">
+        <div class="col-4">
+            <RadzenLabel Text="Description" Style="@LabelStyle" />
+            <RadzenTextArea @bind-Value="TestCase.Details.Description" Style="width:100%; height: 200px; resize: none;" />
+        </div>
+        <div class="col-4">
+            <RadzenLabel Text="Pre Conditions" Style="@LabelStyle" />
+            <RadzenTextArea @bind-Value="TestCase.Details.PreConditions" Style="width: 100%; height: 200px; resize: none;" />
+        </div>
+        <div class="col-4">
+            <RadzenLabel Text="Steps" Style="@LabelStyle" />
+            <RadzenTextArea @bind-Value="TestCase.Details.Steps" Style="width: 100%; height: 200px; resize: none;" />
         </div>
     </div>
-    <div class="col-12 pb-2 mb-3">
-        <div class="container-fluid py-1 px-0">
-            <div class="row d-flex justify-content-evenly">
-                <div class="col-2">
-                    <RadzenLabel Text="Status" />
-                    <RadzenDropDown Disabled="true" Data="@Enum.GetValues(typeof(TestCaseStatus))"
-                                    @bind-Value="TestCase.Status" Style="width:100%;"
-                                    MouseEnter="@(args => ShowStatusTooltip(args) )" />
-                </div>
-                <div class="col-2">
-                    <RadzenLabel Text="Need Correction?" />
-                    <RadzenTextBox Disabled="true" @bind-Value="NeedCorrectionString" Style="width:100%;" />
-                </div>
-                <div class="col-2">
-                    <RadzenLabel Text="Created Date" />
-                    <RadzenDatePicker Disabled="true"
-                                      @bind-Value="TestCase.CreatedDate"
+
+    <div class="row my-2 me-1">
+        <div class="col-3 pb-2">
+            <RadzenLabel Text="Created Date" Style="@LabelStyle" />
+            <RadzenDatePicker Disabled="true"
+                              @bind-Value="TestCase.CreatedDate"
+                              Style="width:100%;" Min="@(DateTime.Today)"
+                              DateFormat="dd/MM/yyyy" />
+        </div>
+        <div class="col-4 pb-2">
+            <RadzenLabel Text="Completed Date" Style="@LabelStyle"/>
+            <RadzenDatePicker Disabled="true"
+                              @bind-Value="TestCase.CompletedDate"
+                              Style="width:100%;" Min="@(DateTime.Today)"
+                              DateFormat="dd/MM/yyyy" MouseEnter="@(args => ShowCompletedDateTooltip(args) )" />
+        </div
+        <div class="col-5 test-schedule pb-2">
+            <div class="row d-flex flex-column align-items-center">
+                <div class="col-8 d-flex flex-column align-items-center">
+                    <RadzenLabel Text="Scheduled Date" Style="@LabelStyle"/>
+                    <RadzenDatePicker @bind-Value="TestCase.ScheduledDate"
+                                      Disabled="@(Request.Status != RequestStatus.ReadyForTesting)"
                                       Style="width:100%;" Min="@(DateTime.Today)"
-                                      DateFormat="dd/MM/yyyy" />
-                </div>
-                <div class="col-2">
-                    <RadzenLabel Text="Completed Date" />
-                    <RadzenDatePicker Disabled="true"
-                                      @bind-Value="TestCase.CompletedDate"
-                                      Style="width:100%;" Min="@(DateTime.Today)"
-                                      DateFormat="dd/MM/yyyy" MouseEnter="@(args => ShowCompletedDateTooltip(args) )" />
-                </div>
-                <div class="col-2">
-                    <RadzenLabel Text="Created by" />
-                    <RadzenTextBox Disabled="true" @bind-Value="TestCase.CreatedBy" Style="width:100%;" />
+                                      DateFormat="dd/MM/yyyy"
+                                      MouseEnter="@(args => ShowScheduledDateTooltip(args) )" />
                 </div>
             </div>
-        </div>
-    </div>
-    <div class="col-12 mb-4">
-        <div class="container-fluid py-1 px-0">
-            <div class="row">
-                <div class="col-2">
-                    <RadzenButton Icon="play_arrow" Text="Start test" ButtonStyle="ButtonStyle.Success" Size="ButtonSize.Small" />
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-12">
-        <div class="container-fluid py-1 px-0">
-            <div class="row">
-                <div class="col-12 d-flex justify-content-between">
-                    <RadzenButton Icon="save" Text="Save" ButtonStyle="ButtonStyle.Primary" Size="ButtonSize.Small" />
-                    <RadzenButton Icon="delete" Text="Delete" ButtonStyle="ButtonStyle.Danger" Size="ButtonSize.Small" Click="@(()=> HandleTestCaseDeletion(TestCase))"/>
-                </div>
-            </div>
+            
         </div>
     </div>
 </div>
@@ -93,7 +79,9 @@
     public TestCase TestCase { get; set; }
 
     [Parameter]
-    public EventCallback OnTestCaseDeleted { get; set; }
+    public TestRequest Request { get; set; }
+
+    private string LabelStyle = "font-weight: 600 !important; color: #333 !important;";
 
     private string NeedCorrectionString
     {
@@ -101,16 +89,19 @@
         set => TestCase.NeedCorrection = value.Equals("True", StringComparison.OrdinalIgnoreCase);
     }
 
-    private async Task HandleTestCaseDeletion(TestCase testCase)
-    {
-        await TestCaseService.RemoveTestCase(testCase);
-        DialogService.Close(true);
-        await OnTestCaseDeleted.InvokeAsync();
-        await InvokeAsync(StateHasChanged);
-    }
-
     private void ShowCompletedDateTooltip(ElementReference elementReference, TooltipOptions options = null) => TooltipService.Open(elementReference, "This date will be set when the test case is marked as Completed.", options);
 
     private void ShowStatusTooltip(ElementReference elementReference, TooltipOptions options = null) => TooltipService.Open(elementReference,
         "Automatically set", options);
+
+    private void ShowScheduledDateTooltip(ElementReference elementReference, TooltipOptions options = null)
+                    => TooltipService.Open(elementReference, "You can only set this date when the request is ready for testing. ", options);
 }
+
+<style>
+    .test-schedule
+    {
+        border-radius: 0.5rem;
+        background-color: var(--rz-warning-lighter)
+    }
+</style>

@@ -7,29 +7,23 @@ namespace Testeger.Shared.Services;
 
 public class TestCaseService
 {
-    private readonly ILocalStorageService _localStorage;
+    private readonly LocalStorageService _localStorageService;
     private const string StorageKey = "testCases";
 
     public event Action? OnChange;
     public event Action? OnTestCaseAdded;
     public event Action? OnTestCaseDeleted;
+    public event Action? OnTestCaseUpdated;
 
-    public TestCaseService(ILocalStorageService localStorage)
+    public TestCaseService(LocalStorageService localStorage)
     {
-        _localStorage = localStorage;
+        _localStorageService = localStorage;
     }
 
     public async Task<List<TestCase>> GetAllTestCases()
     {
-        var json = await _localStorage.GetItemAsStringAsync(StorageKey);
-
-        if (string.IsNullOrEmpty(json))
-        {
-            return new List<TestCase>();
-        }
-
-        var innerJson = JsonConvert.DeserializeObject<string>(json);
-        return JsonConvert.DeserializeObject<List<TestCase>>(innerJson) ?? new List<TestCase>();
+        var testRequests = await _localStorageService.ReadFromStorage<List<TestCase>>(StorageKey);
+        return testRequests ?? new List<TestCase>();
     }
 
     public async Task<TestCase> GetTestCaseById(string id)
@@ -56,8 +50,7 @@ public class TestCaseService
 
         testCases.Add(testCase);
 
-        var jsonString = JsonConvert.SerializeObject(testCases);
-        await _localStorage.SetItemAsync(StorageKey, jsonString);
+        await _localStorageService.WriteToStorage(StorageKey, testCases);
         OnTestCaseAdded?.Invoke();
         NotifyStateChanged();
     }
@@ -73,9 +66,24 @@ public class TestCaseService
             testCases.Remove(testCaseToRemove);
         }
 
-        var jsonString = JsonConvert.SerializeObject(testCases);
-        await _localStorage.SetItemAsync(StorageKey, jsonString);
+        await _localStorageService.WriteToStorage(StorageKey, testCases);
         OnTestCaseDeleted?.Invoke();
+        NotifyStateChanged();
+    }
+
+    public async Task UpdateTestCase(TestCase testCase)
+    {
+        var testCases = await GetAllTestCases();
+        var index = testCases.FindIndex(tr => tr.Id == testCase.Id);
+
+        if (index == -1)
+        {
+            throw new TestCaseNotFoundException($"Test Case with id {testCase.Id} was not found.");
+        }
+
+        testCases[index] = testCase;
+        await _localStorageService.WriteToStorage(StorageKey, testCases);
+        OnTestCaseUpdated?.Invoke();
         NotifyStateChanged();
     }
 

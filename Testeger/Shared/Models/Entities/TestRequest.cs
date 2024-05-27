@@ -20,7 +20,6 @@ public class TestRequest
     public User? AssignedTo { get; set; }
     public RequestStatus Status { get; set; }
     public PriorityLevel PriorityLevel { get; set; }
-    public DateTime? ScheduledDate { get; set; }
     public DateTime? DueDate { get; set; }
     public DateTime CreatedDate { get; set; }
     public DateTime? CompletedDate { get; set; }
