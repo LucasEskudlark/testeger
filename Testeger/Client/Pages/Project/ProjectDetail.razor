@@ -1,4 +1,5 @@
 ﻿@page "/project/{Id}"
+@using Newtonsoft.Json
 @layout DefaultLayout
 @inject ProjectService ProjectService
 @inject TestRequestService TestRequestService
@@ -33,18 +34,26 @@
     private Project? project;
     private Dictionary<RequestStatus, List<TestRequest>> testRequestsByStatus = new();
 
-    protected override void OnParametersSet()
+    protected override async Task OnParametersSetAsync()
     {
-        project = ProjectService.GetProjectById(Id);
+        if (project == null || project.Id != Id)  // Check if project is null or the Id has changed
+        {
+            project = await ProjectService.GetProjectById(Id);
+            testRequestsByStatus = await TestRequestService.GetTestRequestsByProjectIdGroupedByStatus(Id);
+            StateHasChanged(); // This will signal Blazor to re-render the component
+        }
     }
 
     protected override async Task OnInitializedAsync()
     {
+        project = await ProjectService.GetProjectById(Id);
         TestRequestService.OnChange += StateHasChanged;
         TestRequestService.OnTestRequestAdded += UpdateTestRequests;
         TestRequestService.OnTestRequestDeleted += UpdateTestRequests;
         TestRequestService.OnTestRequestUpdated += UpdateTestRequests;
         testRequestsByStatus = await TestRequestService.GetTestRequestsByProjectIdGroupedByStatus(Id);
+
+        Console.WriteLine($"Existing requests for Projects {Id}: {JsonConvert.SerializeObject(testRequestsByStatus)}");
     }
 
     private string GetStatusName(RequestStatus status)
@@ -71,5 +80,13 @@
     {
         testRequestsByStatus = await TestRequestService.GetTestRequestsByProjectIdGroupedByStatus(Id);
         StateHasChanged();
+    }
+
+    public void Dispose()
+    {
+        TestRequestService.OnChange -= StateHasChanged;
+        TestRequestService.OnTestRequestAdded -= UpdateTestRequests;
+        TestRequestService.OnTestRequestDeleted -= UpdateTestRequests;
+        TestRequestService.OnTestRequestUpdated -= UpdateTestRequests;
     }
 }

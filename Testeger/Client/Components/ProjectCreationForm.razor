@@ -1,7 +1,7 @@
 ﻿@inject ProjectService ProjectService
+@inject DialogService DialogService
 
-
-<EditForm Model="newProject">
+<EditForm Model="newProject" OnValidSubmit="NotifyParent">
     <DataAnnotationsValidator />
 
     <div class="row mb-4">
@@ -57,7 +57,10 @@
 
     <div class="row">
         <div class="col-4">
-            <RadzenButton ButtonType="ButtonType.Submit" Text="Create project" Size="ButtonSize.Medium" ButtonStyle="ButtonStyle.Primary"></RadzenButton>
+            <RadzenButton ButtonType="ButtonType.Submit"
+                          Text="Create project"
+                          Size="ButtonSize.Medium"
+                          ButtonStyle="ButtonStyle.Primary" />
         </div>
     </div>
 
@@ -68,12 +71,12 @@
 
     private ProjectCreationViewModel newProject = new();
 
-    private bool IsAbleToProjectCreation => ProjectService.GetProjectCount() < 2;
+    //private bool IsAbleToProjectCreation => ProjectService.GetProjectCount() < 2;
 
     private async Task NotifyParent()
     {
         var projectEntity = GetProject();
-        //DialogService.Close(true);
+        DialogService.Close(true);
         await OnFormSubmitted.InvokeAsync(projectEntity);
         newProject = new();
     }
@@ -82,6 +85,7 @@
     {
         return new Project
             {
+                Id = Guid.NewGuid().ToString(),
                 Name = newProject.ProjectName,
                 Members = GetMembers()
             };

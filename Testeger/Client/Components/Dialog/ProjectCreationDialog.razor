@@ -1,15 +1,22 @@
 ﻿@page "/createeee-project"
 @inject DialogService DialogService 
-
+@inject ProjectService ProjectService
+@inject NavigationManager NavigationManager
 
 <div class="container-fluid">
     <ProjectCreationForm OnFormSubmitted="HandleSubmission"/>
 </div>
 
 @code {
-    public void HandleSubmission()
+    [Parameter]
+    public EventCallback OnProjectAdded { get; set; }
+
+    public async Task HandleSubmission(Project project)
     {
-        
+        await ProjectService.AddProject(project);
+        await OnProjectAdded.InvokeAsync();
+        await InvokeAsync(StateHasChanged);
+        NavigationManager.NavigateTo($"/project/{project.Id}");
     }
 }
 
