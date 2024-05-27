@@ -120,9 +120,11 @@
         {
             TestCase.Status = TestCaseStatus.Failed;
             TestCase.NeedCorrection = true;
+            return;
         }
 
         TestCase.Status = TestCaseStatus.Completed;
+        TestCase.CompletedDate = DateTime.Now;
     }
 
     private TimeSpan CalculateTotalTime()
