@@ -24,4 +24,5 @@ public class TestCase
     public bool IsCompleted { get; set; }
     public TimeSpan ElapsedTime { get; set; }
     public TimeSpan AmountOfTimeSpentToTest { get; set; }
+    public DateTime? ScheduledDate { get; set; }
 }

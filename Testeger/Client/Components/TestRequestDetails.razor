@@ -60,16 +60,6 @@
                                   DateFormat="dd/MM/yyyy" MouseEnter="@(args => ShowCompletedDateTooltip(args) )" />
             </div>
         </div>
-        <div class="row mt-4 p-2 ps-0 d-flex justify-content-center test-schedule">
-            <div class="col-md-4 d-flex flex-column align-items-center">
-                <RadzenLabel Text="Scheduled Date" Style="@GetScheduleLabelStyleBasedOnStatus()" />
-                <RadzenDatePicker @bind-Value="Request.ScheduledDate"
-                                    Disabled="@(StatusAsString != "Ready For Testing")"
-                                    Style="width:100%;" Min="@(DateTime.Today)"
-                                    DateFormat="dd/MM/yyyy"
-                                    MouseEnter="@(args => ShowScheduledDateTooltip(args) )" />
-            </div>
-        </div>
     </div>
 </RadzenContent>
 
@@ -78,12 +68,6 @@
     public TestRequest Request { get; set; }
 
     private string LabelStyle = "font-weight: 600 !important; color: #333 !important;";
-    private string DisabledLabelStyle = "font-weight: 600 !important; color: #808080 !important;";
-
-    private string GetScheduleLabelStyleBasedOnStatus()
-    {
-        return StatusAsString == "Ready For Testing" ? LabelStyle : DisabledLabelStyle;
-    }
 
     // Temporary
     private List<string> names = new()
@@ -110,11 +94,3 @@
     private void ShowScheduledDateTooltip(ElementReference elementReference, TooltipOptions options = null)
                     => TooltipService.Open(elementReference, "You can only set this date when the request is ready for testing. ", options);
 }
-
-<style>
-    .test-schedule
-    {
-        border-radius: 0.5rem;
-        background-color: var(--rz-warning-lighter)
-    }
-</style>
