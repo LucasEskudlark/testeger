@@ -23,12 +23,21 @@
                             <RadzenText TextStyle="TextStyle.Caption">@(Request.Status)</RadzenText>
                         </RadzenColumn>
                         <RadzenColumn Size="3" SizeMD="3" SizeLG="3" Class="d-flex flex-column justify-content-center">
-                            <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H5" Class="rz-mb-0">Assigned To</RadzenText>
-                            <RadzenText TextStyle="TextStyle.Caption">@(Request.CreatorId)</RadzenText>
-                        </RadzenColumn>
-                        <RadzenColumn Size="3" SizeMD="3" SizeLG="3" Class="d-flex flex-column justify-content-center">
                             <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H5" Class="rz-mb-0">Due Date</RadzenText>
                             <RadzenText TextStyle="TextStyle.Caption">@(Request.DueDate?.ToString("dd/MM/yyyy"))</RadzenText>
+                            
+                            
+                        </RadzenColumn>
+                        <RadzenColumn Size="3" SizeMD="3" SizeLG="3" Class="d-flex flex-column justify-content-center">
+                            <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H5" Class="rz-mb-0">Assigned To</RadzenText>
+                            @if (Request.AssignedTo.Name is null)
+                            {
+                                <RadzenText TextStyle="TextStyle.Caption">Not assigned yet</RadzenText>
+                            }
+                            else
+                            {
+                                <RadzenText TextStyle="TextStyle.Caption">@(Request.AssignedTo.Name)</RadzenText>
+                            }
                         </RadzenColumn>
                     </RadzenRow>
                 </RadzenColumn>
