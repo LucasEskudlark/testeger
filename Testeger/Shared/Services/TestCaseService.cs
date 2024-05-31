@@ -39,6 +39,12 @@ public class TestCaseService
         return testCases.Where(tc => tc.RequestId == requestId).ToList();
     }
 
+    public async Task<List<TestCase>> GetTestCasesByProjectId(string projectId)
+    {
+        var testCases = await GetAllTestCases();
+        return testCases.Where(tc => tc.ProjectId == projectId).ToList();
+    }
+
     public async Task AddTestCase(TestCase testCase)
     {
         var testCases = await GetAllTestCases();
