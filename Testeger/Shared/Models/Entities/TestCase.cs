@@ -12,6 +12,7 @@ public class TestCase
     }
     public string? Id { get; set; }
     public string? RequestId { get; set; }
+    public string? ProjectId { get; set; }
     public string? CreatedBy { get; set; }
     public string? Title { get; set; }
     public TestCaseDetails? Details { get; set; }
