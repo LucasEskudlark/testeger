@@ -1,14 +1,15 @@
 ﻿@page "/project/{Id}"
-@using Newtonsoft.Json
 @layout DefaultLayout
 @inject ProjectService ProjectService
 @inject TestRequestService TestRequestService
+@inject NavigationManager NavigationManager
 
 <div class="row mb-3">
     <div class="col-6">
         <h5>Project: @project?.Name</h5>
     </div>
     <div class="col-6 d-flex justify-content-end">
+        <RadzenButton Click="NavigateToProjectMetricsPage" Text="Project Metrics" ButtonStyle="ButtonStyle.Warning" class="me-2"/>
         <RadzenButton Click="@OpenTestRequestCreationDialog" Icon="add_circle_outline" Text="Add request" ButtonStyle="ButtonStyle.Primary" />
     </div>
 </div>
@@ -36,11 +37,11 @@
 
     protected override async Task OnParametersSetAsync()
     {
-        if (project == null || project.Id != Id)  // Check if project is null or the Id has changed
+        if (project == null || project.Id != Id) 
         {
             project = await ProjectService.GetProjectById(Id);
             testRequestsByStatus = await TestRequestService.GetTestRequestsByProjectIdGroupedByStatus(Id);
-            StateHasChanged(); // This will signal Blazor to re-render the component
+            StateHasChanged();
         }
     }
 
@@ -52,8 +53,6 @@
         TestRequestService.OnTestRequestDeleted += UpdateTestRequests;
         TestRequestService.OnTestRequestUpdated += UpdateTestRequests;
         testRequestsByStatus = await TestRequestService.GetTestRequestsByProjectIdGroupedByStatus(Id);
-
-        Console.WriteLine($"Existing requests for Projects {Id}: {JsonConvert.SerializeObject(testRequestsByStatus)}");
     }
 
     private string GetStatusName(RequestStatus status)
@@ -74,6 +73,11 @@
             new Dictionary<string, object>() { { "ProjectId", Id } },
             new DialogOptions() { Width = "700px", Height = "540px", Resizable = false, Draggable = true }
         );
+    }
+
+    public void NavigateToProjectMetricsPage()
+    {
+        NavigationManager.NavigateTo($"/project/{Id}/metrics");
     }
 
     private async void UpdateTestRequests()
