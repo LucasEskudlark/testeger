@@ -1,0 +1,114 @@
+﻿<h5><strong>Average time a request spend in each status:</strong></h5>
+<RadzenCard>
+    <RadzenChart>
+        <RadzenPieSeries Data="@GetPieChartData()" Title="HoursSpent" CategoryProperty="Status" ValueProperty="HoursSpent">
+        </RadzenPieSeries>
+    </RadzenChart>
+    <div class="row card d-flex flex-row p-2 my-1">
+        <div class="col-10 right-divider">
+            <p>Average time spent in the "Waiting" Status:</p>
+        </div>
+        <div class="col-2 d-flex justify-content-center">
+            @CalculateAverageTimeInSpecificStatus(TestRequests, RequestStatus.Waiting)h
+        </div>
+    </div>
+
+    <div class="row card d-flex flex-row p-2 my-1">
+        <div class="col-10 right-divider">
+            <p>Average time spent in the "In Progress" Status:</p>
+        </div>
+        <div class="col-2 d-flex justify-content-center">
+            @CalculateAverageTimeInSpecificStatus(TestRequests, RequestStatus.InProgress)h
+        </div>
+    </div>
+
+    <div class="row card d-flex flex-row p-2 my-1">
+        <div class="col-10 right-divider">
+            <p>Average time spent in the "Ready for Test" Status:</p>
+        </div>
+        <div class="col-2 d-flex justify-content-center">
+            @CalculateAverageTimeInSpecificStatus(TestRequests, RequestStatus.ReadyForTesting)h
+        </div>
+    </div>
+
+    <div class="row card d-flex flex-row p-2 my-1">
+        <div class="col-10 right-divider">
+            <p>Average time spent in the "Fixing" Status:</p>
+        </div>
+        <div class="col-2 d-flex justify-content-center">
+            @CalculateAverageTimeInSpecificStatus(TestRequests, RequestStatus.FixingIssues)h
+        </div>
+    </div>
+</RadzenCard>
+
+@code{
+    [Parameter]
+    public Dictionary<RequestStatus, List<TestRequest>> TestRequestsByStatus { get; set; }
+
+    [Parameter]
+    public List<TestRequest> TestRequests { get; set; }
+
+    private class DataItem
+    {
+        public string? Status { get; set; }
+        public double HoursSpent { get; set; }
+    }
+
+    private DataItem[] GetPieChartData()
+    {
+        DataItem[] dataArray = new DataItem[TestRequestsByStatus.Count - 1];
+        int i = 0;
+        foreach (var entry in TestRequestsByStatus)
+        {
+            if (entry.Key != RequestStatus.Completed)
+            {
+                dataArray[i++] = new DataItem
+                    {
+                        Status = entry.Key.ToString(),
+                        HoursSpent = CalculateAverageTimeInSpecificStatus(TestRequests, entry.Key),
+                    };
+            }
+        }
+
+        return dataArray;
+    }
+
+    public double CalculateAverageTimeInSpecificStatus(List<TestRequest> requests, RequestStatus status)
+    {
+        List<double> durations = new List<double>();
+
+        foreach (var request in requests)
+        {
+            var historyEntries = request.History
+                .Where(h => h.NewStatus == status)
+                .OrderBy(h => h.ChangedDate)
+                .ToList();
+
+            for (int i = 0; i < historyEntries.Count; i++)
+            {
+                var currentEntry = historyEntries[i];
+                DateTime startDate = currentEntry.ChangedDate;
+
+                DateTime endDate;
+                if (i + 1 < historyEntries.Count)
+                {
+                    endDate = historyEntries[i + 1].ChangedDate;
+                }
+                else
+                {
+                    // Considera a data atual se o status não mudou novamente
+                    endDate = DateTime.Now;
+                }
+
+                durations.Add((endDate - startDate).TotalHours);
+            }
+        }
+
+        if (durations.Count == 0)
+        {
+            return 0.0; // Retorna 0 se não houver entradas correspondentes
+        }
+
+        return Math.Round(durations.Average(), 2); // Retorna a média arredondada para duas casas decimais
+    }
+}

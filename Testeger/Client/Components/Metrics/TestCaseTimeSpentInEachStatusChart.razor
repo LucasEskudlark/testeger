@@ -1,0 +1,104 @@
+﻿<h5><strong>Average time a test case spend in each status:</strong></h5>
+<RadzenCard>
+    <div class="row">
+        <div class="col-6">
+            <RadzenChart>
+                <RadzenPieSeries Data="@GetPieChartData()" Title="HoursSpent" CategoryProperty="Status" ValueProperty="HoursSpent">
+                </RadzenPieSeries>
+            </RadzenChart>
+        </div>
+
+        <div class="col-6 d-flex align-items-center">
+            <div class="row ms-2">
+                <div class="row card d-flex flex-row p-2 my-1">
+                    <div class="col-10 right-divider">
+                        <p>Average time spent in the "Pending" Status:</p>
+                    </div>
+                    <div class="col-2 d-flex justify-content-center">
+                        @CalculateAverageTimeInSpecificStatus(TestCases, TestCaseStatus.Pending)h
+                    </div>
+                </div>
+
+                <div class="row card d-flex flex-row p-2 my-1">
+                    <div class="col-10 right-divider">
+                        <p>Average time spent in the "Failed" Status:</p>
+                    </div>
+                    <div class="col-2 d-flex justify-content-center">
+                        @CalculateAverageTimeInSpecificStatus(TestCases, TestCaseStatus.Failed)h
+                    </div>
+                </div>
+            </div>        
+        </div>
+    </div>
+</RadzenCard>
+
+@code {
+    [Parameter]
+    public Dictionary<TestCaseStatus, List<TestCase>> TestCasesByStatus { get; set; }
+
+    [Parameter]
+    public List<TestCase> TestCases { get; set; }
+
+    private class DataItem
+    {
+        public string? Status { get; set; }
+        public double HoursSpent { get; set; }
+    }
+
+    private DataItem[] GetPieChartData()
+    {
+        DataItem[] dataArray = new DataItem[TestCasesByStatus.Count - 1];
+        int i = 0;
+        foreach (var entry in TestCasesByStatus)
+        {
+            if (entry.Key != TestCaseStatus.Completed)
+            {
+                dataArray[i++] = new DataItem
+                    {
+                        Status = entry.Key.ToString(),
+                        HoursSpent = CalculateAverageTimeInSpecificStatus(TestCases, entry.Key),
+                    };
+            }
+        }
+
+        return dataArray;
+    }
+
+    public double CalculateAverageTimeInSpecificStatus(List<TestCase> testCases, TestCaseStatus status)
+    {
+        List<double> durations = new List<double>();
+
+        foreach (var request in testCases)
+        {
+            var historyEntries = request.History
+                .Where(h => h.NewStatus == status)
+                .OrderBy(h => h.ChangedDate)
+                .ToList();
+
+            for (int i = 0; i < historyEntries.Count; i++)
+            {
+                var currentEntry = historyEntries[i];
+                DateTime startDate = currentEntry.ChangedDate;
+
+                DateTime endDate;
+                if (i + 1 < historyEntries.Count)
+                {
+                    endDate = historyEntries[i + 1].ChangedDate;
+                }
+                else
+                {
+                    endDate = DateTime.Now;
+                }
+
+                durations.Add((endDate - startDate).TotalHours);
+            }
+        }
+
+        if (durations.Count == 0)
+        {
+            return 0.0;
+        }
+
+        return Math.Round(durations.Average(), 2);
+    }
+}

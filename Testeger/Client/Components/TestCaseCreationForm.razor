@@ -85,7 +85,7 @@
 
     private TestCase GetTestCase()
     {
-        return new TestCase
+        var testCase = new TestCase
             {
                 Id = Guid.NewGuid().ToString(),
                 Title = testCaseCreationViewModel.Title,
@@ -103,6 +103,19 @@
                 CreatedBy = "Lucas", // Temporary
                 NeedCorrection = false
             };
+
+        var history = new TestCaseHistory
+            {
+                TestCaseId = testCase.Id,
+                ChangedByUserId = "CurrentUserId", // Temporary
+                OldStatus = null,
+                NewStatus = testCase.Status,
+                ChangedDate = DateTime.Now
+            };
+
+        testCase.History.Add(history);
+
+        return testCase;
     }
 }
 

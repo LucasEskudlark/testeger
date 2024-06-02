@@ -86,7 +86,30 @@
     public string StatusAsString
     {
         get => EnumHelper.AddSpacesToEnumName(Request.Status.ToString());
-        set => Request.Status = Enum.Parse<RequestStatus>(value.Replace(" ", ""), true);
+        set
+        {
+            var newStatus = Enum.Parse<RequestStatus>(value.Replace(" ", ""), true);
+            if (Request.Status != newStatus)
+            {
+                var history = new TestRequestHistory
+                    {
+                        TestRequestId = Request.Id,
+                        ChangedByUserId = "CurrentUserId", // Temporary
+                        OldStatus = Request.Status,
+                        NewStatus = newStatus,
+                        ChangedDate = DateTime.Now
+                    };
+
+                Request.History.Add(history);
+
+                Request.Status = newStatus;
+
+                if (Request.Status == RequestStatus.Completed)
+                {
+                    Request.CompletedDate = DateTime.Now;
+                }
+            }
+        }
     }
 
     private void ShowCompletedDateTooltip(ElementReference elementReference, TooltipOptions options = null)

@@ -1,0 +1,110 @@
+﻿@using System.Linq;
+
+<h5><strong>Test case general numbers</strong></h5>
+<RadzenCard>
+    <div class="row card d-flex flex-row p-2 my-1">
+        <div class="col-10 right-divider">
+            <p>Total amount of test cases:</p>
+        </div>
+        <div class="col-2 d-flex justify-content-center">
+            @TestCases.Count()
+        </div>
+    </div>
+
+    <div class="row card d-flex flex-row p-2 my-1">
+        <div class="col-10 right-divider">
+            <p>Average n° of tests cases per test request:</p>
+        </div>
+        <div class="col-2 d-flex justify-content-center">
+            @CalculateAverageNumberOfTestCasesPerRequest(TestRequests)
+        </div>
+    </div>
+
+    <div class="row card d-flex flex-row p-2 my-1">
+        <div class="col-10 right-divider">
+            <p>N° that failed:</p>
+        </div>
+        <div class="col-2 d-flex justify-content-center">
+            @CountFailedTestCases(TestCases)
+        </div>
+    </div>
+
+    <div class="row card d-flex flex-row p-2 my-1">
+        <div class="col-10 right-divider">
+            <p>N° that did not fail a single time:</p>
+        </div>
+        <div class="col-2 d-flex justify-content-center">
+            @CountNeverFailedTestCases(TestCases)
+        </div>
+    </div>
+
+    <div class="row card d-flex flex-row p-2 my-1">
+        <div class="col-10 right-divider">
+            <p>Average time to complete a test case:</p>
+        </div>
+        <div class="col-2 d-flex justify-content-center">
+            @CalculateAverageTestCaseCompletionTimeInHours(TestCases)h
+        </div>
+    </div>
+
+    <div class="row card d-flex flex-row p-2 my-1">
+        <div class="col-10 right-divider">
+            <p>Average time to test a test case:</p>
+        </div>
+        <div class="col-2 d-flex justify-content-center">
+            * min
+        </div>
+    </div>
+    
+</RadzenCard>
+
+@code {
+    [Parameter]
+    public List<TestCase> TestCases { get; set; }
+
+    [Parameter]
+    public List<TestRequest> TestRequests { get; set; }
+
+    private double CalculateAverageTestCaseCompletionTimeInHours(List<TestCase> testCases)
+    {
+        var completedTestCases = testCases.Where(r => r.CompletedDate.HasValue);
+
+        if (!completedTestCases.Any())
+        {
+            return 0.0;
+        }
+
+        double totalHours = completedTestCases
+            .Select(r => (r.CompletedDate.Value - r.CreatedDate).TotalHours)
+            .Sum();
+
+        double averageHours = totalHours / completedTestCases.Count();
+
+        return Math.Round(averageHours, 2);
+    }
+
+    private double CalculateAverageNumberOfTestCasesPerRequest(List<TestRequest> requests)
+    {
+        if (requests.Count == 0)
+        {
+            return 0.0;
+        }
+
+        var totalTestCases = requests.Sum(request => request.TestCases?.Count() ?? 0);
+
+        double averageCount = (double)totalTestCases / requests.Count;
+        return Math.Round(averageCount, 2);
+    }
+
+    private static int CountFailedTestCases(List<TestCase> testCases)
+    {
+        int count = testCases.Count(tc => tc.History.Any(h => h.NewStatus == TestCaseStatus.Failed));
+        return count;
+    }
+
+    private static int CountNeverFailedTestCases(List<TestCase> testCases)
+    {
+        int count = testCases.Count(tc => !tc.History.Any(h => h.NewStatus == TestCaseStatus.Failed));
+        return count;
+    }
+}

@@ -2,11 +2,11 @@
 
 namespace Testeger.Shared.Models.ValueObjects;
 
-public class TestRequestHistory
+public class TestCaseHistory
 {
-    public string? TestRequestId { get; set; }
+    public string? TestCaseId { get; set; }
     public string? ChangedByUserId { get; set; }
-    public RequestStatus? OldStatus { get; set; }
-    public RequestStatus NewStatus { get; set; }
+    public TestCaseStatus? OldStatus { get; set; }
+    public TestCaseStatus NewStatus { get; set; }
     public DateTime ChangedDate { get; set; }
 }

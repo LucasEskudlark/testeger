@@ -1,0 +1,80 @@
+﻿@page "/project/{ProjectId}/metrics"
+@layout DefaultLayout
+@inject TestRequestService TestRequestService
+@inject TestCaseService TestCaseService
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-auto">
+            <RadzenBreadCrumb>
+                <RadzenBreadCrumbItem Path="@BreadCrumbHelper.GetProjectUrl(ProjectId)" Text="Project" />
+                <RadzenBreadCrumbItem Text="Metrics" />
+            </RadzenBreadCrumb>
+        </div>
+    </div>
+    @if (TestCases is null && TestRequests is null)
+    {
+        <div class="row mt-4 d-flex justify-content-center">
+            <div class="col-12">
+                <RadzenCard>
+                    <h5>There are no metrics for this project yet.</h5>
+                </RadzenCard>
+            </div>
+        </div>
+    } else
+    {
+        <div class="row mt-5 d-flex align-items-start">
+            <div class="col-6">
+                <TestRequestGeneralMetricsDatagrid TestRequests="TestRequests"></TestRequestGeneralMetricsDatagrid>
+            </div>
+            <div class="col-6">
+                <RequestTimeSpentInEachStatusChart TestRequests="TestRequests" TestRequestsByStatus="TestRequestsByStatus"></RequestTimeSpentInEachStatusChart>
+            </div>
+        </div>
+
+        <div class="row mt-5 d-flex justify-content-center">
+            <div class="col-10">
+                <TestRequestCountPerStatusChart TestRequestsByStatus="TestRequestsByStatus"></TestRequestCountPerStatusChart>
+            </div>
+        </div>
+
+        <div class="row mt-5">
+            <div class="col-6">
+                <TestCaseCountPerStatusChart TestCasesByStatus="TestCasesByStatus"></TestCaseCountPerStatusChart>
+            </div>
+            <div class="col-6">
+                <TestCaseGeneralMetricsDatagrid TestCases="TestCases" TestRequests="TestRequests"></TestCaseGeneralMetricsDatagrid>
+            </div>
+        </div>
+
+        <div class="row mt-5">
+            <div class="col-12">
+                <TestCaseTimeSpentInEachStatusChart TestCasesByStatus="TestCasesByStatus" TestCases="TestCases"></TestCaseTimeSpentInEachStatusChart>
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter]
+    public string ProjectId { get; set; }
+
+    private List<TestRequest> TestRequests { get; set; }
+    private List<TestCase> TestCases { get; set; }
+    private Dictionary<RequestStatus, List<TestRequest>> TestRequestsByStatus { get; set; }
+    private Dictionary<TestCaseStatus, List<TestCase>> TestCasesByStatus { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        TestRequests = await TestRequestService.GetTestRequestsByProjectId(ProjectId);
+        TestRequestsByStatus = await TestRequestService.GetTestRequestsByProjectIdGroupedByStatus(ProjectId);
+        TestCasesByStatus = await TestCaseService.GetTestCasesByProjectIdGroupedByStatus(ProjectId);
+        TestCases = await TestCaseService.GetTestCasesByProjectId(ProjectId);
+    }
+}
+
+<style>
+    .right-divider {
+        border-right: 1px solid #ced4da;
+    }
+</style>

@@ -26,6 +26,12 @@ public class TestRequestService
         return testRequests.Where(tr => tr.Status == status && tr.ProjectId == id).ToList();
     }
 
+    public async Task<List<TestRequest>> GetTestRequestsByProjectId(string id)
+    {
+        var testRequests = await GetAllTestRequests();
+        return testRequests.Where(tr => tr.ProjectId == id).ToList();
+    }
+
     public async Task<TestRequest> GetTestRequestById(string id)
     {
         var testRequests = await GetAllTestRequests();

@@ -8,6 +8,7 @@ public class TestRequest
     public TestRequest()
     {
         TestCases = new List<TestCase>();
+        History = new List<TestRequestHistory>();
     }
 
     public string? Id { get; set; }
@@ -23,6 +24,6 @@ public class TestRequest
     public DateTime? DueDate { get; set; }
     public DateTime CreatedDate { get; set; }
     public DateTime? CompletedDate { get; set; }
-    public TestRequestHistory? History { get; set; }
+    public List<TestRequestHistory> History { get; set; }
     public IEnumerable<TestCase>? TestCases { get; set; }
 }

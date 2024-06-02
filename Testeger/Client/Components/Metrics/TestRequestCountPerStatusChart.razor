@@ -1,0 +1,42 @@
+﻿<h5><strong>Test request count per status</strong></h5>
+<RadzenCard>
+    <RadzenChart>
+        <RadzenColumnSeries Fills="@(new [] { "#4F4F50", "#4668BC", "#C2840D", "#B90D41", "#00763E" })" Data="@GetChartData()" CategoryProperty="Status" LineType="LineType.Dashed" ValueProperty="RequestCount">
+            <RadzenSeriesDataLabels Visible="false" />
+        </RadzenColumnSeries>
+        <RadzenColumnOptions Radius="5" Width="20" />
+        <RadzenCategoryAxis Padding="5" />
+        <RadzenValueAxis>
+            <RadzenGridLines Visible="true" />
+            <RadzenAxisTitle Text="Request Count" />
+        </RadzenValueAxis>
+        <RadzenLegend Visible="false" />
+    </RadzenChart>
+</RadzenCard>
+
+@code {
+    [Parameter]
+    public Dictionary<RequestStatus, List<TestRequest>> TestRequestsByStatus { get; set; }
+
+    private class DataItem
+    {
+        public string? Status { get; set; }
+        public int RequestCount { get; set; }
+    }
+
+    private DataItem[] GetChartData()
+    {
+        DataItem[] dataArray = new DataItem[TestRequestsByStatus.Count];
+        int i = 0;
+        foreach (var entry in TestRequestsByStatus)
+        {
+            dataArray[i++] = new DataItem
+                {
+                    Status = entry.Key.ToString(),
+                    RequestCount = entry.Value.Count,
+                };
+        }
+
+        return dataArray;
+    }
+}

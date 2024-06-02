@@ -12,7 +12,7 @@
         <div class="row justify-content-between">
             <div class="col-auto">
                 <RadzenBreadCrumb>
-                    <RadzenBreadCrumbItem Path="@BreadCrumbHelper.GetProjectUrl(Request)" Text="Project" />
+                    <RadzenBreadCrumbItem Path="@BreadCrumbHelper.GetProjectUrlBasedOnRequest(Request)" Text="Project" />
                     <RadzenBreadCrumbItem Text="@BreadCrumbHelper.GetRequestText(Request)" />
                 </RadzenBreadCrumb>
             </div>
@@ -103,7 +103,7 @@
         if (Request != null)
         {
             await TestRequestService.RemoveTestRequest(Request);
-            NavigationManager.NavigateTo(BreadCrumbHelper.GetProjectUrl(Request));
+            NavigationManager.NavigateTo(BreadCrumbHelper.GetProjectUrlBasedOnRequest(Request));
             await OnRequestDeleted.InvokeAsync();
             await InvokeAsync(StateHasChanged);
         }
@@ -122,7 +122,7 @@
     public async Task OpenTestCaseCreationDialog()
     {
         await DialogService.OpenAsync<DialogTestCaseCreationPage>("Create Test Case",
-               new Dictionary<string, object>() { { "RequestId", RequestId } },
+               new Dictionary<string, object>() { { "RequestId", RequestId }, { "ProjectId", Request.ProjectId } },
                new DialogOptions() { Width = "1024px", Height = "480px", Resizable = false, Draggable = true });
     }
 

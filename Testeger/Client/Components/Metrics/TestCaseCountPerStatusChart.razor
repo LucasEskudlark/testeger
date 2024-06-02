@@ -1,0 +1,42 @@
+﻿<h5><strong>Test case count per status</strong></h5>
+<RadzenCard>
+    <RadzenChart>
+        <RadzenColumnSeries Fills="@(new [] { "#4768BC", "#B90D41", "#00763E" })" Data="@GetChartData()" CategoryProperty="Status" LineType="LineType.Dashed" ValueProperty="TestCaseCount">
+            <RadzenSeriesDataLabels Visible="false" />
+        </RadzenColumnSeries>
+        <RadzenColumnOptions Radius="5" Width="20" />
+        <RadzenCategoryAxis Padding="5" />
+        <RadzenValueAxis>
+            <RadzenGridLines Visible="true" />
+            <RadzenAxisTitle Text="Test Case Count" />
+        </RadzenValueAxis>
+        <RadzenLegend Visible="false" />
+    </RadzenChart>
+</RadzenCard>
+
+@code {
+    [Parameter]
+    public Dictionary<TestCaseStatus, List<TestCase>> TestCasesByStatus { get; set; }
+
+    private class DataItem
+    {
+        public string? Status { get; set; }
+        public int TestCaseCount { get; set; }
+    }
+
+    private DataItem[] GetChartData()
+    {
+        DataItem[] dataArray = new DataItem[TestCasesByStatus.Count];
+        int i = 0;
+        foreach (var entry in TestCasesByStatus)
+        {
+            dataArray[i++] = new DataItem
+                {
+                    Status = entry.Key.ToString(),
+                    TestCaseCount = entry.Value.Count,
+                };
+        }
+
+        return dataArray;
+    }
+}

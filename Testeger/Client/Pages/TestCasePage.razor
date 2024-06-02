@@ -11,7 +11,7 @@
         <div class="row justify-content-between">
             <div class="col-auto">
                 <RadzenBreadCrumb>
-                    <RadzenBreadCrumbItem Path="@BreadCrumbHelper.GetProjectUrl(Request)" Text="Project" />
+                    <RadzenBreadCrumbItem Path="@BreadCrumbHelper.GetProjectUrlBasedOnRequest(Request)" Text="Project" />
                     <RadzenBreadCrumbItem Path="@BreadCrumbHelper.GetRequestUrl(Request)" Text="@BreadCrumbHelper.GetRequestText(Request)" />
                     <RadzenBreadCrumbItem Text="@TestCase.Title" />
                 </RadzenBreadCrumb>
