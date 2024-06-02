@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using Testeger.Shared.Exceptions;
 using Testeger.Shared.Models.Entities;
+using Testeger.Shared.Models.Enumerations;
 
 namespace Testeger.Shared.Services;
 
@@ -43,6 +44,15 @@ public class TestCaseService
     {
         var testCases = await GetAllTestCases();
         return testCases.Where(tc => tc.ProjectId == projectId).ToList();
+    }
+
+    public async Task<Dictionary<TestCaseStatus, List<TestCase>>> GetTestCasesByProjectIdGroupedByStatus(string projectId)
+    {
+        var testCases = await GetAllTestCases();
+        return Enum.GetValues(typeof(TestCaseStatus)).Cast<TestCaseStatus>()
+                   .ToDictionary(
+                       status => status,
+                       status => testCases.Where(tc => tc.Status == status && tc.ProjectId == projectId).ToList());
     }
 
     public async Task AddTestCase(TestCase testCase)
