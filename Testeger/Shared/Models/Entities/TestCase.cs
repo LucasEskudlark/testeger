@@ -9,7 +9,9 @@ public class TestCase
     {
         SavedTimes = new List<string> ();
         ElapsedTime = TimeSpan.Zero;
+        History = new List<TestCaseHistory>();
     }
+
     public string? Id { get; set; }
     public string? RequestId { get; set; }
     public string? ProjectId { get; set; }
@@ -26,4 +28,5 @@ public class TestCase
     public TimeSpan ElapsedTime { get; set; }
     public TimeSpan AmountOfTimeSpentToTest { get; set; }
     public DateTime? ScheduledDate { get; set; }
+    public List<TestCaseHistory> History { get; set; }
 }

@@ -119,12 +119,26 @@
         if (testResult.Equals("No"))
         {
             TestCase.Status = TestCaseStatus.Failed;
+            TestCase.History.Add(GetTestCaseHistory(TestCaseStatus.Failed));
             TestCase.NeedCorrection = true;
             return;
         }
 
         TestCase.Status = TestCaseStatus.Completed;
+        TestCase.History.Add(GetTestCaseHistory(TestCaseStatus.Completed));
         TestCase.CompletedDate = DateTime.Now;
+    }
+
+    private TestCaseHistory GetTestCaseHistory(TestCaseStatus newStatus)
+    {
+        return new TestCaseHistory
+            {
+                TestCaseId = TestCase.Id,
+                ChangedByUserId = "CurrentUserId", // Temporary
+                OldStatus = TestCase.Status,
+                NewStatus = newStatus,
+                ChangedDate = DateTime.Now
+            };
     }
 
     private TimeSpan CalculateTotalTime()
