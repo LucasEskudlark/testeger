@@ -15,7 +15,7 @@
     @if (TestCases is null && TestRequests is null)
     {
         <div class="row mt-4 d-flex justify-content-center">
-            <div class="col-4">
+            <div class="col-12">
                 <RadzenCard>
                     <h5>There are no metrics for this project yet.</h5>
                 </RadzenCard>
@@ -23,30 +23,33 @@
         </div>
     } else
     {
-        <div class="row mt-4">
-            <div class="col-4">
-                <RadzenCard>
-                    <RadzenChart>
-                        <RadzenColumnSeries Data="@revenue2024" CategoryProperty="Quarter" Title="2024" LineType="LineType.Dashed" ValueProperty="Revenue">
-                            <RadzenSeriesDataLabels Visible="false" />
-                        </RadzenColumnSeries>
-                        <RadzenColumnOptions Radius="5" />
-                        <RadzenValueAxis Formatter="@FormatAsUSD">
-                            <RadzenGridLines Visible="true" />
-                            <RadzenAxisTitle Text="Revenue in USD" />
-                        </RadzenValueAxis>
-                    </RadzenChart>
-                </RadzenCard>
+        <div class="row mt-5 d-flex align-items-start">
+            <div class="col-6">
+                <TestRequestGeneralMetricsDatagrid TestRequests="TestRequests"></TestRequestGeneralMetricsDatagrid>
             </div>
-            <div class="col-4">
-                <RadzenCard>
-                    <h3>Oi</h3>
-                </RadzenCard>
+            <div class="col-6">
+                <RequestTimeSpentInEachStatusChart TestRequests="TestRequests" TestRequestsByStatus="TestRequestsByStatus"></RequestTimeSpentInEachStatusChart>
             </div>
-            <div class="col-4">
-                <RadzenCard>
-                    <h3>Oi</h3>
-                </RadzenCard>
+        </div>
+
+        <div class="row mt-5 d-flex justify-content-center">
+            <div class="col-10">
+                <TestRequestCountPerStatusChart TestRequestsByStatus="TestRequestsByStatus"></TestRequestCountPerStatusChart>
+            </div>
+        </div>
+
+        <div class="row mt-5">
+            <div class="col-6">
+                <TestCaseCountPerStatusChart TestCasesByStatus="TestCasesByStatus"></TestCaseCountPerStatusChart>
+            </div>
+            <div class="col-6">
+                <TestCaseGeneralMetricsDatagrid TestCases="TestCases" TestRequests="TestRequests"></TestCaseGeneralMetricsDatagrid>
+            </div>
+        </div>
+
+        <div class="row mt-5">
+            <div class="col-12">
+                <TestCaseTimeSpentInEachStatusChart TestCasesByStatus="TestCasesByStatus" TestCases="TestCases"></TestCaseTimeSpentInEachStatusChart>
             </div>
         </div>
     }
@@ -58,40 +61,20 @@
 
     private List<TestRequest> TestRequests { get; set; }
     private List<TestCase> TestCases { get; set; }
+    private Dictionary<RequestStatus, List<TestRequest>> TestRequestsByStatus { get; set; }
+    private Dictionary<TestCaseStatus, List<TestCase>> TestCasesByStatus { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
         TestRequests = await TestRequestService.GetTestRequestsByProjectId(ProjectId);
+        TestRequestsByStatus = await TestRequestService.GetTestRequestsByProjectIdGroupedByStatus(ProjectId);
+        TestCasesByStatus = await TestCaseService.GetTestCasesByProjectIdGroupedByStatus(ProjectId);
         TestCases = await TestCaseService.GetTestCasesByProjectId(ProjectId);
     }
-
-    class DataItem
-    {
-        public string Quarter { get; set; }
-        public double Revenue { get; set; }
-    }
-
-    DataItem[] revenue2024 = new DataItem[] {
-        new DataItem
-        {
-            Quarter = "Q1",
-            Revenue = 254000
-        },
-        new DataItem
-        {
-            Quarter = "Q2",
-            Revenue = 324000
-        },
-        new DataItem
-        {
-            Quarter = "Q3",
-            Revenue = 354000
-        },
-        new DataItem
-        {
-            Quarter = "Q4",
-            Revenue = 394000
-        },
-
-    };
 }
+
+<style>
+    .right-divider {
+        border-right: 1px solid #ced4da;
+    }
+</style>
