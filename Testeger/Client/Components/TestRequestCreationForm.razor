@@ -77,7 +77,7 @@
 
     private TestRequest GetTestRequest()
     {
-        return new TestRequest
+        var testRequest = new TestRequest
             {
                 Id = Guid.NewGuid().ToString(),
                 Title = testRequestViewModel.Title,
@@ -90,6 +90,19 @@
                 CreatorId = "Lucas",
                 StoryLink = testRequestViewModel.StoryLink
             };
+
+        var history = new TestRequestHistory
+            {
+                TestRequestId = testRequest.Id,
+                ChangedByUserId = "CurrentUserId", // Temporary
+                OldStatus = null,
+                NewStatus = testRequest.Status,
+                ChangedDate = DateTime.Now
+            };
+
+        testRequest.History.Add(history);
+
+        return testRequest;
     }
 }
 
