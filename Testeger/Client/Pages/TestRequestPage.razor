@@ -52,7 +52,7 @@
                         </div>
                         <div class="row">
                             <div class="col-12 p-0 mt-2" style="min-width: 400px;">
-                                <TestCaseIndividualDataList TestCases="TestCases" />
+                                <TestCasesDataList TestCases="TestCases" />
                             </div>
                         </div>
                     </div>
@@ -121,7 +121,7 @@
 
     public async Task OpenTestCaseCreationDialog()
     {
-        await DialogService.OpenAsync<DialogTestCaseCreationPage>("Create Test Case",
+        await DialogService.OpenAsync<TestCaseCreationDialog>("Create Test Case",
                new Dictionary<string, object>() { { "RequestId", RequestId }, { "ProjectId", Request.ProjectId } },
                new DialogOptions() { Width = "1024px", Height = "480px", Resizable = false, Draggable = true });
     }
