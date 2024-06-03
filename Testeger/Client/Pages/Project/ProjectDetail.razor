@@ -68,7 +68,7 @@
 
     public async Task OpenTestRequestCreationDialog()
     {
-        await DialogService.OpenAsync<DialogTestRequestCreationPage>(
+        await DialogService.OpenAsync<TestRequestCreationDialog>(
             "Create Test Request",
             new Dictionary<string, object>() { { "ProjectId", Id } },
             new DialogOptions() { Width = "700px", Height = "540px", Resizable = false, Draggable = true }
