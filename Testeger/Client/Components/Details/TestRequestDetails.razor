@@ -23,6 +23,12 @@
             </div>
         </div>
         <div class="row mt-2">
+            <div class="col-12">
+                <RadzenLabel Text="Story Link" Style="@LabelStyle" />
+                <RadzenTextBox @bind-Value="Request.StoryLink" Style="width:100%;" />
+            </div>
+        </div>
+        <div class="row mt-2">
             <div class="col-md-4">
                 <RadzenLabel Text="Status" Style="@LabelStyle"  />
                 <RadzenDropDown Data="@EnumHelper.GetSpacedNames(typeof(RequestStatus))"
