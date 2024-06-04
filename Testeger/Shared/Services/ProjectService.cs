@@ -12,6 +12,7 @@ public class ProjectService
     public event Action? OnChange;
     public event Action? OnProjectAdded;
     public event Action? OnProjectDeleted;
+    public event Action? OnProjectUpdated;
 
     public ProjectService(LocalStorageService localStorage)
     {
@@ -67,6 +68,41 @@ public class ProjectService
 
         return projects.Find(p => p.Id == id) ?? throw new ProjectNotFoundException($"Project with id {id} was not found.");
     }
+
+    public async Task UpdateProject(Project project)
+    {
+        var projects = await GetAllProjects();
+        var index = projects.FindIndex(tr => tr.Id == project.Id);
+
+        if (index == -1)
+        {
+            throw new ProjectNotFoundException($"Project with id {project.Id} was not found.");
+        }
+
+        projects[index] = project;
+        await _localStorage.WriteToStorage(StorageKey, projects);
+        OnProjectUpdated?.Invoke();
+        NotifyStateChanged();
+    }
+
+    //public async Task RemoveProjectMember(string projectId, IList<User> users)
+    //{
+    //    var project = await GetProjectById(projectId);
+
+    //    var userToBeRemoved = users.FirstOrDefault(); 
+
+    //    if (userToBeRemoved is null)
+    //    {
+    //        return; // NEED FIX
+    //    }
+
+    //    var updatedMembers = project.Members.ToList();
+    //    updatedMembers.Remove(userToBeRemoved);
+
+    //    project.Members = updatedMembers.AsEnumerable();
+
+    //    await UpdateProject(project);
+    //}
 
     private void NotifyStateChanged() => OnChange?.Invoke();
 }
