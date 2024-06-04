@@ -87,7 +87,9 @@
             {
                 Id = Guid.NewGuid().ToString(),
                 Name = newProject.ProjectName,
-                Members = GetMembers()
+                Members = GetMembers(),
+                CreatorId = "Lucas", // Temporary
+                CreatedDate = DateTime.Now
             };
     }
 
@@ -99,6 +101,8 @@
         {
             var user = new User
             {
+                Id = Guid.NewGuid().ToString(),
+                Name = "User",
                 Email = memberVM.Email,
                 Role = memberVM.Role
             };
@@ -106,7 +110,20 @@
             members.Add(user);
         }
 
+        members.Add(GetProjectCreator());
+
         return members;
+    }
+
+    private User GetProjectCreator() // Temporary
+    {
+        return new User
+            {
+                Id = Guid.NewGuid().ToString(),
+                Name = "Lucas",
+                Email = "lucasbeskudlark@gmail.com",
+                Role = RoleType.ProjectManager
+            };
     }
 
     private void AddMember()
