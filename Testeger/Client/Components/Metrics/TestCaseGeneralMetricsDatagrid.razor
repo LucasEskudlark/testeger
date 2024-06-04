@@ -16,7 +16,7 @@
             <p>Average n° of tests cases per test request:</p>
         </div>
         <div class="col-2 d-flex justify-content-center">
-            @CalculateAverageNumberOfTestCasesPerRequest(TestRequests)
+            @CalculateAverageNumberOfTestCasesPerRequest()
         </div>
     </div>
 
@@ -83,16 +83,9 @@
         return Math.Round(averageHours, 2);
     }
 
-    private double CalculateAverageNumberOfTestCasesPerRequest(List<TestRequest> requests)
+    private double CalculateAverageNumberOfTestCasesPerRequest()
     {
-        if (requests.Count == 0)
-        {
-            return 0.0;
-        }
-
-        var totalTestCases = requests.Sum(request => request.TestCases?.Count() ?? 0);
-
-        double averageCount = (double)totalTestCases / requests.Count;
+        double averageCount = (double)TestCases.Count / TestRequests.Count;
         return Math.Round(averageCount, 2);
     }
 
