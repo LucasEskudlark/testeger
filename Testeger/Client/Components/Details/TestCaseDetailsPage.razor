@@ -15,7 +15,7 @@
             <RadzenLabel Text="Status" Style="@LabelStyle" />
             <RadzenDropDown Disabled="true" Data="@Enum.GetValues(typeof(TestCaseStatus))"
                             @bind-Value="TestCase.Status" Style="width:100%;"
-                            MouseEnter="@(args => ShowStatusTooltip(args) )" />
+                            MouseEnter="@(args => ShowStatusTooltip(args))" />
         </div>
         <div class="col-4">
             <RadzenLabel Text="Need Correction?" Style="@LabelStyle" />

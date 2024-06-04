@@ -1,0 +1,46 @@
+﻿<RadzenDataGrid AllowFiltering="false"
+                AllowColumnResize="false"
+                AllowAlternatingRows="false"
+                FilterMode="FilterMode.Advanced"
+                AllowSorting="false"
+                PageSize="5"
+                AllowPaging="true"
+                PagerHorizontalAlign="HorizontalAlign.Left"
+                ShowPagingSummary="true"
+                Data="@Members"
+                ColumnWidth="300px"
+                LogicalFilterOperator="LogicalFilterOperator.Or"
+                SelectionMode="DataGridSelectionMode.Single"
+                @bind-Value=@SelectedUsers>
+
+    <Columns>
+        <RadzenDataGridColumn Property="Name" Title="Name" Frozen="true" Width="100px" />
+        <RadzenDataGridColumn Property="Email" Title="E-mail" Width="200px" />
+        <RadzenDataGridColumn Property="Role" Title="Role" Width="80px" />
+    </Columns>
+</RadzenDataGrid>
+
+@code {
+    [Parameter]
+    public IEnumerable<User> Members { get; set; }
+
+    [Parameter]
+    public EventCallback<IList<User>> SelectedUsersChanged { get; set; }
+
+    private User User { get; set; }
+
+    private IList<User> _selectedUsers;
+
+    private IList<User> SelectedUsers
+    {
+        get => _selectedUsers;
+        set
+        {
+            if (!Equals(_selectedUsers, value))
+            {
+                _selectedUsers = value;
+                SelectedUsersChanged.InvokeAsync(_selectedUsers);
+            }
+        }
+    }
+}
