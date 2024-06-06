@@ -1,38 +1,56 @@
 ﻿<h5><strong>Test Request general numbers</strong></h5>
 <RadzenCard>
     <div class="row card d-flex flex-row p-2 my-1">
-        <div class="col-10 right-divider">
+        <div class="col-9 right-divider">
             <p>Total amount of Test Requests:</p>
         </div>
-        <div class="col-2 d-flex justify-content-center">
+        <div class="col-3 d-flex justify-content-center">
             @TestRequests.Count()
         </div>
     </div>
 
     <div class="row card d-flex flex-row p-2 my-1">
-        <div class="col-10 right-divider">
+        <div class="col-9 right-divider">
             <p>Average time to complete a test request:</p>
         </div>
-        <div class="col-2 d-flex justify-content-center">
-            @CalculateAverageRequestCompletionTimeInHours(TestRequests)h
+        <div class="col-3 d-flex justify-content-center">
+            @CalculateAverageRequestCompletionTimeInHours(TestRequests).ToHoursAndMinutes()
         </div>
     </div>
 
     <div class="row card d-flex flex-row p-2 my-1">
-        <div class="col-10 right-divider">
+        <div class="col-9 right-divider">
             <p>N° of requests finished after Due Date:</p>
         </div>
-        <div class="col-2 d-flex justify-content-center">
+        <div class="col-3 d-flex justify-content-center">
             @CountRequestsCompletedAfterDueDate(TestRequests)
         </div>
     </div>
 
     <div class="row card d-flex flex-row p-2 my-1">
-        <div class="col-10 right-divider">
+        <div class="col-9 right-divider">
             <p>N° of requests finished before Due Date:</p>
         </div>
-        <div class="col-2 d-flex justify-content-center">
+        <div class="col-3 d-flex justify-content-center">
             @CountRequestsCompletedBeforeDueDate(TestRequests)
+        </div>
+    </div>
+
+    <div class="row card d-flex flex-row p-2 my-1">
+        <div class="col-9 right-divider">
+            <p>N° of requests that needed to be fixed:</p>
+        </div>
+        <div class="col-3 d-flex justify-content-center">
+            @CountRequestsThatNeededToBeFixed(TestRequests)
+        </div>
+    </div>
+
+    <div class="row card d-flex flex-row p-2 my-1">
+        <div class="col-9 right-divider">
+            <p>N° of requests that did not need to be fixed:</p>
+        </div>
+        <div class="col-3 d-flex justify-content-center">
+            @CountRequestsThatDidntNeedToBeFixed(TestRequests)
         </div>
     </div>
 </RadzenCard>
@@ -71,5 +89,15 @@
     {
         return requests.Count(r => r.CompletedDate.HasValue &&
                                    r.CompletedDate.Value > r.DueDate);
+    }
+
+    private static int CountRequestsThatNeededToBeFixed(List<TestRequest> requests)
+    {
+        return requests.Count(tr => tr.History.Any(h => h.NewStatus == RequestStatus.FixingIssues));
+    }
+
+    private static int CountRequestsThatDidntNeedToBeFixed(List<TestRequest> requests)
+    {
+        return requests.Count(tr => !tr.History.Any(h => h.NewStatus == RequestStatus.FixingIssues));
     }
 }
