@@ -4,12 +4,18 @@
 @inject TestCaseService TestCaseService
 
 <div class="container-fluid">
-    <div class="row">
+    <div class="row d-flex justify-content-between">
         <div class="col-auto">
             <RadzenBreadCrumb>
                 <RadzenBreadCrumbItem Path="@BreadCrumbHelper.GetProjectUrl(ProjectId)" Text="Project" />
                 <RadzenBreadCrumbItem Text="Metrics" />
             </RadzenBreadCrumb>
+        </div>
+        <div class="col-4 d-flex justify-content-end">
+            <RadzenDropDown @bind-Value="selectedValue"
+                            Data=@timeOptions
+                            TextProperty="Text"
+                            ValueProperty="Value" />
         </div>
     </div>
     @if (TestCases is null && TestRequests is null)
@@ -70,6 +76,24 @@
         TestRequestsByStatus = await TestRequestService.GetTestRequestsByProjectIdGroupedByStatus(ProjectId);
         TestCasesByStatus = await TestCaseService.GetTestCasesByProjectIdGroupedByStatus(ProjectId);
         TestCases = await TestCaseService.GetTestCasesByProjectId(ProjectId);
+    }
+
+    string selectedValue = "1d";
+
+    List<TimeOption> timeOptions = new List<TimeOption>
+    {
+        new TimeOption { Text = "Past 4 hours", Value = "1h" },
+        new TimeOption { Text = "Past 12 hours", Value = "4h" },
+        new TimeOption { Text = "Past 1 day", Value = "1d" },
+        new TimeOption { Text = "Past 2 days", Value = "2d" },
+        new TimeOption { Text = "Past 1 week", Value = "1w" },
+        new TimeOption { Text = "Past 1 month", Value = "1M" }
+    };
+
+    public class TimeOption
+    {
+        public string? Text { get; set; }
+        public string? Value { get; set; }
     }
 }
 
