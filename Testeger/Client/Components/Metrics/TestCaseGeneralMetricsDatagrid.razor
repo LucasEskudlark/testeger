@@ -1,6 +1,6 @@
 ﻿@using System.Linq;
 
-<h5><strong>Test case general numbers</strong></h5>
+<h6>Test case general numbers</h6>
 <RadzenCard>
     <div class="row card d-flex flex-row p-2 my-1">
         <div class="col-9 right-divider">
@@ -85,6 +85,11 @@
 
     private double CalculateAverageNumberOfTestCasesPerRequest()
     {
+        if (TestRequests.Count == 0)
+        {
+            return (double)0;
+        }
+
         double averageCount = (double)TestCases.Count / TestRequests.Count;
         return Math.Round(averageCount, 2);
     }
