@@ -12,7 +12,7 @@
             </RadzenBreadCrumb>
         </div>
         <div class="col-3 d-flex justify-content-end">
-            <RadzenDropDown @bind-Value="selectedValue"
+            <RadzenDropDown @bind-Value="selectedTimeFrame"
                             Data=@timeOptions
                             TextProperty="Text"
                             ValueProperty="Value" />
@@ -78,17 +78,9 @@
         </RadzenCard>
 
         <RadzenCard class="mt-4">
-            <div class="d-flex justify-content-between">
-                <h5><strong>Individual metrics:</strong></h5>
-            </div>
-            
-            <div class="row mt-5">
-                <div class="col-6">
-                   <RequestCountPerProjectQAChart/>
-                </div>
-                <div class="col-6 pb-0">
-                   <TestCaseCountPerProjectQAChart />
-                </div>
+            <h5><strong>Individual metrics:</strong></h5>
+            <div class="row mt-4">
+                <IndividualProjectQAMetrics/>
             </div>
         </RadzenCard>
     }
@@ -111,7 +103,7 @@
         TestCases = await TestCaseService.GetTestCasesByProjectId(ProjectId);
     }
 
-    string selectedValue = "1d";
+    string selectedTimeFrame = "1d";
 
     List<TimeOption> timeOptions = new List<TimeOption>
     {
