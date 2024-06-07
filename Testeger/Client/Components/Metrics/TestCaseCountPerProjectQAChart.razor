@@ -1,0 +1,47 @@
+﻿<h6>Distribution of Test Cases by QA Analyst</h6>
+<RadzenCard class="py-0">
+    <RadzenChart>
+        <RadzenDonutSeries Data="@revenue" CategoryProperty="Analyst" ValueProperty="TestCaseCount" TotalAngle="180" StartAngle="0">
+            <ChildContent>
+                <RadzenSeriesDataLabels Visible="false" />
+            </ChildContent>
+            <TitleTemplate>
+                <div class="rz-donut-content">
+                    <div>Test Case</div>
+                    <div>amount</div>
+                </div>
+            </TitleTemplate>
+        </RadzenDonutSeries>
+    </RadzenChart>
+</RadzenCard>
+
+@code {
+    class DataItem
+    {
+        public string Analyst { get; set; }
+        public double TestCaseCount { get; set; }
+    }
+
+    DataItem[] revenue = new DataItem[] {
+        new DataItem
+        {
+            Analyst = "Lucas",
+            TestCaseCount = 14
+        },
+        new DataItem
+        {
+            Analyst = "Fernando",
+            TestCaseCount = 6
+        },
+        new DataItem
+        {
+            Analyst = "Fulano",
+            TestCaseCount = 23
+        },
+        new DataItem
+        {
+            Analyst = "Ciclano",
+            TestCaseCount = 32
+        }
+    };
+}

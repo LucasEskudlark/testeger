@@ -4,14 +4,14 @@
 @inject TestCaseService TestCaseService
 
 <div class="container-fluid">
-    <div class="row d-flex justify-content-between">
+    <div class="row d-flex justify-content-between mb-4">
         <div class="col-auto">
             <RadzenBreadCrumb>
                 <RadzenBreadCrumbItem Path="@BreadCrumbHelper.GetProjectUrl(ProjectId)" Text="Project" />
                 <RadzenBreadCrumbItem Text="Metrics" />
             </RadzenBreadCrumb>
         </div>
-        <div class="col-4 d-flex justify-content-end">
+        <div class="col-3 d-flex justify-content-end">
             <RadzenDropDown @bind-Value="selectedValue"
                             Data=@timeOptions
                             TextProperty="Text"
@@ -29,35 +29,68 @@
         </div>
     } else
     {
-        <div class="row mt-5 d-flex align-items-start">
-            <div class="col-6">
-                <TestRequestGeneralMetricsDatagrid TestRequests="TestRequests"/>
+        <RadzenCard class="mt-4">
+            <h5><strong>Test requests metrics:</strong></h5>
+            <div class="row mt-5 d-flex align-items-start">
+                <div class="col-6">
+                    <TestRequestGeneralMetricsDatagrid TestRequests="TestRequests"/>
+                </div>
+                <div class="col-6">
+                    <RequestTimeSpentInEachStatusChart TestRequests="TestRequests" TestRequestsByStatus="TestRequestsByStatus"/>
+                </div>
             </div>
-            <div class="col-6">
-                <RequestTimeSpentInEachStatusChart TestRequests="TestRequests" TestRequestsByStatus="TestRequestsByStatus"/>
-            </div>
-        </div>
 
-        <div class="row mt-5 d-flex justify-content-center">
-            <div class="col-10">
-                <TestRequestCountPerStatusChart TestRequestsByStatus="TestRequestsByStatus"/>
+            <div class="row mt-5 d-flex justify-content-center">
+                <div class="col-10">
+                    <TestRequestCountPerStatusChart TestRequestsByStatus="TestRequestsByStatus"/>
+                </div>
             </div>
-        </div>
+        </RadzenCard>
 
-        <div class="row mt-5">
-            <div class="col-6">
-                <TestCaseCountPerStatusChart TestCasesByStatus="TestCasesByStatus"/>
+        <RadzenCard class="mt-4">
+            <h5><strong>Test cases metrics:</strong></h5>
+            <div class="row mt-5">
+                <div class="col-6">
+                    <TestCaseCountPerStatusChart TestCasesByStatus="TestCasesByStatus"/>
+                </div>
+                <div class="col-6">
+                    <TestCaseGeneralMetricsDatagrid TestCases="TestCases" TestRequests="TestRequests"/>
+                </div>
             </div>
-            <div class="col-6">
-                <TestCaseGeneralMetricsDatagrid TestCases="TestCases" TestRequests="TestRequests"/>
-            </div>
-        </div>
 
-        <div class="row mt-5">
-            <div class="col-12">
-                <TestCaseTimeSpentInEachStatusChart TestCasesByStatus="TestCasesByStatus" TestCases="TestCases"/>
+            <div class="row mt-5">
+                <div class="col-12">
+                    <TestCaseTimeSpentInEachStatusChart TestCasesByStatus="TestCasesByStatus" TestCases="TestCases"/>
+                </div>
             </div>
-        </div>
+        </RadzenCard>
+
+        <RadzenCard class="mt-4">
+            <h5><strong>Team metrics:</strong></h5>
+            <div class="row mt-5">
+                <div class="col-6">
+                   <RequestCountPerProjectQAChart/>
+                </div>
+                <div class="col-6 pb-0">
+                   <TestCaseCountPerProjectQAChart />
+                </div>
+            </div>
+        </RadzenCard>
+
+        <RadzenCard class="mt-4">
+            <div class="d-flex justify-content-between">
+                <h5><strong>Individual metrics:</strong></h5>
+            </div>
+            
+            <div class="row mt-5">
+                <div class="col-6">
+                   <RequestCountPerProjectQAChart/>
+                </div>
+                <div class="col-6 pb-0">
+                   <TestCaseCountPerProjectQAChart />
+                </div>
+            </div>
+        </RadzenCard>
     }
 </div>
 
