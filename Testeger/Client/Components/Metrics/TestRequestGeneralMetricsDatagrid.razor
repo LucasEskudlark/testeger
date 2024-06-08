@@ -1,38 +1,74 @@
-﻿<h5><strong>Test Request general numbers</strong></h5>
+﻿<h6>Test Request general numbers</h6>
 <RadzenCard>
     <div class="row card d-flex flex-row p-2 my-1">
-        <div class="col-10 right-divider">
+        <div class="col-9 right-divider">
             <p>Total amount of Test Requests:</p>
         </div>
-        <div class="col-2 d-flex justify-content-center">
+        <div class="col-3 d-flex justify-content-center">
             @TestRequests.Count()
         </div>
     </div>
 
     <div class="row card d-flex flex-row p-2 my-1">
-        <div class="col-10 right-divider">
+        <div class="col-9 right-divider">
             <p>Average time to complete a test request:</p>
         </div>
-        <div class="col-2 d-flex justify-content-center">
-            @CalculateAverageRequestCompletionTimeInHours(TestRequests)h
+        <div class="col-3 d-flex justify-content-center">
+            @CalculateAverageRequestCompletionTimeInHours(TestRequests).ToHoursAndMinutes()
         </div>
     </div>
 
     <div class="row card d-flex flex-row p-2 my-1">
-        <div class="col-10 right-divider">
+        <div class="col-9 right-divider">
             <p>N° of requests finished after Due Date:</p>
         </div>
-        <div class="col-2 d-flex justify-content-center">
+        <div class="col-3 d-flex justify-content-center">
             @CountRequestsCompletedAfterDueDate(TestRequests)
         </div>
     </div>
 
     <div class="row card d-flex flex-row p-2 my-1">
-        <div class="col-10 right-divider">
+        <div class="col-9 right-divider">
             <p>N° of requests finished before Due Date:</p>
         </div>
-        <div class="col-2 d-flex justify-content-center">
+        <div class="col-3 d-flex justify-content-center">
             @CountRequestsCompletedBeforeDueDate(TestRequests)
+        </div>
+    </div>
+
+    <div class="row card d-flex flex-row p-2 my-1">
+        <div class="col-9 right-divider">
+            <p>N° of requests that needed to be fixed:</p>
+        </div>
+        <div class="col-3 d-flex justify-content-center">
+            @CountRequestsThatNeededToBeFixed(TestRequests)
+        </div>
+    </div>
+
+    <div class="row card d-flex flex-row p-2 my-1">
+        <div class="col-9 right-divider">
+            <p>N° of requests that did not need to be fixed:</p>
+        </div>
+        <div class="col-3 d-flex justify-content-center">
+            @CountRequestsThatDidntNeedToBeFixed(TestRequests)
+        </div>
+    </div>
+
+    <div class="row card d-flex flex-row p-2 my-1">
+        <div class="col-9 right-divider">
+            <p>Average test requests lead time:</p>
+        </div>
+        <div class="col-3 d-flex justify-content-center">
+            @CalculateAverageLeadTime(TestRequests).ToHoursAndMinutes()
+        </div>
+    </div>
+
+    <div class="row card d-flex flex-row p-2 my-1">
+        <div class="col-9 right-divider">
+            <p>Average test requests cycle time:</p>
+        </div>
+        <div class="col-3 d-flex justify-content-center">
+            @CalculateCycleTime(TestRequests).ToHoursAndMinutes()
         </div>
     </div>
 </RadzenCard>
@@ -71,5 +107,91 @@
     {
         return requests.Count(r => r.CompletedDate.HasValue &&
                                    r.CompletedDate.Value > r.DueDate);
+    }
+
+    private static int CountRequestsThatNeededToBeFixed(List<TestRequest> requests)
+    {
+        return requests.Count(tr => tr.History.Any(h => h.NewStatus == RequestStatus.FixingIssues));
+    }
+
+    private static int CountRequestsThatDidntNeedToBeFixed(List<TestRequest> requests)
+    {
+        return requests.Count(tr => !tr.History.Any(h => h.NewStatus == RequestStatus.FixingIssues));
+    }
+
+    private static double CalculateAverageLeadTime(List<TestRequest> testRequests)
+    {
+        if (testRequests.Count == 0)
+        {
+            return 0;
+        }
+
+        double totalLeadTime = 0;
+        int count = 0;
+
+        foreach (var request in testRequests)
+        {
+            var started = request.History
+                .Where(h => h.NewStatus == RequestStatus.Waiting)
+                .OrderBy(h => h.ChangedDate)
+                .FirstOrDefault()?.ChangedDate;
+
+            var completed = request.History
+                .Where(h => h.NewStatus == RequestStatus.Completed && h.ChangedDate >= started)
+                .OrderBy(h => h.ChangedDate)
+                .FirstOrDefault()?.ChangedDate;
+
+            if (started.HasValue && completed.HasValue)
+            {
+                totalLeadTime += (completed.Value - started.Value).TotalHours;
+                count++;
+            }
+        }
+
+        if (count > 0)
+        {
+            var result = totalLeadTime / count;
+            return Math.Round(result, 2);
+        }
+
+        return 0;
+    }
+
+    private static double CalculateCycleTime(List<TestRequest> testRequests)
+    {
+        if (testRequests.Count == 0)
+        {
+            return 0;
+        }
+
+        double totalCycleTime = 0;
+        int count = 0;
+
+        foreach (var request in testRequests)
+        {
+            var started = request.History
+                .Where(h => h.NewStatus == RequestStatus.InProgress)
+                .OrderBy(h => h.ChangedDate)
+                .FirstOrDefault()?.ChangedDate;
+
+            var completed = request.History
+                .Where(h => h.NewStatus == RequestStatus.Completed && h.ChangedDate >= started)
+                .OrderBy(h => h.ChangedDate)
+                .FirstOrDefault()?.ChangedDate;
+
+            if (started.HasValue && completed.HasValue)
+            {
+                totalCycleTime += (completed.Value - started.Value).TotalHours;
+                count++;
+            }
+        }
+
+        if (count > 0)
+        {
+            var result = totalCycleTime / count;
+            return Math.Round(result, 2);
+        }
+
+        return 0;
     }
 }

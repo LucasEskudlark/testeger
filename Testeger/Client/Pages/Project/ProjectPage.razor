@@ -18,12 +18,13 @@
 @foreach (var status in testRequestsByStatus.Keys)
 {
     var requests = testRequestsByStatus[status];
-
-    <IndividualRow Requests="requests" Status="@status">
-        <RowTitle>
-            <RadzenText TextStyle="TextStyle.H6" Class="rz-mb-0 rz-color-base-600" TagName="TagName.H6">@GetStatusName(status)</RadzenText>
-        </RowTitle>
-    </IndividualRow>
+    <RadzenCard class="my-3 pt-1" Style="min-width: 900px;">
+        <IndividualRow Requests="requests" Status="@status">
+            <RowTitle>
+                <RadzenText TextStyle="TextStyle.H6" Class="rz-mb-0" Style="color: #A9ABAE;" TagName="TagName.H6">@GetStatusName(status)</RadzenText>
+            </RowTitle>
+        </IndividualRow>
+    </RadzenCard>
 }
 
 <RadzenButton Click="Clear" Style="margin-right: 10px;" />

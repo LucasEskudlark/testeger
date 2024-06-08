@@ -4,15 +4,21 @@
 @inject TestCaseService TestCaseService
 
 <div class="container-fluid">
-    <div class="row">
+    <div class="row d-flex justify-content-between mb-4">
         <div class="col-auto">
             <RadzenBreadCrumb>
                 <RadzenBreadCrumbItem Path="@BreadCrumbHelper.GetProjectUrl(ProjectId)" Text="Project" />
                 <RadzenBreadCrumbItem Text="Metrics" />
             </RadzenBreadCrumb>
         </div>
+        <div class="col-3 d-flex justify-content-end">
+            <RadzenDropDown @bind-Value="selectedTimeFrame"
+                            Data=@timeOptions
+                            TextProperty="Text"
+                            ValueProperty="Value" />
+        </div>
     </div>
-    @if (TestCases is null && TestRequests is null)
+    @if ((TestCases is null && TestRequests is null) || (TestCases.Count == 0 && TestRequests.Count == 0))
     {
         <div class="row mt-4 d-flex justify-content-center">
             <div class="col-12">
@@ -23,35 +29,84 @@
         </div>
     } else
     {
-        <div class="row mt-5 d-flex align-items-start">
-            <div class="col-6">
-                <TestRequestGeneralMetricsDatagrid TestRequests="TestRequests"></TestRequestGeneralMetricsDatagrid>
-            </div>
-            <div class="col-6">
-                <RequestTimeSpentInEachStatusChart TestRequests="TestRequests" TestRequestsByStatus="TestRequestsByStatus"></RequestTimeSpentInEachStatusChart>
-            </div>
-        </div>
+        <RadzenCard class="my-3 py-2">
+            <ToggleComponent>
+                <Header>
+                    <h5 class="my-2 group-header"><strong>Test requests metrics:</strong></h5>
+                </Header>
+                <ChildContent>
+                    <div class="row mt-5 d-flex align-items-start">
+                        <div class="col-6">
+                            <TestRequestGeneralMetricsDatagrid TestRequests="TestRequests" />
+                        </div>
+                        <div class="col-6">
+                            <RequestTimeSpentInEachStatusChart TestRequests="TestRequests" TestRequestsByStatus="TestRequestsByStatus" />
+                        </div>
+                    </div>
 
-        <div class="row mt-5 d-flex justify-content-center">
-            <div class="col-10">
-                <TestRequestCountPerStatusChart TestRequestsByStatus="TestRequestsByStatus"></TestRequestCountPerStatusChart>
-            </div>
-        </div>
+                    <div class="row mt-4 d-flex justify-content-center mb-4">
+                        <div class="col-10">
+                            <TestRequestCountPerStatusChart TestRequestsByStatus="TestRequestsByStatus" />
+                        </div>
+                    </div>
+                </ChildContent>
+            </ToggleComponent>  
+        </RadzenCard>
 
-        <div class="row mt-5">
-            <div class="col-6">
-                <TestCaseCountPerStatusChart TestCasesByStatus="TestCasesByStatus"></TestCaseCountPerStatusChart>
-            </div>
-            <div class="col-6">
-                <TestCaseGeneralMetricsDatagrid TestCases="TestCases" TestRequests="TestRequests"></TestCaseGeneralMetricsDatagrid>
-            </div>
-        </div>
+        <RadzenCard class="my-3 py-2">
+            <ToggleComponent>
+                <Header>
+                    <h5 class="my-2 group-header"><strong>Test cases metrics:</strong></h5>
+                </Header>
+                <ChildContent>
+                    <div class="row mt-5">
+                        <div class="col-6">
+                            <TestCaseCountPerStatusChart TestCasesByStatus="TestCasesByStatus" />
+                        </div>
+                        <div class="col-6">
+                            <TestCaseGeneralMetricsDatagrid TestCases="TestCases" TestRequests="TestRequests" />
+                        </div>
+                    </div>
 
-        <div class="row mt-5">
-            <div class="col-12">
-                <TestCaseTimeSpentInEachStatusChart TestCasesByStatus="TestCasesByStatus" TestCases="TestCases"></TestCaseTimeSpentInEachStatusChart>
-            </div>
-        </div>
+                    <div class="row mt-4 mb-4">
+                        <div class="col-12">
+                            <TestCaseTimeSpentInEachStatusChart TestCasesByStatus="TestCasesByStatus" TestCases="TestCases" />
+                        </div>
+                    </div>
+                </ChildContent>
+            </ToggleComponent>
+        </RadzenCard>
+
+        <RadzenCard class="my-3 py-2">
+            <ToggleComponent>
+                <Header>
+                    <h5 class="my-2 group-header"><strong>Team metrics:</strong></h5>
+                </Header>
+                <ChildContent>
+                    <div class="row mt-5 mb-4">
+                        <div class="col-6">
+                            <RequestCountPerProjectQAChart />
+                        </div>
+                        <div class="col-6 pb-0">
+                            <TestCaseCountPerProjectQAChart />
+                        </div>
+                    </div>
+                </ChildContent>
+            </ToggleComponent>
+        </RadzenCard>
+
+        <RadzenCard class="my-3 py-2">
+            <ToggleComponent>
+                <Header>
+                    <h5 class="my-2 group-header"><strong>Individual metrics:</strong></h5>
+                </Header>
+                <ChildContent>
+                    <div class="row mt-4 mb-4">
+                        <IndividualProjectQAMetrics />
+                    </div>
+                </ChildContent>
+            </ToggleComponent>
+        </RadzenCard>
     }
 </div>
 
@@ -71,10 +126,32 @@
         TestCasesByStatus = await TestCaseService.GetTestCasesByProjectIdGroupedByStatus(ProjectId);
         TestCases = await TestCaseService.GetTestCasesByProjectId(ProjectId);
     }
+
+    string selectedTimeFrame = "1d";
+
+    List<TimeOption> timeOptions = new List<TimeOption>
+    {
+        new TimeOption { Text = "Past 4 hours", Value = "1h" },
+        new TimeOption { Text = "Past 12 hours", Value = "4h" },
+        new TimeOption { Text = "Past 1 day", Value = "1d" },
+        new TimeOption { Text = "Past 2 days", Value = "2d" },
+        new TimeOption { Text = "Past 1 week", Value = "1w" },
+        new TimeOption { Text = "Past 1 month", Value = "1M" }
+    };
+
+    public class TimeOption
+    {
+        public string? Text { get; set; }
+        public string? Value { get; set; }
+    }
 }
 
 <style>
     .right-divider {
         border-right: 1px solid #ced4da;
+    }
+
+    .group-header {
+        color: #6D6F72;
     }
 </style>

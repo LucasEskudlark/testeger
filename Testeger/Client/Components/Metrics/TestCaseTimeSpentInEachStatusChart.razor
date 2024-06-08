@@ -1,4 +1,4 @@
-﻿<h5><strong>Average time a test case spend in each status:</strong></h5>
+﻿<h6>Average time a test case spend in each status:</h6>
 <RadzenCard>
     <div class="row">
         <div class="col-6">
@@ -11,20 +11,20 @@
         <div class="col-6 d-flex align-items-center">
             <div class="row ms-2">
                 <div class="row card d-flex flex-row p-2 my-1">
-                    <div class="col-10 right-divider">
+                    <div class="col-9 right-divider">
                         <p>Average time spent in the "Pending" Status:</p>
                     </div>
-                    <div class="col-2 d-flex justify-content-center">
-                        @CalculateAverageTimeInSpecificStatus(TestCases, TestCaseStatus.Pending)h
+                    <div class="col-3 d-flex justify-content-center">
+                        @CalculateAverageTimeInSpecificStatus(TestCases, TestCaseStatus.Pending).ToHoursAndMinutes()
                     </div>
                 </div>
 
                 <div class="row card d-flex flex-row p-2 my-1">
-                    <div class="col-10 right-divider">
+                    <div class="col-9 right-divider">
                         <p>Average time spent in the "Failed" Status:</p>
                     </div>
-                    <div class="col-2 d-flex justify-content-center">
-                        @CalculateAverageTimeInSpecificStatus(TestCases, TestCaseStatus.Failed)h
+                    <div class="col-3 d-flex justify-content-center">
+                        @CalculateAverageTimeInSpecificStatus(TestCases, TestCaseStatus.Failed).ToHoursAndMinutes()
                     </div>
                 </div>
             </div>        

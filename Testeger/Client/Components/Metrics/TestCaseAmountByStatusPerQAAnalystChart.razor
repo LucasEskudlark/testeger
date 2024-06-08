@@ -1,0 +1,46 @@
+﻿<h6>Test Case amount by status per QA Analyst</h6>
+<RadzenCard class="py-0">
+    <RadzenChart>
+        <RadzenDonutSeries Data="@chartData"
+                           CategoryProperty="Status"
+                           ValueProperty="TestCaseCount"
+                           Fills="@(new [] { "#6984c9", "#f2405b", "#009952" })"
+                           TotalAngle="180" StartAngle="0">
+            <ChildContent>
+                <RadzenSeriesDataLabels Visible="false" />
+            </ChildContent>
+            <TitleTemplate>
+                <div class="rz-donut-content">
+                    <div>Test Case</div>
+                    <div>amount</div>
+                </div>
+            </TitleTemplate>
+        </RadzenDonutSeries>
+    </RadzenChart>
+</RadzenCard>
+
+@code {
+    class DataItem
+    {
+        public string Status { get; set; }
+        public int TestCaseCount { get; set; }
+    }
+
+    DataItem[] chartData = new DataItem[] {
+        new DataItem
+        {
+            Status = "Pending",
+            TestCaseCount = 5
+        },
+        new DataItem
+        {
+            Status = "Failed",
+            TestCaseCount = 2
+        },
+        new DataItem
+        {
+            Status = "Completed",
+            TestCaseCount = 12
+        }
+    };
+}

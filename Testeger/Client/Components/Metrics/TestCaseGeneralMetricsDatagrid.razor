@@ -1,57 +1,57 @@
 ﻿@using System.Linq;
 
-<h5><strong>Test case general numbers</strong></h5>
+<h6>Test case general numbers</h6>
 <RadzenCard>
     <div class="row card d-flex flex-row p-2 my-1">
-        <div class="col-10 right-divider">
+        <div class="col-9 right-divider">
             <p>Total amount of test cases:</p>
         </div>
-        <div class="col-2 d-flex justify-content-center">
+        <div class="col-3 d-flex justify-content-center">
             @TestCases.Count()
         </div>
     </div>
 
     <div class="row card d-flex flex-row p-2 my-1">
-        <div class="col-10 right-divider">
-            <p>Average n° of tests cases per test request:</p>
+        <div class="col-9 right-divider">
+            <p>Average n° of test cases per test request:</p>
         </div>
-        <div class="col-2 d-flex justify-content-center">
-            @CalculateAverageNumberOfTestCasesPerRequest(TestRequests)
+        <div class="col-3 d-flex justify-content-center">
+            @CalculateAverageNumberOfTestCasesPerRequest()
         </div>
     </div>
 
     <div class="row card d-flex flex-row p-2 my-1">
-        <div class="col-10 right-divider">
-            <p>N° that failed:</p>
+        <div class="col-9 right-divider">
+            <p>N° of test cases that failed at least once:</p>
         </div>
-        <div class="col-2 d-flex justify-content-center">
+        <div class="col-3 d-flex justify-content-center">
             @CountFailedTestCases(TestCases)
         </div>
     </div>
 
     <div class="row card d-flex flex-row p-2 my-1">
-        <div class="col-10 right-divider">
-            <p>N° that did not fail a single time:</p>
+        <div class="col-9 right-divider">
+            <p>N° of test cases that did not fail:</p>
         </div>
-        <div class="col-2 d-flex justify-content-center">
+        <div class="col-3 d-flex justify-content-center">
             @CountNeverFailedTestCases(TestCases)
         </div>
     </div>
 
     <div class="row card d-flex flex-row p-2 my-1">
-        <div class="col-10 right-divider">
+        <div class="col-9 right-divider">
             <p>Average time to complete a test case:</p>
         </div>
-        <div class="col-2 d-flex justify-content-center">
-            @CalculateAverageTestCaseCompletionTimeInHours(TestCases)h
+        <div class="col-3 d-flex justify-content-center">
+            @CalculateAverageTestCaseCompletionTimeInHours(TestCases).ToHoursAndMinutes()
         </div>
     </div>
 
     <div class="row card d-flex flex-row p-2 my-1">
-        <div class="col-10 right-divider">
+        <div class="col-9 right-divider">
             <p>Average time to test a test case:</p>
         </div>
-        <div class="col-2 d-flex justify-content-center">
+        <div class="col-3 d-flex justify-content-center">
             * min
         </div>
     </div>
@@ -83,16 +83,14 @@
         return Math.Round(averageHours, 2);
     }
 
-    private double CalculateAverageNumberOfTestCasesPerRequest(List<TestRequest> requests)
+    private double CalculateAverageNumberOfTestCasesPerRequest()
     {
-        if (requests.Count == 0)
+        if (TestRequests.Count == 0)
         {
-            return 0.0;
+            return (double)0;
         }
 
-        var totalTestCases = requests.Sum(request => request.TestCases?.Count() ?? 0);
-
-        double averageCount = (double)totalTestCases / requests.Count;
+        double averageCount = (double)TestCases.Count / TestRequests.Count;
         return Math.Round(averageCount, 2);
     }
 

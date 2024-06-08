@@ -1,42 +1,42 @@
-﻿<h5><strong>Average time a request spend in each status:</strong></h5>
+﻿<h6>Average time a request spend in each status:</h6>
 <RadzenCard>
     <RadzenChart>
         <RadzenPieSeries Data="@GetPieChartData()" Title="HoursSpent" CategoryProperty="Status" ValueProperty="HoursSpent">
         </RadzenPieSeries>
     </RadzenChart>
     <div class="row card d-flex flex-row p-2 my-1">
-        <div class="col-10 right-divider">
+        <div class="col-9 right-divider">
             <p>Average time spent in the "Waiting" Status:</p>
         </div>
-        <div class="col-2 d-flex justify-content-center">
-            @CalculateAverageTimeInSpecificStatus(TestRequests, RequestStatus.Waiting)h
+        <div class="col-3 d-flex justify-content-center">
+            @CalculateAverageTimeInSpecificStatus(TestRequests, RequestStatus.Waiting).ToHoursAndMinutes()
         </div>
     </div>
 
     <div class="row card d-flex flex-row p-2 my-1">
-        <div class="col-10 right-divider">
+        <div class="col-9 right-divider">
             <p>Average time spent in the "In Progress" Status:</p>
         </div>
-        <div class="col-2 d-flex justify-content-center">
-            @CalculateAverageTimeInSpecificStatus(TestRequests, RequestStatus.InProgress)h
+        <div class="col-3 d-flex justify-content-center">
+            @CalculateAverageTimeInSpecificStatus(TestRequests, RequestStatus.InProgress).ToHoursAndMinutes()
         </div>
     </div>
 
     <div class="row card d-flex flex-row p-2 my-1">
-        <div class="col-10 right-divider">
+        <div class="col-9 right-divider">
             <p>Average time spent in the "Ready for Test" Status:</p>
         </div>
-        <div class="col-2 d-flex justify-content-center">
-            @CalculateAverageTimeInSpecificStatus(TestRequests, RequestStatus.ReadyForTesting)h
+        <div class="col-3 d-flex justify-content-center">
+            @CalculateAverageTimeInSpecificStatus(TestRequests, RequestStatus.ReadyForTesting).ToHoursAndMinutes()
         </div>
     </div>
 
     <div class="row card d-flex flex-row p-2 my-1">
-        <div class="col-10 right-divider">
-            <p>Average time spent in the "Fixing" Status:</p>
+        <div class="col-9 right-divider">
+            <p>Average time spent in the "Fixing Issues" Status:</p>
         </div>
-        <div class="col-2 d-flex justify-content-center">
-            @CalculateAverageTimeInSpecificStatus(TestRequests, RequestStatus.FixingIssues)h
+        <div class="col-3 d-flex justify-content-center">
+            @CalculateAverageTimeInSpecificStatus(TestRequests, RequestStatus.FixingIssues).ToHoursAndMinutes()
         </div>
     </div>
 </RadzenCard>
