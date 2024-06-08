@@ -1,0 +1,43 @@
+﻿<div @onclick="ToggleContent" class="toggle-header">
+    <RadzenIcon Icon="@(isContentVisible ? "arrow_drop_up" : "arrow_drop_down")" IconColor="@Colors.Primary" Style="height: 20px;" />
+    @Header
+</div>
+<div style="@(isContentVisible ? "display:block;" : "display:none;")">
+    @if (isChartInitialized)
+    {
+        @ChildContent
+    }
+</div>
+
+@code {
+    private bool isContentVisible = false;
+    private bool isChartInitialized = false;
+
+    [Parameter] public RenderFragment Header { get; set; }
+    [Parameter] public RenderFragment ChildContent { get; set; }
+
+    private void ToggleContent()
+    {
+        isContentVisible = !isContentVisible;
+        if (isContentVisible && !isChartInitialized)
+        {
+            isChartInitialized = true;
+        }
+    }
+}
+
+<style>
+    .toggle-header {
+        cursor: pointer;
+        font-size: 18px;
+        font-weight: bold;
+        display: flex;
+        align-items: center;
+        margin-bottom: 5px;
+    }
+
+        .toggle-header .rzi {
+            margin-right: 8px;
+            font-size: 24px;
+        }
+</style>
