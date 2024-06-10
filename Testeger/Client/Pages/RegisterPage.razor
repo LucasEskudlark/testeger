@@ -1,30 +1,28 @@
 ﻿@page "/register"
+@inject NavigationManager NavigationManager
 
-<div class="row d-flex justify-content-center align-items-center h-100">
-    <div class="col-12 col-md-9 col-lg-7 col-xl-7">
+<div class="row d-flex justify-content-center align-items-center vh-100">
+    <div class="col-12 col-md-8 col-lg-6 col-xl-6">
         <div class="card shadow-sm" style="border-radius: 15px;">
             <div class="card-body p-5">
-                <h2 class="mb-5">Create an account</h2>
+                <div class="row d-flex justify-content-between">
+                    <h3 class="mb-5">Create an account</h3>
 
-                <EditForm Model="registerModel"  style="width: 350px;">
+                </div>
+                
+                <EditForm Model="registerModel" OnValidSubmit="HandleRegistration">
                     <div class="register-container">
-                        <div class="row mb-2">
-                            <div class="col-12 d-flex justify-content-center">
-                                <img class="mb-2" src="/images/testeger.horizontal-logo.png" alt="Testeger logo" height="100">
-                            </div>
-
-                        </div>
-                        
                         <div class="row mb-2 d-flex justify-content-between">
                             <div class="col-6">
                                 <div class="form-group">
-                                    <InputText id="firstName" class="form-control" placeholder="First Name" @bind-Value="registerModel.FirstName" />
+                                    <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">First Name</RadzenText>
+                                    <InputText id="firstName" class="form-control" placeholder="Firste" @bind-Value="registerModel.FirstName" />
                                 </div>
                             </div>
-
                             <div class="col-6">
                                 <div class="form-group">
-                                    <InputText id="lastName" class="form-control" placeholder="Last Name" @bind-Value="registerModel.LastName" />
+                                    <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Last Name</RadzenText>
+                                    <InputText id="lastName" class="form-control" placeholder="Last" @bind-Value="registerModel.LastName" />
                                 </div>
                             </div>
                         </div>
@@ -32,32 +30,39 @@
                         <div class="row mb-2 d-flex justify-content-between">
                             <div class="col-6">
                                 <div class="form-group">
+                                    <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Birth date</RadzenText>
                                     <RadzenDatePicker @bind-Value="registerModel.BirthDate"
-                                                      Style="width:100%;" Min="@(DateTime.Today)"
-                                                      DateFormat="dd/MM/yyyy" />
+                                                      Style="width:100%;" Max="@(DateTime.Today)"
+                                                      DateFormat="dd/MM/yyyy"
+                                                      Placeholder="01/01/0001" />
                                 </div>
                             </div>
-
                             <div class="col-6">
                                 <div class="form-group">
-                                    <RadzenFieldset Text="Phone Number Input Example">
-                                        <RadzenMask Mask="(000) 000-0000" @bind-Value="@registerModel.LastName" Placeholder="(123) 456-7890" />
-                                    </RadzenFieldset>
+                                    <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Phone number</RadzenText>
+                                    <RadzenMask Mask="(**) *****-****" CharacterPattern="[0-9]" Placeholder="(00) 00000-0000" Name="Phone" @bind-Value=@registerModel.PhoneNumber
+                                                Style="width: 100%;" aria-label="Phone" />
                                 </div>
                             </div>
                         </div>
 
-                        @* <div class="form-group">
-                            <InputText id="email" class="form-control" placeholder="E-mail address" Style="height: 50px" @bind-Value="registerModel.Email" />
+                        <div class="row mb-2 d-flex justify-content-between">
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">E-mail</RadzenText>
+                                    <InputText id="email" class="form-control" placeholder="testeger@email.com" @bind-Value="registerModel.Email" />
+                                </div>
+                            </div>
+                            
                         </div>
 
-                        <div class="form-group mb-4">
-                            <InputText id="password" type="password" class="form-control" placeholder="Password" Style="height: 50px" @bind-Value="registerModel.Password" />
-                        </div> *@
+                        <RadzenButton ButtonType="ButtonType.Submit" ButtonStyle="ButtonStyle.Primary" Text="Register" Style="width: 100%;" />
 
-                        <button type="submit" class="btn-login">Sign in</button>
-
-                        <p class="mt-5 mb-3 text-body-secondary">© 2024</p>
+                        <p class="mt-4 mb-1">
+                            <small>
+                                Already have an account? <RadzenLink Path="login" Text="Login here" class="login-link" />
+                            </small>
+                        </p>
                     </div>
                 </EditForm>
 
@@ -73,6 +78,7 @@
 
     private void HandleRegistration()
     {
+        NavigationManager.NavigateTo("/home");
     }
 
     public class RegisterModel
@@ -87,10 +93,22 @@
 
 <style>
     .register-container {
-
+        max-width: 600px;
     }
 
     .form-group {
         margin-bottom: 15px;
+    }
+
+    .form-control::placeholder {
+        font-size: 15px;
+    }
+
+    .form-control {
+        font-size: 15px;
+    }
+
+    .login-link{
+        color: var(--rz-primary);
     }
 </style>
