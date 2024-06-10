@@ -15,12 +15,12 @@
         </RadzenHeader>
         <RadzenSidebar @bind-Expanded="@sidebarExpanded">
             <RadzenPanelMenu>
-                <RadzenPanelMenuItem Text="Home" Icon="home" Path="/" />
+                <RadzenPanelMenuItem Text="Home" Icon="home" Path="/home" />
                 <RadzenPanelMenuItem Text="Profile" Icon="account_box" />
 
                 @if (Projects.Any())
                 {
-                    <RadzenPanelMenuItem Text="Projects">
+                    <RadzenPanelMenuItem Icon="file_copy" Text="Projects">
                         @foreach (var project in Projects)
                         {
                             <RadzenPanelMenuItem Text="@project.Name" Path="@GetProjectRoute(project.Id)" />
