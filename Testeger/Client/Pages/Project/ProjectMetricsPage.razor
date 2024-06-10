@@ -2,6 +2,9 @@
 @layout DefaultLayout
 @inject TestRequestService TestRequestService
 @inject TestCaseService TestCaseService
+@inject ProjectService ProjectService
+
+<PageTitle>@Project?.Name Metrics - Testeger</PageTitle>
 
 <div class="container-fluid">
     <div class="row d-flex justify-content-between mb-4">
@@ -114,6 +117,7 @@
     [Parameter]
     public string ProjectId { get; set; }
 
+    private Project Project { get; set; }
     private List<TestRequest> TestRequests { get; set; }
     private List<TestCase> TestCases { get; set; }
     private Dictionary<RequestStatus, List<TestRequest>> TestRequestsByStatus { get; set; }
@@ -125,6 +129,7 @@
         TestRequestsByStatus = await TestRequestService.GetTestRequestsByProjectIdGroupedByStatus(ProjectId);
         TestCasesByStatus = await TestCaseService.GetTestCasesByProjectIdGroupedByStatus(ProjectId);
         TestCases = await TestCaseService.GetTestCasesByProjectId(ProjectId);
+        Project = await ProjectService.GetProjectById(ProjectId);
     }
 
     string selectedTimeFrame = "1d";

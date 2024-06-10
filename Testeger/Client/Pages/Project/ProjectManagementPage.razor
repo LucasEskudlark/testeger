@@ -3,8 +3,11 @@
 @inject ProjectService ProjectService
 @inject TooltipService TooltipService
 
+
 @if (Project is not null)
 {
+    <PageTitle>@Project.Name Settings - Testeger</PageTitle>
+
     <div class="row mb-4" style="min-width: 900px; width: 100%;">
         <div class="col-6">
             <RadzenBreadCrumb>
