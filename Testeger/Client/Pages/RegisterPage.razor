@@ -1,0 +1,116 @@
+﻿@page "/register"
+@inject NavigationManager NavigationManager
+
+<PageTitle>Register - Testeger</PageTitle>
+
+<div class="row d-flex justify-content-center align-items-center vh-100">
+    <div class="col-12 col-md-8 col-lg-6 col-xl-6">
+        <div class="card shadow-sm" style="border-radius: 15px;">
+            <div class="card-body p-5">
+                <div class="row d-flex justify-content-between">
+                    <h3 class="mb-5">Create an account</h3>
+
+                </div>
+                
+                <EditForm Model="registerModel" OnValidSubmit="HandleRegistration">
+                    <div class="register-container">
+                        <div class="row mb-2 d-flex justify-content-between">
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">First Name</RadzenText>
+                                    <InputText id="firstName" class="form-control" placeholder="Firste" @bind-Value="registerModel.FirstName" />
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Last Name</RadzenText>
+                                    <InputText id="lastName" class="form-control" placeholder="Last" @bind-Value="registerModel.LastName" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row mb-2 d-flex justify-content-between">
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Birth date</RadzenText>
+                                    <RadzenDatePicker @bind-Value="registerModel.BirthDate"
+                                                      Style="width:100%;" Max="@(DateTime.Today)"
+                                                      DateFormat="dd/MM/yyyy"
+                                                      Placeholder="01/01/0001" />
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Phone number</RadzenText>
+                                    <RadzenMask Mask="(**) *****-****" CharacterPattern="[0-9]" Placeholder="(00) 00000-0000" Name="Phone" @bind-Value=@registerModel.PhoneNumber
+                                                Style="width: 100%;" aria-label="Phone" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row mb-2 d-flex justify-content-between">
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">E-mail</RadzenText>
+                                    <InputText id="email" class="form-control" placeholder="testeger@email.com" @bind-Value="registerModel.Email" />
+                                </div>
+                            </div>
+                            
+                        </div>
+
+                        <RadzenButton ButtonType="ButtonType.Submit" ButtonStyle="ButtonStyle.Primary" Text="Register" Style="width: 100%;" />
+
+                        <p class="mt-4 mb-1">
+                            <small>
+                                Already have an account? <RadzenLink Path="login" Text="Login here" class="login-link" />
+                            </small>
+                        </p>
+                    </div>
+                </EditForm>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+@code{
+    private RegisterModel registerModel = new RegisterModel();
+
+    private int value = 1;
+
+    private void HandleRegistration()
+    {
+        NavigationManager.NavigateTo("/home");
+    }
+
+    public class RegisterModel
+    {
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public DateTime BirthDate { get; set; }
+        public string PhoneNumber { get; set; }
+        public string Email { get; set; }
+    }
+}
+
+<style>
+    .register-container {
+        max-width: 600px;
+    }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    .form-control::placeholder {
+        font-size: 15px;
+    }
+
+    .form-control {
+        font-size: 15px;
+    }
+
+    .login-link{
+        color: var(--rz-primary);
+    }
+</style>

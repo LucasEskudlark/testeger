@@ -107,7 +107,6 @@
 
     private async Task HandleTestFinished()
     {
-        TestCase.IsCompleted = true;
         SetTestCaseStatus(TestResult);
         TestCase.AmountOfTimeSpentToTest = CalculateTotalTime();
         await TestCaseService.UpdateTestCase(TestCase);

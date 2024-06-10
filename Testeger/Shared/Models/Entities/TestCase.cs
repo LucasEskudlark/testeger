@@ -24,9 +24,10 @@ public class TestCase
     public TestCaseStatus Status { get; set; }
     public bool NeedCorrection { get; set; }
     public List<string> SavedTimes { get; set; }
-    public bool IsCompleted { get; set; }
     public TimeSpan ElapsedTime { get; set; }
     public TimeSpan AmountOfTimeSpentToTest { get; set; }
     public DateTime? ScheduledDate { get; set; }
     public List<TestCaseHistory> History { get; set; }
+
+    public bool IsCompleted => Status == TestCaseStatus.Completed;
 }

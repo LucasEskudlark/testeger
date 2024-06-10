@@ -1,0 +1,35 @@
+﻿@page "/home"
+@layout DefaultLayout
+@inject TestRequestService TestRequestService
+@inject DialogService DialogService
+
+<PageTitle>Home - Testeger</PageTitle>
+
+<div class="px-4 py-5 my-5 text-center">
+    <img class="d-block mx-auto mb-4" src="/docs/5.3/assets/brand/bootstrap-logo.svg" alt="" width="72" height="57">
+    <h1 class="display-5 fw-bold text-body-emphasis">Centered hero</h1>
+    <div class="col-lg-6 mx-auto">
+        <p class="lead mb-4">Quickly design and customize responsive mobile-first sites with Bootstrap, the world’s most popular front-end open source toolkit, featuring Sass variables and mixins, responsive grid system, extensive prebuilt components, and powerful JavaScript plugins.</p>
+        <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+            <RadzenButton Text="Primary"
+                          Size="ButtonSize.Large"
+                          ButtonStyle="ButtonStyle.Primary"
+                          Click="OpenProjectCreationDialog" />
+            <RadzenButton Text="Secondary"
+                          Size="ButtonSize.Large"
+                          ButtonStyle="ButtonStyle.Light"
+                           />
+        </div>
+    </div>
+</div>
+
+@code {
+    private async Task OpenProjectCreationDialog()
+    {
+        await DialogService.OpenAsync<ProjectCreationDialog>(
+            "Create Project",
+            null,
+            new DialogOptions() { Width = "700px", Height = "540px", Resizable = false, Draggable = true }
+        );
+    }
+}

@@ -1,0 +1,85 @@
+﻿@page "/login"
+@inject NavigationManager NavigationManager
+
+<PageTitle>Login - Testeger</PageTitle>
+
+<div class="row d-flex justify-content-center align-items-center vh-100">
+    <div class="col-10 col-md-6 col-lg-4 col-xl-4">
+        <div class="card shadow-sm" style="border-radius: 15px;">
+            <div class="card-body px-5 py-4">
+                <div class="row mb-2">
+                    <div class="col-12 d-flex justify-content-center">
+                        <img class="mb-2" src="/images/testeger.horizontal-logo.png" alt="Testeger logo" height="100">
+                    </div>
+                </div>
+
+                <EditForm Model="loginModel" OnValidSubmit="HandleLogin">
+                    <h4 class="mb-3">Please sign in</h4>
+
+                    <div class="form-group">
+                        <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">E-mail</RadzenText>
+                        <InputText id="email" class="form-control" placeholder="testeger@email.com" @bind-Value="loginModel.Email" />
+                    </div>
+
+                    <div class="form-group">
+                        <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Password</RadzenText>
+                        <InputText id="password" type="password" class="form-control" placeholder="******" @bind-Value="loginModel.Password" />
+                    </div>
+
+                    <div class="mb-5 d-flex flex-row align-items-center">
+                        <RadzenSwitch @bind-Value=@value InputAttributes="@(new Dictionary<string,object>(){ { "aria-label", "Switch value" }})" />
+                        <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3" class="ms-2 my-0">Remember me</RadzenText>
+                    </div>
+                    
+
+                    <RadzenButton ButtonType="ButtonType.Submit" ButtonStyle="ButtonStyle.Primary" Text="Sign in" Style="width: 100%;" />
+
+                    <p>
+                        <small class="d-flex justify-content-end mt-1">
+                            <RadzenLink Path="login" Text="Forgot password?" class="forgotpw-link" />
+                        </small>
+                    </p>
+                    
+                    <p class="mt-2">
+                        <small>
+                            Don't have an account yet? <RadzenLink Path="register" Text="Sign up" class="register-link" />
+                        </small>
+                    </p>
+                </EditForm>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    private LoginModel loginModel = new LoginModel();
+    bool value;
+
+    private void HandleLogin()
+    {
+        NavigationManager.NavigateTo("/home");
+    }
+
+    public class LoginModel
+    {
+        public string Email { get; set; }
+        public string Password { get; set; }
+    }
+}
+
+<style>
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    .register-link {
+        color: var(--rz-primary);
+    }
+
+    .forgotpw-link {
+        color: var(--rz-primary);
+        font-size: 0.85rem;
+    }
+</style>
+

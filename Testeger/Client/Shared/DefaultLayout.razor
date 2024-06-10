@@ -2,8 +2,7 @@
 @inject ProjectService ProjectService
 @inject NavigationManager NavigationManager
 
-<RadzenDialog />
-<RadzenTooltip />
+<RadzenComponents />
 
 @if (isDataLoaded)
 {
@@ -16,12 +15,12 @@
         </RadzenHeader>
         <RadzenSidebar @bind-Expanded="@sidebarExpanded">
             <RadzenPanelMenu>
-                <RadzenPanelMenuItem Text="Home" Icon="home" Path="/" />
+                <RadzenPanelMenuItem Text="Home" Icon="home" Path="/home" />
                 <RadzenPanelMenuItem Text="Profile" Icon="account_box" />
 
                 @if (Projects.Any())
                 {
-                    <RadzenPanelMenuItem Text="Projects">
+                    <RadzenPanelMenuItem Icon="file_copy" Text="Projects">
                         @foreach (var project in Projects)
                         {
                             <RadzenPanelMenuItem Text="@project.Name" Path="@GetProjectRoute(project.Id)" />
@@ -82,10 +81,10 @@
 
 <style>
     .rz-body {
-        background-color: #fafafa;
+        background-color: #F8F9FA;
     }
 
     .rz-dialog-content {
-        background-color: #fafafa;
+        background-color: #F8F9FA;
     }
 </style>
