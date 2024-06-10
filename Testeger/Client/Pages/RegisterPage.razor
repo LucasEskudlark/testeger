@@ -1,0 +1,96 @@
+﻿@page "/register"
+
+<div class="row d-flex justify-content-center align-items-center h-100">
+    <div class="col-12 col-md-9 col-lg-7 col-xl-7">
+        <div class="card shadow-sm" style="border-radius: 15px;">
+            <div class="card-body p-5">
+                <h2 class="mb-5">Create an account</h2>
+
+                <EditForm Model="registerModel"  style="width: 350px;">
+                    <div class="register-container">
+                        <div class="row mb-2">
+                            <div class="col-12 d-flex justify-content-center">
+                                <img class="mb-2" src="/images/testeger.horizontal-logo.png" alt="Testeger logo" height="100">
+                            </div>
+
+                        </div>
+                        
+                        <div class="row mb-2 d-flex justify-content-between">
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <InputText id="firstName" class="form-control" placeholder="First Name" @bind-Value="registerModel.FirstName" />
+                                </div>
+                            </div>
+
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <InputText id="lastName" class="form-control" placeholder="Last Name" @bind-Value="registerModel.LastName" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row mb-2 d-flex justify-content-between">
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <RadzenDatePicker @bind-Value="registerModel.BirthDate"
+                                                      Style="width:100%;" Min="@(DateTime.Today)"
+                                                      DateFormat="dd/MM/yyyy" />
+                                </div>
+                            </div>
+
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <RadzenFieldset Text="Phone Number Input Example">
+                                        <RadzenMask Mask="(000) 000-0000" @bind-Value="@registerModel.LastName" Placeholder="(123) 456-7890" />
+                                    </RadzenFieldset>
+                                </div>
+                            </div>
+                        </div>
+
+                        @* <div class="form-group">
+                            <InputText id="email" class="form-control" placeholder="E-mail address" Style="height: 50px" @bind-Value="registerModel.Email" />
+                        </div>
+
+                        <div class="form-group mb-4">
+                            <InputText id="password" type="password" class="form-control" placeholder="Password" Style="height: 50px" @bind-Value="registerModel.Password" />
+                        </div> *@
+
+                        <button type="submit" class="btn-login">Sign in</button>
+
+                        <p class="mt-5 mb-3 text-body-secondary">© 2024</p>
+                    </div>
+                </EditForm>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+@code{
+    private RegisterModel registerModel = new RegisterModel();
+
+    private int value = 1;
+
+    private void HandleRegistration()
+    {
+    }
+
+    public class RegisterModel
+    {
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public DateTime BirthDate { get; set; }
+        public string PhoneNumber { get; set; }
+        public string Email { get; set; }
+    }
+}
+
+<style>
+    .register-container {
+
+    }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+</style>
