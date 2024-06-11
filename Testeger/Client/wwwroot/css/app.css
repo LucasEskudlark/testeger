@@ -79,3 +79,34 @@ input:hover {
     color: #8F9194;
     font-size: 0.8rem;
 }
+
+.rz-dialog-title {
+    padding: 10px 10px !important;
+    padding-top: 0 !important;
+    border-top-left-radius: 8px !important;
+    border-top-right-radius: 8px !important;
+    text-shadow: 0 .125rem .25rem rgba(0, 0, 0, .075) !important;
+}
+
+.rz-dialog-titlebar {
+    background-color: #E8E8E8 !important;
+    box-shadow: inset 0 .125rem .25rem rgba(0, 0, 0, .075) !important;
+}
+
+.rz-dialog-content {
+    box-shadow: inset 0 .125rem .25rem rgba(0, 0, 0, .075) !important;
+}
+
+.rz-dialog {
+    border-radius: 8px !important;
+    box-shadow: 0 .125rem .25rem rgba(0, 0, 0, .075) !important;
+}
+
+.rz-link-text {
+    color: var(--rz-primary) !important;
+}
+
+.accordion-button {
+    color: var(--rz-primary) !important;
+    background-color: #B2C4F3;
+}
