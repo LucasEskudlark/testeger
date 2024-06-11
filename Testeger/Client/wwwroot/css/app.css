@@ -74,3 +74,8 @@ a, .btn-link {
 input:hover {
     cursor: pointer;
 }
+
+.description-text {
+    color: #8F9194;
+    font-size: 0.8rem;
+}
