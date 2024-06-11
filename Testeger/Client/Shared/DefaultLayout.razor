@@ -20,10 +20,10 @@
 
                 @if (Projects.Any())
                 {
-                    <RadzenPanelMenuItem Icon="file_copy" Text="Projects">
+                    <RadzenPanelMenuItem Icon="folder_open" Text="Projects">
                         @foreach (var project in Projects)
                         {
-                            <RadzenPanelMenuItem Text="@project.Name" Path="@GetProjectRoute(project.Id)" />
+                            <RadzenPanelMenuItem Icon="file_copy" Text="@project.Name" Path="@GetProjectRoute(project.Id)" />
                         }
                     </RadzenPanelMenuItem>
                 }
