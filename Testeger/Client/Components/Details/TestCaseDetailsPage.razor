@@ -5,70 +5,66 @@
 <div class="container-fluid py-2 px-0">
     <div class="row my-2">
         <div class="col-8">
-            <RadzenLabel Text="Title" Style="@LabelStyle" />
+            <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H3">Title</RadzenText>
             <RadzenTextBox @bind-Value="TestCase.Title" Style="width:100%;" />
         </div>
-    </div
+    </div>
 
-    <div class="row my-2">
+    <div class="row my-3">
         <div class="col-3">
-            <RadzenLabel Text="Status" Style="@LabelStyle" />
+            <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H3">Status</RadzenText>
             <RadzenDropDown Disabled="true" Data="@Enum.GetValues(typeof(TestCaseStatus))"
                             @bind-Value="TestCase.Status" Style="width:100%;"
                             MouseEnter="@(args => ShowStatusTooltip(args))" />
         </div>
         <div class="col-4">
-            <RadzenLabel Text="Need Correction?" Style="@LabelStyle" />
+            <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H3">Need correction?</RadzenText>
             <RadzenTextBox Disabled="true" @bind-Value="NeedCorrectionString" Style="width:100%;" />
         </div>
 
         <div class="col-3">
-            <RadzenLabel Text="Created by" Style="@LabelStyle" />
+            <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H3">Created by</RadzenText>
             <RadzenTextBox Disabled="true" @bind-Value="TestCase.CreatedBy" Style="width:100%;" />
         </div>
     </div>
 
     <div class="row my-2">
         <div class="col-4">
-            <RadzenLabel Text="Description" Style="@LabelStyle" />
+            <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H3">Description</RadzenText>
             <RadzenTextArea @bind-Value="TestCase.Details.Description" Style="width:100%; height: 200px; resize: none;" />
         </div>
         <div class="col-4">
-            <RadzenLabel Text="Pre Conditions" Style="@LabelStyle" />
+            <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H3">Pre Conditions</RadzenText>
             <RadzenTextArea @bind-Value="TestCase.Details.PreConditions" Style="width: 100%; height: 200px; resize: none;" />
         </div>
         <div class="col-4">
-            <RadzenLabel Text="Steps" Style="@LabelStyle" />
+            <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H3">Steps</RadzenText>
             <RadzenTextArea @bind-Value="TestCase.Details.Steps" Style="width: 100%; height: 200px; resize: none;" />
         </div>
     </div>
 
-    <div class="row my-2 me-1">
-        <div class="col-3 pb-2">
-            <RadzenLabel Text="Created Date" Style="@LabelStyle" />
+    <div class="row d-flex justify-content-start mt-3 me-1 ps-0">
+        <div class="col-3 pb-2 mt-1 ms-2">
+            <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H3">Created date</RadzenText>
             <RadzenDatePicker Disabled="true"
                               @bind-Value="TestCase.CreatedDate"
                               Style="width:100%;" Min="@(DateTime.Today)"
                               DateFormat="dd/MM/yyyy" />
         </div>
-        <div class="col-4 pb-2">
-            <RadzenLabel Text="Completed Date" Style="@LabelStyle"/>
+        <div class="col-4 pb-2 mt-1 ms-2">
+            <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H3">Completed date</RadzenText>
             <RadzenDatePicker Disabled="true"
                               @bind-Value="TestCase.CompletedDate"
                               Style="width:100%;" Min="@(DateTime.Today)"
                               DateFormat="dd/MM/yyyy" MouseEnter="@(args => ShowCompletedDateTooltip(args) )" />
-        </div
-        <div class="col-5 test-schedule pb-2">
-            <div class="row d-flex flex-column align-items-center">
-                <div class="col-8 d-flex flex-column align-items-center">
-                    <RadzenLabel Text="Scheduled Date" Style="@LabelStyle"/>
-                    <RadzenDatePicker @bind-Value="TestCase.ScheduledDate"
-                                      Disabled="@(Request.Status != RequestStatus.ReadyForTesting)"
-                                      Style="width:100%;" Min="@(DateTime.Today)"
-                                      DateFormat="dd/MM/yyyy"
-                                      MouseEnter="@(args => ShowScheduledDateTooltip(args) )" />
-                </div>
-            </div>
+        </div>
+        <div class="col-4 pb-2 test-schedule pt-1 ms-2">
+            <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H3">Scheduled date</RadzenText>
+            <RadzenDatePicker @bind-Value="TestCase.ScheduledDate"
+                                Disabled="@(Request.Status != RequestStatus.ReadyForTesting)"
+                                Style="width:100%;" Min="@(DateTime.Today)"
+                                DateFormat="dd/MM/yyyy"
+                                MouseEnter="@(args => ShowScheduledDateTooltip(args) )" />
             
         </div>
     </div>
@@ -80,8 +76,6 @@
 
     [Parameter]
     public TestRequest Request { get; set; }
-
-    private string LabelStyle = "font-weight: 600 !important; color: #333 !important;";
 
     private string NeedCorrectionString
     {

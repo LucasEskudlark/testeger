@@ -5,7 +5,7 @@
     <div class="container-fluid">
         <div class="row mb-3 mt-2">
             <div class="col-5">
-                <label for="title" class="form-label">Title</label>
+                <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H3">Title</RadzenText>
                 <InputText id="title"
                            class="form-control inputtext"
                            placeholder="Enter a concise title for the test case."
@@ -14,7 +14,7 @@
             </div>
 
             <div class="col-3 ms-4">
-                <label for="environment" class="form-label">Environment</label>
+                <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H3">Environment</RadzenText>
                 <InputText id="environment"
                            class="form-control inputtext"
                            placeholder="Where the test will be executed."
@@ -25,7 +25,7 @@
 
         <div class="row mb-3">
             <div class="col-3">
-                <label for="description" class="form-label">Description</label>
+                <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H3">Description</RadzenText>
                 <InputTextArea id="description"
                                class="form-control textarea"
                                placeholder="Provide a detailed description of the test case."
@@ -34,7 +34,7 @@
             </div>
 
             <div class="col-3">
-                <label for="preconditions" class="form-label">Pre Conditions</label>
+                <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H3">Pre Conditions</RadzenText>
                 <InputTextArea id="preconditions"
                                class="form-control textarea"
                                placeholder="List any conditions that must be met before the test is executed."
@@ -43,7 +43,7 @@
             </div>
 
             <div class="col-3">
-                <label for="steps" class="form-label">Steps</label>
+                <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H3">Steps</RadzenText>
                 <InputTextArea id="steps"
                                class="form-control textarea"
                                placeholder="Detail each step required to perform the test."
@@ -52,7 +52,7 @@
             </div>
 
             <div class="col-3">
-                <label for="expectedresult" class="form-label">Expected Result</label>
+                <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H3">Expected Result</RadzenText>
                 <InputTextArea id="expectedresult"
                                class="form-control textarea"
                                placeholder="Describe the expected outcome of the test."
@@ -116,6 +116,28 @@
         testCase.History.Add(history);
 
         return testCase;
+    }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        if (string.IsNullOrEmpty(testCaseCreationViewModel.ExpectedResult))
+        {
+            testCaseCreationViewModel.ExpectedResult = "Given \n" +
+                                                       "And \n" +
+                                                       "When \n" +
+                                                       "And \n" +
+                                                       "Then ";
+        }
+
+        if (string.IsNullOrEmpty(testCaseCreationViewModel.Steps))
+        {
+            testCaseCreationViewModel.Steps = "1. \n" +
+                                                       "2. \n" +
+                                                       "3. \n" +
+                                                       "4. \n" +
+                                                       "5. ";
+        }
     }
 }
 

@@ -11,18 +11,18 @@
 
                     <div class="row mb-2">
                         <div class="col-7">
-                            <RadzenLabel Text="Expected Result" Style="@LabelStyle"/>
-                            <RadzenTextArea @bind-Value="TestCase.Details.ExpectedResult" Style="width:100%; height: 100px; resize: none;" />
+                            <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H3">Expected Result</RadzenText>
+                            <RadzenTextArea @bind-Value="TestCase.Details.ExpectedResult" Style="width:100%; height: 150px; resize: none;" />
                         </div>
                         <div class="col-5">
-                            <RadzenLabel Text="Environment" Style="@LabelStyle" />
+                            <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H3">Environment</RadzenText>
                             <RadzenTextBox @bind-Value="TestCase.Details.Environment" Style="width:100%;" />
                         </div>
                     </div>
 
                     <div class="row my-2 top-divider">
                         <div class="col-12">
-                            <small><i>Tests results will be shown here after the test is done.</i></small>
+                            <small class="description-text"><i>Tests results will be shown here after the test is done.</i></small>
                         </div>
                     </div>
                 </div>

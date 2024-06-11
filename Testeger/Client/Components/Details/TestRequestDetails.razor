@@ -6,11 +6,11 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-md-8">
-                <RadzenLabel Text="Title" Style="@LabelStyle" />
+                <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H3">Title</RadzenText>
                 <RadzenTextBox @bind-Value="Request.Title" Style="width:100%;" />
             </div>
             <div class="col-md-4">
-                <RadzenLabel Text="Assigned to" Style="@LabelStyle" />
+                <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H3">Assigned to</RadzenText>
                 <RadzenDropDown Data="names"
                                 @bind-Value="Request.AssignedTo.Name"
                                 Style="width:100%;" />
@@ -18,49 +18,49 @@
         </div>
         <div class="row mt-2">
             <div class="col-12">
-                <RadzenLabel Text="Description" Style="@LabelStyle" />
+                <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H3">Description</RadzenText>
                 <RadzenTextArea @bind-Value="Request.Description" Style="width:100%; height:170px; resize: none;" />
             </div>
         </div>
         <div class="row mt-2">
             <div class="col-12">
-                <RadzenLabel Text="Story Link" Style="@LabelStyle" />
+                <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H3">Story Link</RadzenText>
                 <RadzenTextBox @bind-Value="Request.StoryLink" Style="width:100%;" />
             </div>
         </div>
         <div class="row mt-2">
             <div class="col-md-4">
-                <RadzenLabel Text="Status" Style="@LabelStyle"  />
+                <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H3">Status</RadzenText>
                 <RadzenDropDown Data="@EnumHelper.GetSpacedNames(typeof(RequestStatus))"
                                 @bind-Value="StatusAsString"
                                 Style="width:100%;" />
             </div>
             <div class="col-md-4">
-                <RadzenLabel Text="Priority Level" Style="@LabelStyle" />
+                <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H3">Priority Level</RadzenText>
                 <RadzenDropDown Data="@EnumHelper.GetSpacedNames(typeof(PriorityLevel))"
                                 @bind-Value="PriorityAsString" Style="width:100%;" />
             </div>
             <div class="col-md-4">
-                <RadzenLabel Text="Created by" Style="@LabelStyle"  />
+                <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H3">Created By</RadzenText>
                 <RadzenTextBox Disabled="true" @bind-Value="Request.CreatorId" Style="width:100%;" />
             </div>
         </div>
         <div class="row mt-2">
             <div class="col-md-4">
-                <RadzenLabel Text="Due Date" Style="@LabelStyle"  />
+                <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H3">Due Date</RadzenText>
                 <RadzenDatePicker @bind-Value="Request.DueDate"
                                   Style="width:100%;" Min="@(DateTime.Today)"
                                   DateFormat="dd/MM/yyyy" />
             </div>
             <div class="col-md-4">
-                <RadzenLabel Text="Created Date" Style="@LabelStyle" />
+                <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H3">Created Date</RadzenText>
                 <RadzenDatePicker Disabled="true"
                                   @bind-Value="Request.CreatedDate"
                                   Style="width:100%;" Min="@(DateTime.Today)"
                                   DateFormat="dd/MM/yyyy" />
             </div>
             <div class="col-md-4">
-                <RadzenLabel Text="Completed Date" Style="@LabelStyle" />
+                <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H3">Completed Date</RadzenText>
                 <RadzenDatePicker Disabled="true"
                                   @bind-Value="Request.CompletedDate"
                                   Style="width:100%;" Min="@(DateTime.Today)"
@@ -73,8 +73,6 @@
 @code {
     [Parameter]
     public TestRequest Request { get; set; }
-
-    private string LabelStyle = "font-weight: 600 !important; color: #333 !important;";
 
     // Temporary
     private List<string> names = new()
