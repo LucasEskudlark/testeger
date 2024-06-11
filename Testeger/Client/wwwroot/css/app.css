@@ -88,7 +88,7 @@ input:hover {
     text-shadow: 0 .125rem .25rem rgba(0, 0, 0, .075) !important;
 }
 
-.rz-dialog-titlebar {
+.rz-dialog-titlebar, .row-titlebar {
     background-color: #E8E8E8 !important;
     box-shadow: inset 0 .125rem .25rem rgba(0, 0, 0, .075) !important;
 }
@@ -109,4 +109,12 @@ input:hover {
 .accordion-button {
     color: var(--rz-primary) !important;
     background-color: #B2C4F3;
+}
+
+.bottom-divider {
+    border-bottom: 1px solid #ced4da;
+}
+
+.right-divider {
+    border-right: 1px solid #ced4da;
 }
