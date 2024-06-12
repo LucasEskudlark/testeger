@@ -38,7 +38,7 @@
         <div class="row pb-2">
             <div class="col-7 p2">
                 <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H3">Actual Result</RadzenText>
-                <RadzenTextArea @bind-Value="TestCase.Results.ActualResult"
+                <RadzenTextArea @bind-Value="TestCase.GetLatestTestCaseResult().ActualResult"
                                 Style="width:100%; height: 150px; resize: none;"
                                 Placeholder="Describe the test results with as much details as possible."/>
             </div>
@@ -60,7 +60,7 @@
             </div>
 
             <div class="col-5 p2 d-flex justify-content-end">
-                @if (TestResult != null && TestCase.Results.ActualResult != null)
+                @if (TestResult != null && TestCase.GetLatestTestCaseResult().ActualResult != null)
                 {
                     <RadzenButton Icon="check"
                                   Text="Finish test"
@@ -109,6 +109,7 @@
     {
         SetTestCaseStatus(TestResult);
         TestCase.AmountOfTimeSpentToTest = CalculateTotalTime();
+        TestCase.Results.Add(new TestCaseResults());
         await TestCaseService.UpdateTestCase(TestCase);
         DialogService.Close();
     }
