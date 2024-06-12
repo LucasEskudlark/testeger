@@ -108,7 +108,7 @@
     private async Task HandleTestFinished()
     {
         SetTestCaseStatus(TestResult);
-        TestCase.AmountOfTimeSpentToTest = CalculateTotalTime();
+        TestCase.GetLatestTestCaseResult().AmountOfTimeSpentToTest = CalculateTotalTime();
         TestCase.Results.Add(new TestCaseResults());
         await TestCaseService.UpdateTestCase(TestCase);
         DialogService.Close();
@@ -144,7 +144,7 @@
     private TimeSpan CalculateTotalTime()
     {
         TimeSpan total = TimeSpan.Zero;
-        foreach (var time in TestCase.SavedTimes)
+        foreach (var time in TestCase.GetLatestTestCaseResult().SavedTimes)
         {
             if (TimeSpan.TryParse(time, out var parsedTime))
             {
