@@ -1,11 +1,11 @@
-﻿<div class="row" style="min-width: 900px;">
+﻿<div class="row card mt-3 shadow-sm" style="min-width: 900px;">
     <div class="col-12 px-0 mx-0">
-        <div class="row-title d-flex flex-row justify-content-start align-items-center mt-0 ms-2" style="min-width: 900px; height: 35px;">
+        <div class="card-header row-titlebar d-flex justify-content-start align-items-center ps-2 px-0" style="min-width: 900px; height: 35px;">
             @RowTitle
         </div>
         @if (Requests.Count > 0)
         {
-            <div class="row my-2 mt-2" style="min-width: 900px;">
+            <div class="card-body my-2 mt-2" style="min-width: 900px;">
 
                 <TestRequestsDataList Requests="Requests"
                                     Status="Status" />
@@ -13,9 +13,9 @@
             </div>
         } else
         {
-            <div class="row my-2 d-flex justify-content-center align-items-center" style="min-width: 900px; height: 50px;">
+            <div class="card-body my-2 d-flex justify-content-center align-items-center" style="min-width: 900px; height: 50px;">
                 <div>
-                    <small class="d-flex justify-content-center align-items-center"><i>No existing requests for this status yet.</i></small>
+                    <small class="d-flex justify-content-center align-items-center" style="color: #A9ABAE;"><i>No existing requests for this status yet.</i></small>
                 </div> 
             </div>
         }
@@ -32,9 +32,3 @@
     [Parameter]
     public RequestStatus Status { get; set; }
 }
-
-<style>
-    .row-title {
-        border-bottom: 1px solid #D9DADB;
-    }
-</style>

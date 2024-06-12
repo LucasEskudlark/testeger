@@ -10,7 +10,7 @@
 {
     <PageTitle>@Request.Title - Testeger</PageTitle>
 
-    <div class="rz-m-12 p-0 m-0">
+    <div class="container-fluid mb-5 mt-2">
         <div class="row justify-content-between">
             <div class="col-auto">
                 <RadzenBreadCrumb>
@@ -29,6 +29,7 @@
                 <RadzenButton Icon="delete"
                               Text="Delete"
                               ButtonStyle="ButtonStyle.Danger"
+                              Shade="Shade.Darker"
                               Size="ButtonSize.Small"
                               Click="HandleTestRequestDeletion"
                               MouseEnter="@(args => ShowDeleteRequestButtonTooltip(args) )" />
@@ -48,7 +49,7 @@
                     <div class="container-fluid">
                         <div class="row">
                             <div class="col-12 d-flex justify-content-between">
-                                <RadzenText TextStyle="TextStyle.H6" TagName="TagName.H5">Test Cases</RadzenText>
+                                <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H3">Test Cases</RadzenText>
                                 <RadzenButton Icon="add_circle" Text="Add case" ButtonStyle="ButtonStyle.Primary" Size="ButtonSize.Small" Click="OpenTestCaseCreationDialog" />
                             </div>
                         </div>
@@ -134,11 +135,5 @@
     private void ShowDeleteRequestButtonTooltip(ElementReference elementReference, TooltipOptions options = null)
                     => TooltipService.Open(elementReference, "Delete this entire request", options);
 }
-
-<style>
-    .right-divider {
-        border-right: 1px solid #ced4da;
-    }
-</style>
 
 

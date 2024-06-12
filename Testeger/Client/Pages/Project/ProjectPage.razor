@@ -8,7 +8,7 @@
 
 <div class="row mb-3" style="min-width: 900px;">
     <div class="col-6">
-        <h5><strong>Project: @project?.Name</strong></h5>
+        <RadzenText TextStyle="TextStyle.H6" TagName="TagName.H6">Project: @project?.Name</RadzenText>
     </div>
     <div class="col-6 d-flex justify-content-end" style="min-width: 450px;">
         <RadzenButton Click="NavigateToProjectManagementPage" Icon="settings" ButtonStyle="ButtonStyle.Light" class="me-2" />
@@ -20,13 +20,11 @@
 @foreach (var status in testRequestsByStatus.Keys)
 {
     var requests = testRequestsByStatus[status];
-    <RadzenCard class="my-3 pt-1" Style="min-width: 900px;">
-        <IndividualRow Requests="requests" Status="@status">
-            <RowTitle>
-                <RadzenText TextStyle="TextStyle.H6" Class="rz-mb-0" Style="color: #A9ABAE;" TagName="TagName.H6">@GetStatusName(status)</RadzenText>
-            </RowTitle>
-        </IndividualRow>
-    </RadzenCard>
+    <IndividualRow Requests="requests" Status="@status">
+        <RowTitle>
+            <RadzenText TextStyle="TextStyle.H6" class="rz-mb-0" Style="font-size: 1.1rem;" TagName="TagName.H6">@GetStatusName(status)</RadzenText>
+        </RowTitle>
+    </IndividualRow>
 }
 
 <RadzenButton Click="Clear" Style="margin-right: 10px;" />

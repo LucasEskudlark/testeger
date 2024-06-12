@@ -5,20 +5,51 @@
 
 <PageTitle>Home - Testeger</PageTitle>
 
-<div class="px-4 py-5 my-5 text-center">
-    <img class="d-block mx-auto mb-4" src="/docs/5.3/assets/brand/bootstrap-logo.svg" alt="" width="72" height="57">
-    <h1 class="display-5 fw-bold text-body-emphasis">Centered hero</h1>
-    <div class="col-lg-6 mx-auto">
-        <p class="lead mb-4">Quickly design and customize responsive mobile-first sites with Bootstrap, the world’s most popular front-end open source toolkit, featuring Sass variables and mixins, responsive grid system, extensive prebuilt components, and powerful JavaScript plugins.</p>
-        <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
-            <RadzenButton Text="Primary"
-                          Size="ButtonSize.Large"
-                          ButtonStyle="ButtonStyle.Primary"
-                          Click="OpenProjectCreationDialog" />
-            <RadzenButton Text="Secondary"
-                          Size="ButtonSize.Large"
-                          ButtonStyle="ButtonStyle.Light"
-                           />
+<div class="container-fluid">
+    <div class="row my-0  pb-4">  
+        <div class="col-6 mt-4 ">
+            <RadzenText TextStyle="TextStyle.H5">Hello, Lucas!</RadzenText>
+            <p class="lead mt-3" style="font-size: 1rem;">Ready to start your next testeger project? Whether you're looking to manage your testing workflow or collaborate with your team, we've got you covered.</p>
+
+            <div class="d-grid gap-3 d-sm-flex justify-content-sm-start">
+                <RadzenButton Text="Create a new project"
+                              Size="ButtonSize.Medium"
+                              ButtonStyle="ButtonStyle.Primary"
+                              Click="OpenProjectCreationDialog" 
+                              class="p-3" />
+                <RadzenButton Text="See my invitations"
+                              Size="ButtonSize.Medium"
+                              ButtonStyle="ButtonStyle.Light"
+                              class="p-3" />
+            </div>
+        </div>
+        <div class="col-6 d-flex justify-content-center align-items-center">
+            <img src="images/testeger-horizontal-logo-no-bg.png" alt="Testeger logo" height="200px">
+        </div>
+    </div>
+
+    <div class="row mt-4">
+        <div class="col-6">
+            <div class="card shadow-sm px-0">
+                <div class="card-header pt-3 row-titlebar d-flex">
+                    <RadzenIcon Icon="folder_open" IconColor="@Colors.Primary"></RadzenIcon>
+                    <RadzenText TextStyle="TextStyle.H6" class="ms-2 home-card-title">Your projects</RadzenText>
+                </div>
+                <div class="card-body">
+                    oi
+                </div>
+            </div>
+        </div>
+        <div class="col-6">
+            <div class="card shadow-sm px-0">
+                <div class="card-header pt-3 row-titlebar d-flex">
+                    <RadzenIcon Icon="notifications" IconColor="@Colors.Primary"></RadzenIcon>
+                    <RadzenText TextStyle="TextStyle.H6" class="ms-2 home-card-title">Notifications</RadzenText>
+                </div>
+                <div class="card-body">
+                    oi
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -33,3 +64,9 @@
         );
     }
 }
+
+<style>
+    .home-card-title{
+        font-size: 1.1rem;
+    }
+</style>
