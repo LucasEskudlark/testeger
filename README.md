@@ -45,7 +45,7 @@ For more information, contact the project managers.
 ---
 
 ## License
-© [2024] [Lucas Bottega Eskudlark, Fernando Dias]. All rights reserved.
+© 2024 Lucas Bottega Eskudlark, Fernando Dias. All rights reserved.
 
 This project and all associated files are proprietary and confidential. It is strictly prohibited to copy, distribute, modify, or use in any other way the files contained in this repository, by any means, without the express permission of the copyright owner. See the [LICENSE](LICENSE) file for more details.
 
