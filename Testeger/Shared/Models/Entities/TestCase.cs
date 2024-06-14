@@ -7,8 +7,6 @@ public class TestCase
 {
     public TestCase()
     {
-        SavedTimes = new List<string> ();
-        ElapsedTime = TimeSpan.Zero;
         History = new List<TestCaseHistory>();
         Results = new List<TestCaseResults>();
     }
@@ -23,9 +21,6 @@ public class TestCase
     public DateTime? CompletedDate { get; set; }
     public TestCaseStatus Status { get; set; }
     public bool NeedCorrection { get; set; }
-    public List<string> SavedTimes { get; set; }
-    public TimeSpan ElapsedTime { get; set; }
-    public TimeSpan AmountOfTimeSpentToTest { get; set; }
     public DateTime? ScheduledDate { get; set; }
     public List<TestCaseHistory> History { get; set; }
     public List<TestCaseResults> Results { get; set; }
