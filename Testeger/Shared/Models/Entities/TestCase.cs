@@ -27,5 +27,5 @@ public class TestCase
 
     public bool IsCompleted => Status == TestCaseStatus.Completed;
 
-    public TestCaseResults GetLatestTestCaseResult() => Results.LastOrDefault() ?? new TestCaseResults();
+    public TestCaseResults GetLatestTestCaseResult() => Results.Last();
 }

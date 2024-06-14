@@ -125,6 +125,7 @@
         }
 
         TestCase.Status = TestCaseStatus.Completed;
+        TestCase.GetLatestTestCaseResult().IsSuccess = true;
         TestCase.History.Add(GetTestCaseHistory(TestCaseStatus.Completed));
         TestCase.CompletedDate = DateTime.Now;
     }

@@ -3,11 +3,18 @@
         <Header>
             <div class="row d-flex justify-content-between" style="width: 100%;">
                 <div class="col-9">
-                    <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H3" class="ps-0 pt-2">#1 Result</RadzenText>
+                    <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H3" class="ps-0 pt-2">Result</RadzenText>
                 </div>
                 <div class="col-3 d-flex align-items-center">
-                    <RadzenIcon Icon="close" IconColor="@Colors.DangerDark" class="me-0"></RadzenIcon>
-                    <small class="result-p ms-1" style="color: var(--rz-danger-darker);">Failed</small>
+                    @if (!Result.IsSuccess)
+                    {
+                        <RadzenIcon Icon="close" IconColor="@Colors.DangerDark" class="me-0"></RadzenIcon>
+                        <small class="result-p ms-1" style="color: var(--rz-danger-darker);">Failed</small>
+                    } else
+                    {
+                        <RadzenIcon Icon="check" IconColor="@Colors.Success" class="me-0"></RadzenIcon>
+                        <small class="result-p ms-1" style="color: var(--rz-success);">Passed</small>
+                    }
                 </div>
             </div>
            

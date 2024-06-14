@@ -14,4 +14,5 @@ public class TestCaseResults
     public List<string> SavedTimes { get; set; }
     public TimeSpan ElapsedTime { get; set; }
     public TimeSpan AmountOfTimeSpentToTest { get; set; }
+    public bool IsSuccess { get; set; }
 }
