@@ -6,7 +6,7 @@ public class TestCaseCreationViewModel
 {
     [Required(ErrorMessage = "Title is required")]
     [MinLength(5, ErrorMessage = "Title must be at least 5 characters")]
-    [MaxLength(30, ErrorMessage = "Title must be at 30 characters at most")]
+    [MaxLength(50, ErrorMessage = "Title must be at 50 characters at most")]
     public string? Title { get; set; }
 
     [Required(ErrorMessage = "Description is required")]

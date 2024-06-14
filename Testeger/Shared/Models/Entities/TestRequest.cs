@@ -25,5 +25,5 @@ public class TestRequest
     public DateTime CreatedDate { get; set; }
     public DateTime? CompletedDate { get; set; }
     public List<TestRequestHistory> History { get; set; }
-    public IEnumerable<TestCase> TestCases { get; set; }
+    public List<TestCase> TestCases { get; set; }
 }
