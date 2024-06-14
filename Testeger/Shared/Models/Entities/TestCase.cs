@@ -10,10 +10,7 @@ public class TestCase
         SavedTimes = new List<string> ();
         ElapsedTime = TimeSpan.Zero;
         History = new List<TestCaseHistory>();
-        Results = new List<TestCaseResults>
-        {
-            new()
-        };
+        Results = new List<TestCaseResults>();
     }
 
     public string? Id { get; set; }

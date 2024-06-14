@@ -1,15 +1,15 @@
 ﻿<div class="accordion" id="accordionExample">
     <div class="accordion-item">
-        <h5 class="accordion-header" style="height: 40px;">
-            <button class="accordion-button" style="height: 40px;" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                Testing Details
+        <h5 class="accordion-header row-titlebar" style="height: 40px;">
+            <button class="accordion-button row-titlebar" style="height: 40px;" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                <RadzenText TextStyle="TextStyle.H6" TagName="TagName.H6" class="mt-2">Testing Details</RadzenText>
             </button>
         </h5>
         <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#accordionExample">
             <div class="accordion-body">
-                <div class="container-fluid p-1">
+                <div class="container-fluid px-0">
 
-                    <div class="row mb-2">
+                    <div class="row pb-2 bottom-divider">
                         <div class="col-7">
                             <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H3">Expected Result</RadzenText>
                             <RadzenTextArea @bind-Value="TestCase.Details.ExpectedResult" Style="width:100%; height: 150px; resize: none;" />
@@ -20,10 +20,8 @@
                         </div>
                     </div>
 
-                    <div class="row my-2 top-divider">
-                        <div class="col-12">
-                            <small class="description-text"><i>Tests results will be shown here after the test is done.</i></small>
-                        </div>
+                    <div class="row mt-1 pt-2 mx-1">
+                        <DisplayTestCaseResults TestCase="TestCase" />
                     </div>
                 </div>
             </div>
@@ -34,12 +32,23 @@
 @code {
     [Parameter]
     public TestCase TestCase { get; set; }
-
-    private string LabelStyle = "font-weight: 600 !important; color: #333 !important;";
 }
 
 <style>
-    .top-divider {
-        border-top: 1px solid #ced4da;
+
+    .toggle-header {
+        cursor: pointer;
+        font-size: 1.1rem;
+        font-weight: bold;
+        display: flex;
+        align-items: center;
+        margin-bottom: 0;
+        background-color: #E8E8E8 !important;
     }
+
+        .toggle-header .rzi {
+            margin-right: 8px;
+            font-size: 14px;
+            margin-left: 0.5rem;
+        }
 </style>
