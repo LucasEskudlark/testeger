@@ -1,0 +1,21 @@
+﻿@code {
+    [Parameter]
+    public TestCase TestCase { get; set; }
+
+    private bool HasSingleResult => TestCase.Results.Count <= 1;
+}
+
+@if (HasSingleResult)
+{
+    <small class="description-text"><i>Tests results will be shown here after the test is done.</i></small>
+}
+else
+{
+    @foreach (var result in TestCase.Results)
+    {
+        if (result.ActualResult != null)
+        {
+            <TestResultDisplay Result="result" />
+        }
+    }
+}

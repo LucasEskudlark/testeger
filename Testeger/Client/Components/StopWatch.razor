@@ -18,7 +18,7 @@
     }
 
     private Timer timer;
-    private TimeSpan elapsedTime => TestCase.ElapsedTime;
+    private TimeSpan elapsedTime => TestCase.GetLatestTestCaseResult().ElapsedTime;
 
     private void StartStopwatch()
     {
@@ -38,24 +38,19 @@
 
     private async Task SaveTime()
     {
-        TestCase.SavedTimes.Add(elapsedTime.ToString(@"hh\:mm\:ss"));
-        await SaveTask();
+        TestCase.GetLatestTestCaseResult().SavedTimes.Add(elapsedTime.ToString(@"hh\:mm\:ss"));
+        await SaveTestCase();
     }
 
     private void UpdateElapsedTime()
     {
-        TestCase.ElapsedTime = TestCase.ElapsedTime.Add(TimeSpan.FromSeconds(1));
+        TestCase.GetLatestTestCaseResult().ElapsedTime = TestCase.GetLatestTestCaseResult().ElapsedTime.Add(TimeSpan.FromSeconds(1));
         InvokeAsync(StateHasChanged);
     }
 
-    private void ClearSavedTimes()
+    private async Task SaveTestCase()
     {
-        TestCase.SavedTimes.Clear();
-    }
-
-    private async Task SaveTask()
-    {
-        TestCaseService.UpdateTestCase(TestCase);
+        await TestCaseService.UpdateTestCase(TestCase);
     }
 }
 

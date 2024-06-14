@@ -98,7 +98,6 @@
                     ExpectedResult = testCaseCreationViewModel.ExpectedResult,
                     Environment = testCaseCreationViewModel.Environment
                 },
-                Results = new TestCaseResults(),
                 CreatedDate = DateTime.Now,
                 CreatedBy = "Lucas", // Temporary
                 NeedCorrection = false
@@ -114,6 +113,7 @@
             };
 
         testCase.History.Add(history);
+        testCase.Results.Add(new());
 
         return testCase;
     }

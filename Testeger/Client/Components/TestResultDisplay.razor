@@ -1,0 +1,54 @@
+﻿<div class="col-12 my-2 shadow-sm p-0">
+    <ToggleComponent>
+        <Header>
+            <div class="row d-flex justify-content-between" style="width: 100%;">
+                <div class="col-9">
+                    <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H3" class="ps-0 pt-2">Result</RadzenText>
+                </div>
+                <div class="col-3 d-flex align-items-center">
+                    @if (!Result.IsSuccess)
+                    {
+                        <RadzenIcon Icon="close" IconColor="@Colors.DangerDark" class="me-0"></RadzenIcon>
+                        <small class="result-p ms-1" style="color: var(--rz-danger-darker);">Failed</small>
+                    } else
+                    {
+                        <RadzenIcon Icon="check" IconColor="@Colors.Success" class="me-0"></RadzenIcon>
+                        <small class="result-p ms-1" style="color: var(--rz-success);">Passed</small>
+                    }
+                </div>
+            </div>
+           
+        </Header>
+        <ChildContent>
+            <div class="row my-2 ms-1 me-2 pb-0">
+                <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H3" class="ps-2 pt-0 result-h">Result:</RadzenText>
+                <p class="result-p ms-0 ps-2 mb-0">
+                    @Result.ActualResult
+                </p>
+            </div>
+            <div class="row my-2 ms-1 me-2">
+                <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H3" class="ps-2 pt-0 result-h">Evidence:</RadzenText>
+                <div class="d-flex">
+                    <RadzenIcon Icon="image" class="me-1 ms-0"></RadzenIcon>
+                    <RadzenIcon Icon="image" class="mx-1"></RadzenIcon>
+                    <RadzenIcon Icon="image" class="mx-1"></RadzenIcon>
+                </div>
+            </div>
+        </ChildContent>
+    </ToggleComponent>
+</div>
+
+@code {
+    [Parameter]
+    public TestCaseResults Result { get; set; }
+}
+
+<style>
+    .result-p{
+        font-size: 0.8rem;
+    }
+
+    .result-h{
+        font-size: 0.9rem;
+    }
+</style>

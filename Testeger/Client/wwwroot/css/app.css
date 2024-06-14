@@ -106,11 +106,6 @@ input:hover {
     color: var(--rz-primary) !important;
 }
 
-.accordion-button {
-    color: var(--rz-primary) !important;
-    background-color: #B2C4F3;
-}
-
 .bottom-divider {
     border-bottom: 1px solid #ced4da;
 }
