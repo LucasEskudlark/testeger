@@ -6,9 +6,9 @@
 
     <div class="row mb-4">
         <div class="col-9">
-            <label for="name" class="form-label mb-1 label">Name</label>
+            <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H3">Name</RadzenText>
             <InputText id="name"
-                       class="form-control"
+                       class="form-control inputtext"
                        placeholder="Enter the project name"
                        @bind-Value="newProject.ProjectName" />
             <ValidationMessage For="@(() => newProject.ProjectName)" />
@@ -18,11 +18,11 @@
     <div class="row mb-3">
         <div class="col-12 d-flex justify-content-between align-items-center">
             <div class="d-flex flex-column">
-                <h6 class="label">Project Members</h6>
+                <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H3" class="mb-0">Project Members</RadzenText>
                 <small style="font-size: 11px;">When creating, you will be automatically assigned the role of project manager.</small>
             </div>
 
-            <RadzenButton Icon="add" Text="Add member" Size="ButtonSize.Small" ButtonStyle="ButtonStyle.Primary" Click="AddMember"></RadzenButton>
+            <RadzenButton Icon="add" Text="Add member" Size="ButtonSize.Small" ButtonStyle="ButtonStyle.Primary" Click="AddMember" class="me-4"></RadzenButton>
         </div>
     </div>
 
@@ -31,15 +31,15 @@
         {
             <div class="row mb-2">
                 <div class="col-8 mb-0 pb-0">
-                    <label class="form-label mb-1 label">E-mail</label>
-                    <InputText @bind-Value="member.Email" placeholder="E-mail" class="form-control" />
+                    <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H3">E-mail</RadzenText>
+                    <InputText @bind-Value="member.Email" placeholder="E-mail" class="form-control inputtext" />
                     <ValidationMessage For="@(() => member.Email)" />
 
 
                 </div>
                 <div class="col-4 m-0 pb-0">
-                    <label class="form-label mb-1 label">Role</label>
-                    <InputSelect @bind-Value="member.Role" class="form-control">
+                    <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H3">Role</RadzenText>
+                    <InputSelect @bind-Value="member.Role" class="form-control inputtext">
                         @foreach (var role in Enum.GetValues<RoleType>())
                         {
                             if (CanDisplayRole(role))
@@ -133,10 +133,3 @@
 
     private bool CanDisplayRole(RoleType role) => role != RoleType.ProjectManager;
 }
-
-<style>
-    .label {
-        font-weight: 600 !important;
-        color: #333 !important;
-    }
-</style>
