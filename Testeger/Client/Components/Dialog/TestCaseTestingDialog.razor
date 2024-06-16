@@ -86,6 +86,9 @@
     [Parameter]
     public string TestCaseId { get; set; }
 
+    [Parameter]
+    public EventCallback OnTestFinished { get; set; }
+
     private TestCase TestCase { get; set; }
 
     private List<String> TestResultOptions = new List<string> { "Yes", "No" };
@@ -111,6 +114,7 @@
         TestCase.GetLatestTestCaseResult().AmountOfTimeSpentToTest = CalculateTotalTime();
         TestCase.Results.Add(new TestCaseResults());
         await TestCaseService.UpdateTestCase(TestCase);
+        await OnTestFinished.InvokeAsync();
         DialogService.Close();
     }
 

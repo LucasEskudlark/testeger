@@ -27,7 +27,7 @@
         <div class="col-4">
             <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H3">Priority Level</RadzenText>
             <InputSelect id="priorityLevel"
-                         class="form-select"
+                         class="form-select inputtext"
                          @bind-Value="testRequestViewModel.PriorityLevel">
                 @foreach (var priority in Enum.GetValues<PriorityLevel>())
                 {
@@ -139,10 +139,6 @@
     .textarea {
         height: 200px;
         resize: none;
-        font-size: 15px;
-    }
-
-    .inputtext {
         font-size: 15px;
     }
 </style>
