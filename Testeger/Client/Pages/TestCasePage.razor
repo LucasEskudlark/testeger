@@ -25,6 +25,7 @@
                               ButtonStyle="@testButtonStyle"
                               Size="ButtonSize.Small"
                               Click="@HandleButtonClick"
+                              Disabled="@isNotScheduled"
                               class="me-2" />
 
                 <RadzenButton Icon="save"
@@ -72,6 +73,7 @@
     public TestRequest Request { get; set; }
     private TestCase TestCase { get; set; }
 
+    private bool isNotScheduled;
     private bool isTestRunning = false;
     private string testButtonText => isTestRunning ? "Continue Test" : "Start Test";
     private ButtonStyle testButtonStyle => isTestRunning ? ButtonStyle.Warning : ButtonStyle.Success;
@@ -80,7 +82,9 @@
     {
         TestCase = await TestCaseService.GetTestCaseById(TestCaseId);
         Request = await TestRequestService.GetTestRequestById(TestCase.RequestId);
+        isNotScheduled = !TestCase.ScheduledDate.HasValue;
         TestCaseService.OnChange += StateHasChanged;
+        TestCaseService.OnTestCaseUpdated += UpdateTestCase;
     }
 
     private async Task HandleTestCaseDeletion()
@@ -99,6 +103,7 @@
         {
             await TestCaseService.UpdateTestCase(TestCase);
             await OnTestCaseUpdated.InvokeAsync();
+            isNotScheduled = !TestCase.ScheduledDate.HasValue;
         }
     }
 
@@ -112,7 +117,7 @@
     {
         var options = new DialogOptions { Width = "700px", Height = "630px", Resizable = false, Draggable = true };
         await DialogService.OpenAsync<TestCaseTestingDialog>("Testing",
-            new Dictionary<string, object> { { "TestCaseId", TestCaseId }, { nameof(TestCaseTestingDialog.OnTestFinished), UpdateTestCase } },
+            new Dictionary<string, object> { { "TestCaseId", TestCaseId }, { nameof(TestCaseTestingDialog.OnTestFinished), UpdateTestCaseResult } },
             options);
     }
 
@@ -121,10 +126,16 @@
         TooltipService.Open(elementReference, message, options);
     }
 
-    private EventCallback UpdateTestCase => new(this, async () =>
+    private EventCallback UpdateTestCaseResult => new(this, async () =>
     {
-        TestCase = await TestCaseService.GetTestCaseById(TestCaseId);
+        UpdateTestCase();
         isTestRunning = false;
         await InvokeAsync(StateHasChanged);
     });
+
+    private async void UpdateTestCase()
+    {
+        TestCase = await TestCaseService.GetTestCaseById(TestCaseId);
+        StateHasChanged();
+    }
 }
