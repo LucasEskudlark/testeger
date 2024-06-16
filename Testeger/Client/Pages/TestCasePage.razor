@@ -21,10 +21,10 @@
             </div>
             <div class="col-auto d-flex">
                 <RadzenButton Icon="play_arrow"
-                              Text="Start test"
-                              ButtonStyle="ButtonStyle.Success"
+                              Text="@testButtonText"
+                              ButtonStyle="@testButtonStyle"
                               Size="ButtonSize.Small"
-                              Click="@OpenTestCaseTestingDialog"
+                              Click="@HandleButtonClick"
                               class="me-2" />
 
                 <RadzenButton Icon="save"
@@ -72,6 +72,10 @@
     public TestRequest Request { get; set; }
     private TestCase TestCase { get; set; }
 
+    private bool isTestRunning = false;
+    private string testButtonText => isTestRunning ? "Continue Test" : "Start Test";
+    private ButtonStyle testButtonStyle => isTestRunning ? ButtonStyle.Warning : ButtonStyle.Success;
+
     protected override async Task OnInitializedAsync()
     {
         TestCase = await TestCaseService.GetTestCaseById(TestCaseId);
@@ -98,7 +102,13 @@
         }
     }
 
-    private async Task OpenTestCaseTestingDialog()
+    private async Task HandleButtonClick()
+    {
+        isTestRunning = true;
+        await OpenTestCaseTestingDialog();
+    }
+
+    public async Task OpenTestCaseTestingDialog()
     {
         var options = new DialogOptions { Width = "700px", Height = "630px", Resizable = false, Draggable = true };
         await DialogService.OpenAsync<TestCaseTestingDialog>("Testing",
@@ -114,6 +124,7 @@
     private EventCallback UpdateTestCase => new(this, async () =>
     {
         TestCase = await TestCaseService.GetTestCaseById(TestCaseId);
+        isTestRunning = false;
         await InvokeAsync(StateHasChanged);
     });
 }
