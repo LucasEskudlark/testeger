@@ -110,7 +110,11 @@
     {
         await DialogService.OpenAsync<TestCaseTestingDialog>(
             "Testing",
-            new Dictionary<string, object>() { { "TestCaseId", TestCaseId } },
+            new Dictionary<string, object>() 
+            {
+                { "TestCaseId", TestCaseId },
+                { nameof(TestCaseTestingDialog.OnTestFinished), UpdateTestCase}
+            },
             new DialogOptions() { Width = "700px", Height = "630px", Resizable = false, Draggable = true }
         );
     }
@@ -123,4 +127,10 @@
 
     private void ShowDeleteTestCaseButtonTooltip(ElementReference elementReference, TooltipOptions options = null)
                     => TooltipService.Open(elementReference, "Delete this entire request", options);
+
+    private EventCallback UpdateTestCase => new(this, (Action)(async () =>
+    {
+        TestCase = await TestCaseService.GetTestCaseById(TestCaseId);
+        await InvokeAsync(StateHasChanged);
+    }));
 }
