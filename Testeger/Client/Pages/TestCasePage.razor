@@ -4,8 +4,9 @@
 @inject TestRequestService TestRequestService
 @inject NavigationManager NavigationManager
 @inject TooltipService TooltipService
+@inject DialogService DialogService
 
-@if(TestCase is not null)
+@if (TestCase is not null)
 {
     <PageTitle>@TestCase.Title - Testeger</PageTitle>
 
@@ -23,15 +24,15 @@
                               Text="Start test"
                               ButtonStyle="ButtonStyle.Success"
                               Size="ButtonSize.Small"
-                              Click="OpenTestCaseTestingDialog"
+                              Click="@OpenTestCaseTestingDialog"
                               class="me-2" />
 
                 <RadzenButton Icon="save"
                               Text="Save"
                               ButtonStyle="ButtonStyle.Primary"
                               Size="ButtonSize.Small"
-                              Click="HandleTestCaseUpdate"
-                              MouseEnter="@(args => ShowSaveTestCaseButtonTooltip(args) )"
+                              Click="@HandleTestCaseUpdate"
+                              MouseEnter="@(args => ShowTooltip(args, "Save the changes made in this request"))"
                               class="me-2" />
 
                 <RadzenButton Icon="delete"
@@ -39,8 +40,8 @@
                               ButtonStyle="ButtonStyle.Danger"
                               Shade="Shade.Darker"
                               Size="ButtonSize.Small"
-                              Click="HandleTestCaseDeletion"
-                              MouseEnter="@(args => ShowDeleteTestCaseButtonTooltip(args) )" />
+                              Click="@HandleTestCaseDeletion"
+                              MouseEnter="@(args => ShowTooltip(args, "Delete this entire request"))" />
             </div>
         </div>
     </div>
@@ -68,20 +69,13 @@
     [Parameter]
     public EventCallback OnTestCaseUpdated { get; set; }
 
-    [Inject]
-    public DialogService DialogService { get; set; }
-
     public TestRequest Request { get; set; }
-
     private TestCase TestCase { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        await base.OnInitializedAsync();
-
         TestCase = await TestCaseService.GetTestCaseById(TestCaseId);
         Request = await TestRequestService.GetTestRequestById(TestCase.RequestId);
-
         TestCaseService.OnChange += StateHasChanged;
     }
 
@@ -92,7 +86,6 @@
             await TestCaseService.RemoveTestCase(TestCase);
             NavigationManager.NavigateTo(BreadCrumbHelper.GetRequestUrl(Request));
             await OnTestCaseDeleted.InvokeAsync();
-            await InvokeAsync(StateHasChanged);
         }
     }
 
@@ -102,35 +95,25 @@
         {
             await TestCaseService.UpdateTestCase(TestCase);
             await OnTestCaseUpdated.InvokeAsync();
-            await InvokeAsync(StateHasChanged);
         }
     }
 
-    public async Task OpenTestCaseTestingDialog()
+    private async Task OpenTestCaseTestingDialog()
     {
-        await DialogService.OpenAsync<TestCaseTestingDialog>(
-            "Testing",
-            new Dictionary<string, object>() 
-            {
-                { "TestCaseId", TestCaseId },
-                { nameof(TestCaseTestingDialog.OnTestFinished), UpdateTestCase}
-            },
-            new DialogOptions() { Width = "700px", Height = "630px", Resizable = false, Draggable = true }
-        );
+        var options = new DialogOptions { Width = "700px", Height = "630px", Resizable = false, Draggable = true };
+        await DialogService.OpenAsync<TestCaseTestingDialog>("Testing",
+            new Dictionary<string, object> { { "TestCaseId", TestCaseId }, { nameof(TestCaseTestingDialog.OnTestFinished), UpdateTestCase } },
+            options);
     }
 
-    private void ShowStartTestButtonTooltip(ElementReference elementReference, TooltipOptions options = null)
-                    => TooltipService.Open(elementReference, "Open the menu to start the test for this test case", options);
+    private void ShowTooltip(ElementReference elementReference, string message, TooltipOptions options = null)
+    {
+        TooltipService.Open(elementReference, message, options);
+    }
 
-    private void ShowSaveTestCaseButtonTooltip(ElementReference elementReference, TooltipOptions options = null)
-                    => TooltipService.Open(elementReference, "Save the changes made in this request", options);
-
-    private void ShowDeleteTestCaseButtonTooltip(ElementReference elementReference, TooltipOptions options = null)
-                    => TooltipService.Open(elementReference, "Delete this entire request", options);
-
-    private EventCallback UpdateTestCase => new(this, (Action)(async () =>
+    private EventCallback UpdateTestCase => new(this, async () =>
     {
         TestCase = await TestCaseService.GetTestCaseById(TestCaseId);
         await InvokeAsync(StateHasChanged);
-    }));
+    });
 }
