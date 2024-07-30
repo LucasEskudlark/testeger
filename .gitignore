@@ -154,3 +154,5 @@ D:/home/LogFiles
 
 # NuGet Packages
 *.nupkg
+/Testeger/Server/Properties/launchSettings.json
+/Testeger/Server/appsettings.Development.json
