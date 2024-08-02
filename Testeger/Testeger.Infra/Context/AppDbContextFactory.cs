@@ -8,7 +8,7 @@ public class AppDbContextFactory : IDesignTimeDbContextFactory<AppDbContext>
 {
     public AppDbContext CreateDbContext(string[] args)
     {
-        var basePath = Path.Combine(Directory.GetCurrentDirectory(), "..", "Testeger/Api");
+        var basePath = Path.Combine(Directory.GetCurrentDirectory(), "..", "Api");
 
         var configuration = new ConfigurationBuilder()
             .SetBasePath(basePath)
