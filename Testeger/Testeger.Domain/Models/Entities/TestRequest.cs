@@ -1,4 +1,5 @@
-﻿using Testeger.Domain.Models.ValueObjects;
+﻿using System.Text.Json.Serialization;
+using Testeger.Domain.Models.ValueObjects;
 using Testeger.Shared.Models.Enumerations;
 
 namespace Testeger.Domain.Models.Entities;
@@ -28,4 +29,7 @@ public class TestRequest
 
     public ICollection<TestRequestHistory>? History { get; set; }
     public ICollection<TestCase>? TestCases { get; set; }
+
+    [JsonIgnore]
+    public Project Project { get; set; }
 }

@@ -4,8 +4,8 @@ public class Project
 {
     public string? Id { get; set; }
     public string? Name { get; set; }
-    public DateTime CreationDate { get; set; }
-    public string? CreatorId { get; set; }
+    public DateTime CreatedDate { get; set; }
+    public string? CreatedByUserId { get; set; }
 
-    public ICollection<User>? Users { get; set; }
+    public ICollection<TestRequest>? TestRequests { get; set; }
 }
