@@ -8,7 +8,7 @@ public class ImageMapping : IEntityTypeConfiguration<Image>
 {
     public void Configure(EntityTypeBuilder<Image> builder)
     {
-        builder.ToTable("Images");
+        builder.ToTable("Image");
 
         builder.HasKey(img => img.Id);
 
