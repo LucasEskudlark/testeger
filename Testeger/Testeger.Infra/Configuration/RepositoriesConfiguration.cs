@@ -5,6 +5,9 @@ using Testeger.Infra.Repositories.Projects;
 using Testeger.Infra.Repositories.TestCaseResults;
 using Testeger.Infra.Repositories.TestCases;
 using Testeger.Infra.Repositories.TestRequests;
+using Testeger.Infra.UnitOfWork;
+
+using UnitOfWorkClass = Testeger.Infra.UnitOfWork.UnitOfWork;
 
 namespace Testeger.Infra.Configuration;
 
@@ -18,5 +21,10 @@ public static class RepositoriesConfiguration
         services.AddScoped<ITestRequestRepository, TestRequestRepository>();
         services.AddScoped<ITestCaseResultRepository, TestCaseResultRepository>();
         services.AddScoped<IImageRepository, ImageRepository>();
+    }
+
+    public static void AddUnitOfWork(this IServiceCollection services)
+    {
+        services.AddScoped<IUnitOfWork, UnitOfWorkClass>();
     }
 }

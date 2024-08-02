@@ -15,6 +15,7 @@ builder.Services.AddRazorPages();
 
 builder.Services.AddRepositories();
 builder.Services.AddDatabase(configuration);
+builder.Services.AddUnitOfWork();
 
 
 
