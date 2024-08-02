@@ -1,4 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Testeger.Domain.Models.Entities;
+using Testeger.Infra.Mappings;
 
 namespace Testeger.Infra.Context;
 
@@ -8,4 +10,19 @@ public class AppDbContext : DbContext
     {
     }
 
+    public DbSet<Project> Projects { get; set; } 
+    public DbSet<TestRequest> TestRequests { get; set; }
+    public DbSet<TestCase> TestCases { get; set; }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder
+            .ApplyConfiguration(new ProjectMapping())
+            .ApplyConfiguration(new TestRequestMapping())
+            .ApplyConfiguration(new TestCaseMapping())
+            .ApplyConfiguration(new TestCaseResultMapping())
+            .ApplyConfiguration(new ImageMapping());
+
+        base.OnModelCreating(modelBuilder);
+    }
 }
