@@ -15,8 +15,7 @@ public class TestRequestMapping : IEntityTypeConfiguration<TestRequest>
         builder.Property(t => t.Number)
             .HasColumnName("Number")
             .HasColumnType("int")
-            .IsRequired()
-            .ValueGeneratedOnAdd();
+            .IsRequired();
 
         builder.Property(t => t.ProjectId)
             .HasColumnName("ProjectId")
