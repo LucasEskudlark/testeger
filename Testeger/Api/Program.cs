@@ -1,11 +1,23 @@
-using Microsoft.AspNetCore.ResponseCompression;
+using Testeger.Infra.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+var configuration = new ConfigurationBuilder()
+            .SetBasePath(Directory.GetCurrentDirectory())
+            .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+            .AddJsonFile($"appsettings.Development.json", optional: true)
+            .AddEnvironmentVariables()
+            .Build();
 
+builder.Configuration.AddConfiguration(configuration);
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
+
+builder.Services.AddRepositories();
+builder.Services.AddDatabase(configuration);
+builder.Services.AddUnitOfWork();
+
+
 
 var app = builder.Build();
 
