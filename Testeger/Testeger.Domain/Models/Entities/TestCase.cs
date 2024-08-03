@@ -1,4 +1,5 @@
-﻿using Testeger.Shared.Models.Enumerations;
+﻿using System.Text.Json.Serialization;
+using Testeger.Shared.Models.Enumerations;
 using Testeger.Shared.Models.ValueObjects;
 
 namespace Testeger.Domain.Models.Entities;
@@ -12,7 +13,7 @@ public class TestCase
     }
 
     public string? Id { get; set; }
-    public string? RequestId { get; set; }
+    public string? TestRequestId { get; set; }
     public string? ProjectId { get; set; }
     public string? CreatedByUserId { get; set; }
     public string? Title { get; set; }
@@ -24,7 +25,10 @@ public class TestCase
     public DateTime? ScheduledDate { get; set; }
     public ICollection<TestCaseHistory> History { get; set; }
     public ICollection<TestCaseResult> Results { get; set; }
-    public bool IsCompleted => Status == TestCaseStatus.Completed;
 
+    [JsonIgnore]
+    public TestRequest TestRequest { get; set; }
+
+    public bool IsCompleted => Status == TestCaseStatus.Completed;
     public TestCaseResult GetLatestTestCaseResult() => Results.Last();
 }
