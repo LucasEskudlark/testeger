@@ -13,6 +13,12 @@ public class Repository<T> : IRepository<T> where T : class
         _dbSet = _dbContext.Set<T>();
     }
 
+    public Task UpdateAsync(T entity)
+    {
+        _dbSet.Update(entity);
+        return Task.CompletedTask;
+    }
+
     public async Task AddAsync(T entity)
     {
         await _dbSet.AddAsync(entity);
