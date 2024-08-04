@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Testeger.Domain.Models.Entities;
+using Testeger.Infra.Context;
 
 namespace Testeger.Infra.Repositories.TestCaseResults;
 
@@ -7,7 +8,7 @@ public class TestCaseResultRepository : Repository<TestCaseResult>, ITestCaseRes
 {
     private readonly DbSet<TestCaseResult> _dbSet;
 
-    public TestCaseResultRepository(DbContext dbContext) : base(dbContext)
+    public TestCaseResultRepository(AppDbContext dbContext) : base(dbContext)
     {
         _dbSet = _dbContext.Set<TestCaseResult>();
     }

@@ -8,11 +8,13 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="6.0.28" />
+    <PackageReference Include="SharpGrip.FluentValidation.AutoValidation.Mvc" Version="1.4.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Client\Testeger.Client.csproj" />
     <ProjectReference Include="..\Shared\Testeger.Shared.csproj" />
+    <ProjectReference Include="..\Testeger.Application\Testeger.Application.csproj" />
     <ProjectReference Include="..\Testeger.Infra\Testeger.Infra.csproj" />
   </ItemGroup>
 

@@ -1,4 +1,7 @@
 using Testeger.Infra.Configuration;
+using Testeger.Application.Configuration;
+using SharpGrip.FluentValidation.AutoValidation.Mvc.Extensions;
+using Testeger.Application.MappingProfiles;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,11 +16,15 @@ builder.Configuration.AddConfiguration(configuration);
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 
+
+builder.Services.AddDatabase(builder.Configuration);
 builder.Services.AddRepositories();
-builder.Services.AddDatabase(configuration);
 builder.Services.AddUnitOfWork();
+builder.Services.AddFluentValidationAutoValidation();
+builder.Services.AddRequestValidators();
+builder.Services.AddAutoMapper(typeof(ProjectMappingProfile));
 
-
+builder.Services.AddApplicationServices();
 
 var app = builder.Build();
 
