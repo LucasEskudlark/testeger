@@ -1,6 +1,4 @@
-﻿using System.Runtime.Serialization;
-
-namespace Testeger.Application.Exceptions;
+﻿namespace Testeger.Application.Exceptions;
 
 public class NotFoundException : Exception
 {

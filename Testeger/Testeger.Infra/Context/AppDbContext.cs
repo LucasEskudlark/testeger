@@ -10,7 +10,7 @@ public class AppDbContext : DbContext
     {
     }
 
-    public DbSet<Project> Projects { get; set; } 
+    public DbSet<Project> Projects { get; set; }
     public DbSet<TestRequest> TestRequests { get; set; }
     public DbSet<TestCase> TestCases { get; set; }
     public DbSet<TestCaseResult> TestCaseResults { get; set; }

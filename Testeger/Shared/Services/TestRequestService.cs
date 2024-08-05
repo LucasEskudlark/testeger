@@ -1,5 +1,4 @@
-﻿using Blazored.LocalStorage;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using Testeger.Shared.Exceptions;
 using Testeger.Shared.Models.Entities;
 using Testeger.Shared.Models.Enumerations;
@@ -35,7 +34,7 @@ public class TestRequestService
     public async Task<TestRequest> GetTestRequestById(string id)
     {
         var testRequests = await GetAllTestRequests();
-        
+
         return testRequests.Find(tr => tr.Id == id) ?? throw new TestRequestNotFoundException($"Test Request with id {id} was not found.");
     }
 

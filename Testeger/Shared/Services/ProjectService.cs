@@ -1,6 +1,4 @@
-﻿using Blazored.LocalStorage;
-using System.Text.Json;
-using Testeger.Shared.Exceptions;
+﻿using Testeger.Shared.Exceptions;
 using Testeger.Shared.Models.Entities;
 
 namespace Testeger.Shared.Services;
@@ -24,7 +22,7 @@ public class ProjectService
         var projects = await _localStorage.ReadFromStorage<List<Project>>(StorageKey);
         return projects ?? new List<Project>();
     }
-    
+
     public async Task<int> GetProjectCount()
     {
         var projects = await GetAllProjects();

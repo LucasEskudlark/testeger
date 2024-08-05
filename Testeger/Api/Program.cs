@@ -1,8 +1,8 @@
-using Testeger.Infra.Configuration;
-using Testeger.Application.Configuration;
 using SharpGrip.FluentValidation.AutoValidation.Mvc.Extensions;
-using Testeger.Application.MappingProfiles;
 using Testeger.Api.Middlewares;
+using Testeger.Application.Configuration;
+using Testeger.Application.MappingProfiles;
+using Testeger.Infra.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
