@@ -33,7 +33,7 @@ public class ProjectsController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetAllProjectsAsync([FromQuery]PagedRequest request)
+    public async Task<IActionResult> GetAllProjectsAsync([FromQuery] PagedRequest request)
     {
         var response = await _projectService.GetAllProjectsAsync(request);
 
