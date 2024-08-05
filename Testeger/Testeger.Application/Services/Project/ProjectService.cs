@@ -46,4 +46,12 @@ public class ProjectService : BaseService, IProjectService
 
         return response;
     }
+
+    public async Task DeleteProject(string id)
+    {
+        var project = await _unitOfWork.ProjectRepository.GetByIdAsync(id) ?? throw new NotFoundException($"Could not delete project. Project with id {id} not found");
+
+        await _unitOfWork.ProjectRepository.Delete(project);
+        await _unitOfWork.CompleteAsync();
+    }
 }

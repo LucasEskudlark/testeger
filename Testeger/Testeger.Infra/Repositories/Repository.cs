@@ -14,7 +14,7 @@ public class Repository<T> : IRepository<T> where T : class
         _dbSet = _dbContext.Set<T>();
     }
 
-    public Task UpdateAsync(T entity)
+    public Task Update(T entity)
     {
         _dbSet.Update(entity);
         return Task.CompletedTask;
@@ -25,10 +25,10 @@ public class Repository<T> : IRepository<T> where T : class
         await _dbSet.AddAsync(entity);
     }
 
-    public async Task DeleteAsync(string id)
+    public Task Delete(T entity)
     {
-        var entity = await _dbSet.FindAsync(id) ?? throw new ArgumentException($"No entity with id {id} was found");
         _dbSet.Remove(entity);
+        return Task.CompletedTask;
     }
 
     public async Task<IEnumerable<T>> GetAllAsync()
