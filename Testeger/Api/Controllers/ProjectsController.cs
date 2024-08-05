@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Testeger.Application.Requests.CreateProject;
+using Testeger.Application.DTOs.Requests.Common;
+using Testeger.Application.DTOs.Requests.CreateProject;
 using Testeger.Application.Services.Project;
 
 namespace Testeger.Api.Controllers;
@@ -27,6 +28,14 @@ public class ProjectsController : ControllerBase
     public async Task<IActionResult> GetProjectByIdAsync(string id)
     {
         var response = await _projectService.GetProjectById(id);
+
+        return Ok(response);
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> GetAllProjectsAsync([FromQuery]PagedRequest request)
+    {
+        var response = await _projectService.GetAllProjectsAsync(request);
 
         return Ok(response);
     }

@@ -1,4 +1,6 @@
-﻿namespace Testeger.Infra.Repositories;
+﻿using Testeger.Domain.Models.Pagination;
+
+namespace Testeger.Infra.Repositories;
 
 public interface IRepository<T> where T : class
 {
@@ -7,4 +9,5 @@ public interface IRepository<T> where T : class
     Task AddAsync(T entity);
     Task UpdateAsync(T entity);
     Task DeleteAsync(string id);
+    Task<PagedResult<T>> GetAllPagedAsync(int pageSize, int pageNumber);
 }

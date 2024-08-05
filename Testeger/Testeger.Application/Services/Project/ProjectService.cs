@@ -29,6 +29,15 @@ public class ProjectService : BaseService, IProjectService
         return response;
     }
 
+    public async Task<PagedResponse<GetProjectResponse>> GetAllProjectsAsync(PagedRequest request)
+    {
+        var projects = await _unitOfWork.ProjectRepository.GetAllPagedAsync(request.PageSize, request.PageNumber);
+
+        var response = _mapper.Map<PagedResponse<GetProjectResponse>>(projects);
+
+        return response;
+    }
+
     public async Task<GetProjectResponse> GetProjectById(string id)
     {
         var project = await _unitOfWork.ProjectRepository.GetByIdAsync(id) ?? throw new NotFoundException($"Project with id {id} not found");

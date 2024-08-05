@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Testeger.Domain.Models.Pagination;
 
 namespace Testeger.Infra.Repositories;
 
@@ -39,5 +40,24 @@ public class Repository<T> : IRepository<T> where T : class
     {
         var entity = await _dbSet.FindAsync(id);
         return entity;
+    }
+
+    public async Task<PagedResult<T>> GetAllPagedAsync(int pageSize, int pageNumber)
+    {
+        var totalItems = await _dbSet.AsNoTracking().CountAsync();
+
+        var categories = await _dbSet
+            .AsNoTracking()
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
+
+        return new PagedResult<T>
+        {
+            Items = categories,
+            TotalItems = totalItems,
+            PageNumber = pageNumber,
+            PageSize = pageSize
+        };
     }
 }
