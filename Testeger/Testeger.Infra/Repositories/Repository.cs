@@ -35,9 +35,9 @@ public class Repository<T> : IRepository<T> where T : class
         return await _dbSet.AsNoTracking().ToListAsync();
     }
 
-    public async Task<T> GetByIdAsync(string id)
+    public async Task<T?> GetByIdAsync(string id)
     {
-        var entity = await _dbSet.FindAsync(id) ?? throw new ArgumentException($"No entity with id {id} was found");
+        var entity = await _dbSet.FindAsync(id);
         return entity;
     }
 }

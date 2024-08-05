@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Testeger.Application.Exceptions;
 using Testeger.Application.Requests.CreateProject;
 using Testeger.Application.Responses;
 using Testeger.Infra.UnitOfWork;
@@ -24,6 +25,15 @@ public class ProjectService : BaseService, IProjectService
         await _unitOfWork.CompleteAsync();
 
         var response = _mapper.Map<CreateProjectResponse>(project);
+        return response;
+    }
+
+    public async Task<GetProjectResponse> GetProjectById(string id)
+    {
+        var project = await _unitOfWork.ProjectRepository.GetByIdAsync(id) ?? throw new NotFoundException($"Project with id {id} not found");
+
+        var response = _mapper.Map<GetProjectResponse>(project);
+
         return response;
     }
 }

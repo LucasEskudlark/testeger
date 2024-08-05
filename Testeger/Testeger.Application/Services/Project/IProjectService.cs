@@ -6,4 +6,5 @@ namespace Testeger.Application.Services.Project;
 public interface IProjectService
 {
     Task<CreateProjectResponse> CreateProject(CreateProjectRequest request);
+    Task<GetProjectResponse> GetProjectById(string id);
 }

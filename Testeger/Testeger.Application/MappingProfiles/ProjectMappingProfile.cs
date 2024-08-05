@@ -13,5 +13,6 @@ public class ProjectMappingProfile : Profile
             .ForMember(p => p.CreatedByUserId,
                 x => x.MapFrom(r => r.UserId));
         CreateMap<Project, CreateProjectResponse>();
+        CreateMap<Project, GetProjectResponse>();
     }
 }

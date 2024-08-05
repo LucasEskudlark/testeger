@@ -16,9 +16,17 @@ public class ProjectsController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateProjectAsync([FromBody]CreateProjectRequest request)
+    public async Task<IActionResult> CreateProjectAsync([FromBody] CreateProjectRequest request)
     {
         var response = await _projectService.CreateProject(request);
+
+        return Ok(response);
+    }
+
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetProjectByIdAsync(string id)
+    {
+        var response = await _projectService.GetProjectById(id);
 
         return Ok(response);
     }
