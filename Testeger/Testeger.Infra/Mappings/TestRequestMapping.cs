@@ -44,8 +44,7 @@ public class TestRequestMapping : IEntityTypeConfiguration<TestRequest>
 
         builder.Property(t => t.UserAssignedId)
             .HasColumnName("UserAssignedId")
-            .HasMaxLength(36)
-            .IsRequired();
+            .HasMaxLength(36);
 
         builder.Property(t => t.Status)
             .HasColumnName("Status")
@@ -70,8 +69,7 @@ public class TestRequestMapping : IEntityTypeConfiguration<TestRequest>
 
         builder.Property(t => t.CompletedDate)
             .HasColumnName("CompletedDate")
-            .HasColumnType("datetime")
-            .IsRequired();
+            .HasColumnType("datetime");
 
         builder.OwnsMany(t => t.History, b => b.ApplyTestRequestHistoryMapping());
 
