@@ -1,4 +1,6 @@
 using SharpGrip.FluentValidation.AutoValidation.Mvc.Extensions;
+using System.Text.Json.Serialization;
+using System.Text.Json;
 using Testeger.Api.Middlewares;
 using Testeger.Application.Configuration;
 using Testeger.Application.MappingProfiles;
@@ -14,7 +16,12 @@ var configuration = new ConfigurationBuilder()
             .Build();
 
 builder.Configuration.AddConfiguration(configuration);
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
+        options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter(JsonNamingPolicy.SnakeCaseLower));
+    });
 builder.Services.AddRazorPages();
 
 
