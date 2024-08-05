@@ -1,7 +1,8 @@
 ﻿using AutoMapper;
+using Testeger.Application.DTOs.Requests.Common;
+using Testeger.Application.DTOs.Requests.CreateProject;
+using Testeger.Application.DTOs.Responses;
 using Testeger.Application.Exceptions;
-using Testeger.Application.Requests.CreateProject;
-using Testeger.Application.Responses;
 using Testeger.Infra.UnitOfWork;
 
 using DomainProject = Testeger.Domain.Models.Entities.Project;

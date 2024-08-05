@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
-using Testeger.Application.Requests.CreateProject;
+using Testeger.Application.DTOs.Requests.CreateProject;
 
 namespace Testeger.Application.Configuration;
 
