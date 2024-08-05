@@ -1,4 +1,4 @@
-﻿namespace Testeger.Application.Requests.CreateProject;
+﻿namespace Testeger.Application.DTOs.Requests.CreateProject;
 
 public class CreateProjectRequest
 {
