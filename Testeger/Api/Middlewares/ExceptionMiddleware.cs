@@ -28,7 +28,7 @@ public class CustomExceptionMiddleware
         }
     }
 
-    private Task HandleExceptionAsync(HttpContext context, Exception exception)
+    private static Task HandleExceptionAsync(HttpContext context, Exception exception)
     {
         context.Response.ContentType = "application/json";
         var statusCode = HttpStatusCode.InternalServerError;
@@ -43,7 +43,8 @@ public class CustomExceptionMiddleware
         var response = new
         {
             context.Response.StatusCode,
-            exception.Message
+            exception.GetType().Name,
+            exception.Message,
         };
 
         var jsonResponse = JsonSerializer.Serialize(response);
