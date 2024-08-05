@@ -1,6 +1,6 @@
-﻿using Testeger.Shared.Models.Enumerations;
+﻿using Testeger.Domain.Enumerations;
 
-namespace Testeger.Shared.Models.ValueObjects;
+namespace Testeger.Domain.Models.ValueObjects;
 
 public class TestCaseHistory
 {

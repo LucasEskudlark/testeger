@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace Testeger.Shared.Models.Enumerations;
+namespace Testeger.Domain.Enumerations;
 
 public enum RequestStatus
 {

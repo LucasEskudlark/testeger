@@ -1,5 +1,5 @@
-﻿using Testeger.Application.Requests.CreateProject;
-using Testeger.Application.Responses;
+﻿using Testeger.Application.DTOs.Requests.CreateProject;
+using Testeger.Application.DTOs.Responses;
 
 namespace Testeger.Application.Services.Project;
 
