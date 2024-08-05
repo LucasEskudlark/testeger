@@ -2,6 +2,7 @@ using Testeger.Infra.Configuration;
 using Testeger.Application.Configuration;
 using SharpGrip.FluentValidation.AutoValidation.Mvc.Extensions;
 using Testeger.Application.MappingProfiles;
+using Testeger.Api.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -40,6 +41,7 @@ else
     app.UseHsts();
 }
 
+app.UseCustomExceptionMiddleware();
 app.UseHttpsRedirection();
 
 app.UseBlazorFrameworkFiles();
