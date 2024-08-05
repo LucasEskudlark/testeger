@@ -1,4 +1,4 @@
-﻿namespace Testeger.Shared.Models.ValueObjects;
+﻿namespace Testeger.Domain.Models.ValueObjects;
 
 public class TestCaseDetails
 {

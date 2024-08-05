@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using Testeger.Application.Requests.CreateProject;
-using Testeger.Application.Responses;
+using Testeger.Application.DTOs.Requests.CreateProject;
+using Testeger.Application.DTOs.Responses;
 using Testeger.Domain.Models.Entities;
 
 namespace Testeger.Application.MappingProfiles;
@@ -13,5 +13,6 @@ public class ProjectMappingProfile : Profile
             .ForMember(p => p.CreatedByUserId,
                 x => x.MapFrom(r => r.UserId));
         CreateMap<Project, CreateProjectResponse>();
+        CreateMap<Project, GetProjectResponse>();
     }
 }

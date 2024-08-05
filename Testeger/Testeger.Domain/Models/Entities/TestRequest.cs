@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
+using Testeger.Domain.Enumerations;
 using Testeger.Domain.Models.ValueObjects;
-using Testeger.Shared.Models.Enumerations;
 
 namespace Testeger.Domain.Models.Entities;
 

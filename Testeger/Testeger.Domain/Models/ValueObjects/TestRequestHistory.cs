@@ -1,4 +1,4 @@
-﻿using Testeger.Shared.Models.Enumerations;
+﻿using Testeger.Domain.Enumerations;
 
 namespace Testeger.Domain.Models.ValueObjects;
 

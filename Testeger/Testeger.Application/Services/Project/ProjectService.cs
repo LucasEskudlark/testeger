@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
-using Testeger.Application.Requests.CreateProject;
-using Testeger.Application.Responses;
+using Testeger.Application.DTOs.Requests.Common;
+using Testeger.Application.DTOs.Requests.CreateProject;
+using Testeger.Application.DTOs.Responses;
+using Testeger.Application.Exceptions;
 using Testeger.Infra.UnitOfWork;
 
 using DomainProject = Testeger.Domain.Models.Entities.Project;
@@ -24,6 +26,24 @@ public class ProjectService : BaseService, IProjectService
         await _unitOfWork.CompleteAsync();
 
         var response = _mapper.Map<CreateProjectResponse>(project);
+        return response;
+    }
+
+    public async Task<PagedResponse<GetProjectResponse>> GetAllProjectsAsync(PagedRequest request)
+    {
+        var projects = await _unitOfWork.ProjectRepository.GetAllPagedAsync(request.PageSize, request.PageNumber);
+
+        var response = _mapper.Map<PagedResponse<GetProjectResponse>>(projects);
+
+        return response;
+    }
+
+    public async Task<GetProjectResponse> GetProjectById(string id)
+    {
+        var project = await _unitOfWork.ProjectRepository.GetByIdAsync(id) ?? throw new NotFoundException($"Project with id {id} not found");
+
+        var response = _mapper.Map<GetProjectResponse>(project);
+
         return response;
     }
 }

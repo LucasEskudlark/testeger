@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Testeger.Domain.Models.ValueObjects;
-using Testeger.Shared.Models.ValueObjects;
 
 namespace Testeger.Infra.Mappings;
 
