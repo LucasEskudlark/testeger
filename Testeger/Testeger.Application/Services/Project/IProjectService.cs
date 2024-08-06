@@ -1,6 +1,7 @@
 ﻿using Testeger.Application.DTOs.Requests.Common;
 using Testeger.Application.DTOs.Requests.CreateProject;
 using Testeger.Application.DTOs.Responses;
+using Testeger.Application.DTOs.Responses.Project;
 
 namespace Testeger.Application.Services.Project;
 

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Testeger.Application.DTOs.Requests.Common;
 using Testeger.Application.DTOs.Requests.CreateTestRequest;
 using Testeger.Application.Services.TestRequest;
 
@@ -19,6 +20,22 @@ public class TestRequestsController : ControllerBase
     public async Task<IActionResult> CreateProjectAsync([FromBody] CreateTestRequestRequest request)
     {
         var response = await _testRequestService.CreateTestRequestAsync(request);
+
+        return Ok(response);
+    }
+
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetTestRequestByIdAsync(string id)
+    {
+        var response = await _testRequestService.GetTestRequestByIdAsync(id);
+        
+        return Ok(response);
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> GetAllTestRequestsAsync([FromQuery] PagedRequest request)
+    {
+        var response = await _testRequestService.GetAllTestRequestsPagedAsync(request);
 
         return Ok(response);
     }
