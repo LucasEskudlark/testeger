@@ -17,9 +17,9 @@ public class TestRequestService : BaseService, ITestRequestService
 
     public async Task<CreateTestRequestResponse> CreateTestRequestAsync(CreateTestRequestRequest request)
     {
-        var testRequest = _mapper.Map<DomainTestRequest>(request);
-
         await ValidateProjectExistence(request.ProjectId);
+
+        var testRequest = _mapper.Map<DomainTestRequest>(request);
 
         testRequest.Id = GenerateGuid();
         testRequest.CreatedDate = DateTime.Now;

@@ -10,6 +10,7 @@ public class TestCase
     {
         History = new List<TestCaseHistory>();
         Results = new List<TestCaseResult>();
+        Details = new TestCaseDetails();
     }
 
     public string? Id { get; set; }
@@ -17,7 +18,7 @@ public class TestCase
     public string? ProjectId { get; set; }
     public string? CreatedByUserId { get; set; }
     public string? Title { get; set; }
-    public TestCaseDetails? Details { get; set; }
+    public TestCaseDetails Details { get; set; }
     public DateTime CreatedDate { get; set; }
     public DateTime? CompletedDate { get; set; }
     public TestCaseStatus Status { get; set; }
