@@ -40,8 +40,7 @@ public class TestCaseMapping : IEntityTypeConfiguration<TestCase>
 
         builder.Property(t => t.CompletedDate)
             .HasColumnName("CompletedDate")
-            .HasColumnType("datetime")
-            .IsRequired();
+            .HasColumnType("datetime");
 
         builder.Property(t => t.Status)
             .HasColumnName("Status")
@@ -50,13 +49,11 @@ public class TestCaseMapping : IEntityTypeConfiguration<TestCase>
 
         builder.Property(t => t.NeedCorrection)
             .HasColumnName("NeedCorrection")
-            .HasColumnType("bit")
-            .IsRequired();
+            .HasColumnType("bit");
 
         builder.Property(t => t.ScheduledDate)
             .HasColumnName("ScheduledDate")
-            .HasColumnType("datetime")
-            .IsRequired();
+            .HasColumnType("datetime");
 
         builder
             .OwnsOne(t => t.Details, b => b.ApplyTestCaseDetailsMapping())
