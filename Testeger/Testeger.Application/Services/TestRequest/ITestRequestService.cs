@@ -9,4 +9,6 @@ public interface ITestRequestService
 {
     Task<CreateTestRequestResponse> CreateTestRequestAsync(CreateTestRequestRequest request);
     Task<GetTestRequestResponse> GetTestRequestByIdAsync(string id);
+
+    Task<PagedResponse<GetTestRequestResponse>> GetAllTestRequestsPagedAsync(PagedRequest request);
 }

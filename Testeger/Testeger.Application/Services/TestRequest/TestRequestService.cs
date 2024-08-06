@@ -42,9 +42,18 @@ public class TestRequestService : BaseService, ITestRequestService
 
         return response;
     }
+
+    public async Task<PagedResponse<GetTestRequestResponse>> GetAllTestRequestsPagedAsync(PagedRequest request)
+    {
+        var testRequests = await _unitOfWork.TestRequestRepository.GetAllPagedAsync(request.PageSize, request.PageNumber);
+
+        var response = _mapper.Map<PagedResponse<GetTestRequestResponse>>(testRequests);
+
+        return response;
+    }
+
     private async Task ValidateProjectExistence(string projectId)
     {
-        _ = await _unitOfWork.ProjectRepository.GetByIdAsync(projectId) ?? throw new NotFoundException($"You must inform an existing project. Project with id {projectId} not found");
         _ = await _unitOfWork.ProjectRepository.GetByIdAsync(projectId)
             ?? throw new NotFoundException($"You must inform an existing project. Project with id {projectId} not found");
     }
