@@ -5,7 +5,7 @@ using Testeger.Application.Services.Project;
 
 namespace Testeger.Api.Controllers;
 
-[Route("[controller]")]
+[Route("api/[controller]")]
 [ApiController]
 public class ProjectsController : ControllerBase
 {

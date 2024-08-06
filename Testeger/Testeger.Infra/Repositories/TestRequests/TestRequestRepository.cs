@@ -11,4 +11,13 @@ public class TestRequestRepository : Repository<TestRequest>, ITestRequestReposi
     {
         _dbSet = _dbContext.Set<TestRequest>();
     }
+
+    public async Task<int> GetNextNumberAsync(string projectId)
+    {
+        var maxNumber = await _dbSet
+            .Where(tr => tr.ProjectId == projectId)
+            .MaxAsync(tr => (int?)tr.Number) ?? 0;
+
+        return maxNumber + 1;
+    }
 }
