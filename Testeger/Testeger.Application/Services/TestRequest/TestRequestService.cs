@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
+using Testeger.Application.DTOs.Requests.Common;
 using Testeger.Application.DTOs.Requests.CreateTestRequest;
 using Testeger.Application.DTOs.Responses;
-using Testeger.Infra.UnitOfWork;
+using Testeger.Application.DTOs.Responses.TestRequest;
 using Testeger.Application.Exceptions;
+using Testeger.Infra.UnitOfWork;
 using DomainTestRequest = Testeger.Domain.Models.Entities.TestRequest;
 
 namespace Testeger.Application.Services.TestRequest;
@@ -31,9 +33,20 @@ public class TestRequestService : BaseService, ITestRequestService
         return response;
     }
 
+    public async Task<GetTestRequestResponse> GetTestRequestByIdAsync(string id)
+    {
+        var testRequest = await _unitOfWork.TestRequestRepository.GetByIdAsync(id) ??
+            throw new NotFoundException($"TestRequest with id {id} not found");
+
+        var response = _mapper.Map<GetTestRequestResponse>(testRequest);
+
+        return response;
+    }
     private async Task ValidateProjectExistence(string projectId)
     {
         _ = await _unitOfWork.ProjectRepository.GetByIdAsync(projectId) ?? throw new NotFoundException($"You must inform an existing project. Project with id {projectId} not found");
+        _ = await _unitOfWork.ProjectRepository.GetByIdAsync(projectId)
+            ?? throw new NotFoundException($"You must inform an existing project. Project with id {projectId} not found");
     }
 
     private async Task<int> GetTestRequestNumber(string projectId)

@@ -22,4 +22,12 @@ public class TestRequestsController : ControllerBase
 
         return Ok(response);
     }
+
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetTestRequestByIdAsync(string id)
+    {
+        var response = await _testRequestService.GetTestRequestByIdAsync(id);
+        
+        return Ok(response);
+    }
 }

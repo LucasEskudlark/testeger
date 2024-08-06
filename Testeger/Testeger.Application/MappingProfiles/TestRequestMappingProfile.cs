@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using Testeger.Application.DTOs.Requests.CreateTestRequest;
-using Testeger.Application.DTOs.Responses;
+using Testeger.Application.DTOs.Responses.TestRequest;
 using Testeger.Domain.Models.Entities;
 
 namespace Testeger.Application.MappingProfiles;
@@ -14,5 +14,7 @@ public class TestRequestMappingProfile : Profile
                 opt => opt.MapFrom(r => r.UserId));
 
         CreateMap<TestRequest, CreateTestRequestResponse>();
+        
+        CreateMap<TestRequest, GetTestRequestResponse>();
     }
 }
