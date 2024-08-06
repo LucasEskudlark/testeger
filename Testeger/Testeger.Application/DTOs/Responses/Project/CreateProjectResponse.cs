@@ -1,4 +1,4 @@
-﻿namespace Testeger.Application.DTOs.Responses;
+﻿namespace Testeger.Application.DTOs.Responses.Project;
 
 public class CreateProjectResponse
 {

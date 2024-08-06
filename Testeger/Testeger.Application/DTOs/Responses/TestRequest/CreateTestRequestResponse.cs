@@ -1,4 +1,4 @@
-﻿namespace Testeger.Application.DTOs.Responses;
+﻿namespace Testeger.Application.DTOs.Responses.TestRequest;
 
 public class CreateTestRequestResponse
 {
