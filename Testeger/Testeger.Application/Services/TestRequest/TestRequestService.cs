@@ -51,6 +51,15 @@ public class TestRequestService : BaseService, ITestRequestService
 
         return response;
     }
+    
+    public async Task DeleteTestRequestAsync(string id)
+    {
+        var testRequest = await _unitOfWork.TestRequestRepository.GetByIdAsync(id) ??
+            throw new NotFoundException($"TestRequest with id {id} not found");
+
+        await _unitOfWork.TestRequestRepository.Delete(testRequest);
+        await _unitOfWork.CompleteAsync();
+    }
 
     private async Task ValidateProjectExistence(string projectId)
     {

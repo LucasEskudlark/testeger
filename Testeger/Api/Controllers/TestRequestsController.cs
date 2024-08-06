@@ -39,4 +39,12 @@ public class TestRequestsController : ControllerBase
 
         return Ok(response);
     }
+
+    [HttpPost("delete/{id}")]
+    public async Task<IActionResult> DeleteTestRequestAsync(string id)
+    {
+        await _testRequestService.DeleteTestRequestAsync(id);
+
+        return NoContent();
+    }
 }
