@@ -33,6 +33,16 @@ public class TestCaseService : BaseService, ITestCaseService
         return response;
     }
 
+    public async Task<GetTestCaseResponse> GetTestCaseByIdAsync(string id)
+    {
+        var testCase = await _unitOfWork.TestCaseRepository.GetByIdAsync(id) ??
+            throw new NotFoundException($"TestCase with id {id} not found");
+
+        var response = _mapper.Map<GetTestCaseResponse>(testCase);
+
+        return response;
+    }
+
     private async Task ValidateTestRequestExistenceAsync(string testRequestId)
     {
         _ = await _unitOfWork.TestRequestRepository.GetByIdAsync(testRequestId) ??

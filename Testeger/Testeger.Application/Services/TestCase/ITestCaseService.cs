@@ -6,4 +6,5 @@ namespace Testeger.Application.Services.TestCase;
 public interface ITestCaseService
 {
     Task<CreateTestCaseResponse> CreateTestCaseAsync(CreateTestCaseRequest request);
+    Task<GetTestCaseResponse> GetTestCaseByIdAsync(string id);
 }

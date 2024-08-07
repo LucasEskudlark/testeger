@@ -15,6 +15,10 @@ public class TestCaseMappingProfile : Profile
             .ForMember(t => t.CreatedByUserId,
                 opt => opt.MapFrom(r => r.UserId));
         CreateMap<TestCase, CreateTestCaseResponse>();
+
+        CreateMap<TestCase, GetTestCaseResponse>();
+
         CreateMap<TestCaseDetailsRequest, TestCaseDetails>();
+        CreateMap<TestCaseDetails, TestCaseDetailsResponse>();
     }
 }
