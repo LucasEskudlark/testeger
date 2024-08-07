@@ -25,7 +25,7 @@ public class TestCasesController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    public async Task<IActionResult> GetTestCaseByIdAsync(string id)
+    public async Task<IActionResult> GetTestCaseByIdAsync([FromRoute] string id)
     {
         var response = await _testCaseService.GetTestCaseByIdAsync(id);
 
@@ -38,5 +38,13 @@ public class TestCasesController : ControllerBase
         var response = await _testCaseService.GetAllTestCasesPagedAsync(request);
 
         return Ok(response);
+    }
+
+    [HttpPost("delete/{id}")]
+    public async Task<IActionResult> DeleteTestCaseAsync([FromRoute] string id)
+    {
+        await _testCaseService.DeleteTestCaseAsync(id);
+
+        return NoContent();
     }
 }

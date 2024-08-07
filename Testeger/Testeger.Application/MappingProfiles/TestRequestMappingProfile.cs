@@ -14,7 +14,7 @@ public class TestRequestMappingProfile : Profile
                 opt => opt.MapFrom(r => r.UserId));
 
         CreateMap<TestRequest, CreateTestRequestResponse>();
-        
+
         CreateMap<TestRequest, GetTestRequestResponse>();
     }
 }
