@@ -10,4 +10,5 @@ public interface ITestCaseService
     Task<CreateTestCaseResponse> CreateTestCaseAsync(CreateTestCaseRequest request);
     Task<GetTestCaseResponse> GetTestCaseByIdAsync(string id);
     Task<PagedResponse<GetTestCaseResponse>> GetAllTestCasesPagedAsync(PagedRequest request);
+    Task DeleteTestCaseAsync(string id);
 }

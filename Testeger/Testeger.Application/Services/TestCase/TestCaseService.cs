@@ -54,6 +54,15 @@ public class TestCaseService : BaseService, ITestCaseService
         return response;
     }
 
+    public async Task DeleteTestCaseAsync(string id)
+    {
+        var testCase = await _unitOfWork.TestCaseRepository.GetByIdAsync(id) ??
+            throw new NotFoundException($"TestCase with id {id} not found");
+        
+        await _unitOfWork.TestCaseRepository.Delete(testCase);
+        await _unitOfWork.CompleteAsync();
+    }
+
     private async Task ValidateTestRequestExistenceAsync(string testRequestId)
     {
         _ = await _unitOfWork.TestRequestRepository.GetByIdAsync(testRequestId) ??
