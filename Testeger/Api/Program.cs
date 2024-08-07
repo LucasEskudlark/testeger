@@ -1,6 +1,6 @@
 using SharpGrip.FluentValidation.AutoValidation.Mvc.Extensions;
-using System.Text.Json.Serialization;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using Testeger.Api.Middlewares;
 using Testeger.Application.Configuration;
 using Testeger.Application.MappingProfiles;

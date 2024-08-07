@@ -28,7 +28,7 @@ public class TestRequestsController : ControllerBase
     public async Task<IActionResult> GetTestRequestByIdAsync(string id)
     {
         var response = await _testRequestService.GetTestRequestByIdAsync(id);
-        
+
         return Ok(response);
     }
 
