@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Testeger.Application.DTOs.Requests.Common;
 using Testeger.Application.DTOs.Requests.CreateTestCase;
 using Testeger.Application.Services.TestCase;
 
@@ -27,6 +28,14 @@ public class TestCasesController : ControllerBase
     public async Task<IActionResult> GetTestCaseByIdAsync(string id)
     {
         var response = await _testCaseService.GetTestCaseByIdAsync(id);
+
+        return Ok(response);
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> GetAllTestCasesPagedAsync([FromQuery] PagedRequest request)
+    {
+        var response = await _testCaseService.GetAllTestCasesPagedAsync(request);
 
         return Ok(response);
     }
