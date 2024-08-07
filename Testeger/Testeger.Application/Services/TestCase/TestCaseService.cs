@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
+using Testeger.Application.DTOs.Requests.Common;
 using Testeger.Application.DTOs.Requests.CreateTestCase;
+using Testeger.Application.DTOs.Responses;
 using Testeger.Application.DTOs.Responses.TestCase;
 using Testeger.Application.Exceptions;
 using Testeger.Infra.UnitOfWork;
@@ -29,6 +31,25 @@ public class TestCaseService : BaseService, ITestCaseService
         await _unitOfWork.CompleteAsync();
 
         var response = _mapper.Map<CreateTestCaseResponse>(testCase);
+
+        return response;
+    }
+
+    public async Task<GetTestCaseResponse> GetTestCaseByIdAsync(string id)
+    {
+        var testCase = await _unitOfWork.TestCaseRepository.GetByIdAsync(id) ??
+            throw new NotFoundException($"TestCase with id {id} not found");
+
+        var response = _mapper.Map<GetTestCaseResponse>(testCase);
+
+        return response;
+    }
+
+    public async Task<PagedResponse<GetTestCaseResponse>> GetAllTestCasesPagedAsync(PagedRequest request)
+    {
+        var testCases = await _unitOfWork.TestCaseRepository.GetAllPagedAsync(request.PageSize, request.PageNumber);
+
+        var response = _mapper.Map<PagedResponse<GetTestCaseResponse>>(testCases);
 
         return response;
     }
