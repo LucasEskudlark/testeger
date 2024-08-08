@@ -11,5 +11,6 @@ public class TestCaseResultMappingProfile : Profile
     {
         CreateMap<CreateTestCaseResultRequest, TestCaseResult>();
         CreateMap<TestCaseResult, CreateTestCaseResultResponse>();
+        CreateMap<TestCaseResult, GetTestCaseResultResponse>();
     }
 }

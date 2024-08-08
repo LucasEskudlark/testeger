@@ -23,10 +23,11 @@ public class ProjectService : BaseService, IProjectService
         project.Id = GenerateGuid();
         project.CreatedDate = DateTime.Now;
 
+        var response = _mapper.Map<CreateProjectResponse>(project);
+
         await _unitOfWork.ProjectRepository.AddAsync(project);
         await _unitOfWork.CompleteAsync();
 
-        var response = _mapper.Map<CreateProjectResponse>(project);
         return response;
     }
 

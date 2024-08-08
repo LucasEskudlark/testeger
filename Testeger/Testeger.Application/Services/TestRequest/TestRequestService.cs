@@ -25,10 +25,11 @@ public class TestRequestService : BaseService, ITestRequestService
         testRequest.CreatedDate = DateTime.Now;
         testRequest.Number = await GetTestRequestNumber(request.ProjectId);
 
+        var response = _mapper.Map<CreateTestRequestResponse>(testRequest);
+
+
         await _unitOfWork.TestRequestRepository.AddAsync(testRequest);
         await _unitOfWork.CompleteAsync();
-
-        var response = _mapper.Map<CreateTestRequestResponse>(testRequest);
 
         return response;
     }
