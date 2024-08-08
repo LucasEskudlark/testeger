@@ -25,12 +25,11 @@ public class TestCaseService : BaseService, ITestCaseService
 
         testCase.Id = GenerateGuid();
         testCase.CreatedDate = DateTime.Now;
-        testCase.NeedCorrection = false;
+
+        var response = _mapper.Map<CreateTestCaseResponse>(testCase);
 
         await _unitOfWork.TestCaseRepository.AddAsync(testCase);
         await _unitOfWork.CompleteAsync();
-
-        var response = _mapper.Map<CreateTestCaseResponse>(testCase);
 
         return response;
     }
