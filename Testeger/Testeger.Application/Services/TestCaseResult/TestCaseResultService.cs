@@ -23,10 +23,10 @@ public class TestCaseResultService : BaseService, ITestCaseResultService
         testCaseResult.Number = await GetTestCaseResultNumberAsync(request.TestCaseId);
         testCaseResult.IsSuccess = false;
 
+        var response = _mapper.Map<CreateTestCaseResultResponse>(testCaseResult);
+
         await _unitOfWork.TestCaseResultRepository.AddAsync(testCaseResult);
         await _unitOfWork.CompleteAsync();
-
-        var response = _mapper.Map<CreateTestCaseResultResponse>(testCaseResult);
 
         return response;
     }
