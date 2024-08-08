@@ -12,6 +12,11 @@ public class TestCaseResultMapping : IEntityTypeConfiguration<TestCaseResult>
 
         builder.HasKey(tr => tr.Id);
 
+        builder.Property(t => t.Number)
+            .HasColumnName("Number")
+            .HasColumnType("int")
+            .IsRequired();
+
         builder.Property(tr => tr.TestCaseId)
             .HasColumnName("TestCaseId")
             .HasMaxLength(36)
@@ -19,28 +24,19 @@ public class TestCaseResultMapping : IEntityTypeConfiguration<TestCaseResult>
 
         builder.Property(tr => tr.ActualResult)
             .HasColumnName("ActualResult")
-            .HasMaxLength(700)
-            .IsRequired();
+            .HasMaxLength(700);
 
         builder.Property(t => t.IsSuccess)
             .HasColumnName("IsSuccess")
-            .HasColumnType("bit")
-            .IsRequired();
-
-        builder.Property(e => e.SavedTimesJson)
-            .HasColumnName("SavedTimes")
-            .HasColumnType("json")
-            .IsRequired();
+            .HasColumnType("bit");
 
         builder.Property(e => e.ElapsedTime)
             .HasColumnName("ElapsedTime")
-            .HasColumnType("time")
-            .IsRequired();
+            .HasColumnType("time");
 
         builder.Property(e => e.AmountOfTimeSpentToTest)
             .HasColumnName("AmountOfTimeSpentToTest")
-            .HasColumnType("time")
-            .IsRequired();
+            .HasColumnType("time");
 
         builder.HasOne(tr => tr.TestCase)
             .WithMany(tc => tc.Results)

@@ -12,4 +12,13 @@ public class TestCaseResultRepository : Repository<TestCaseResult>, ITestCaseRes
     {
         _dbSet = _dbContext.Set<TestCaseResult>();
     }
+
+    public async Task<int> GetNextNumberAsync(string testCaseId)
+    {
+        var maxNumber = await _dbSet
+            .Where(tr => tr.TestCaseId == testCaseId)
+            .MaxAsync(tr => (int?)tr.Number) ?? 0;
+
+        return maxNumber + 1;
+    }
 }
