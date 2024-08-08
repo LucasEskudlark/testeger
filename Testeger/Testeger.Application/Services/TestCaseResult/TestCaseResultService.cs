@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
+using Testeger.Application.DTOs.Requests.Common;
 using Testeger.Application.DTOs.Requests.CreateTestCaseResult;
+using Testeger.Application.DTOs.Responses;
 using Testeger.Application.DTOs.Responses.TestCaseResult;
 using Testeger.Application.Exceptions;
 using Testeger.Infra.UnitOfWork;
@@ -21,12 +23,30 @@ public class TestCaseResultService : BaseService, ITestCaseResultService
 
         testCaseResult.Id = GenerateGuid();
         testCaseResult.Number = await GetTestCaseResultNumberAsync(request.TestCaseId);
-        testCaseResult.IsSuccess = false;
 
         var response = _mapper.Map<CreateTestCaseResultResponse>(testCaseResult);
 
         await _unitOfWork.TestCaseResultRepository.AddAsync(testCaseResult);
         await _unitOfWork.CompleteAsync();
+
+        return response;
+    }
+
+    public async Task<PagedResponse<GetTestCaseResultResponse>> GetAllTestCaseResultsPagedAsync(PagedRequest request)
+    {
+        var testCaseResults = await _unitOfWork.TestCaseResultRepository.GetAllPagedAsync(request.PageSize, request.PageNumber);
+
+        var response = _mapper.Map<PagedResponse<GetTestCaseResultResponse>>(testCaseResults);
+
+        return response;
+    }
+
+    public async Task<GetTestCaseResultResponse> GetTestCaseResultByIdAsync(string id)
+    {
+        var testCaseResult = await _unitOfWork.TestCaseResultRepository.GetByIdAsync(id)
+            ?? throw new NotFoundException($"TestCaseResult with id {id} not found");
+
+        var response = _mapper.Map<GetTestCaseResultResponse>(testCaseResult);
 
         return response;
     }
