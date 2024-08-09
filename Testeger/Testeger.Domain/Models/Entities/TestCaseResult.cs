@@ -11,9 +11,9 @@ public class TestCaseResult
         ElapsedTime = TimeSpan.Zero;
     }
 
-    public string? Id { get; set; }
+    public required string Id { get; set; }
     public int Number { get; set; }
-    public string? TestCaseId { get; set; }
+    public required string TestCaseId { get; set; }
     public string? ActualResult { get; set; }
     public TimeSpan? ElapsedTime { get; set; }
     public TimeSpan? AmountOfTimeSpentToTest { get; set; }

@@ -4,10 +4,10 @@ namespace Testeger.Domain.Models.Entities;
 
 public class Image
 {
-    public string? Id { get; set; }
-    public string? TestCaseResultId { get; set; }
-    public string? FilePath { get; set; }
-    public string? FileName { get; set; }
+    public required string Id { get; set; }
+    public required string TestCaseResultId { get; set; }
+    public required string FilePath { get; set; }
+    public required string FileName { get; set; }
 
     [JsonIgnore]
     public TestCaseResult? TestCaseResult { get; set; }

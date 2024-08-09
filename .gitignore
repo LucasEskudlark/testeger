@@ -156,3 +156,4 @@ D:/home/LogFiles
 *.nupkg
 /Testeger/Api/Properties/launchSettings.json
 /Testeger/Api/appsettings.Development.json
+/Testeger/UploadedImages
