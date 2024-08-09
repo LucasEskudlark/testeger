@@ -38,6 +38,18 @@ public class ImageService : BaseService, IImageService
         }
     }
 
+    public async Task<IEnumerable<string>> GetTestCaseResultImagesFilePathsAsync(string testCaseResultId)
+    {
+        var filePaths = await _unitOfWork.ImageRepository.GetTestCaseResultImagesFilePathsAsync(testCaseResultId);
+
+        if (!filePaths.Any())
+        {
+            throw new NotFoundException($"No images related to TestCaseResult with id {testCaseResultId} were found");
+        }
+
+        return filePaths;
+    }
+
     private async Task<string> GetTestCaseId(string testCaseResultId)
     {
         var testCaseResult = await _unitOfWork.TestCaseResultRepository.GetByIdAsync(testCaseResultId)

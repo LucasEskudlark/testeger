@@ -21,5 +21,13 @@ public class ImagesController : ControllerBase
 
         return NoContent();
     }
+
+    [HttpGet("result/{testCaseResultId}")]
+    public async Task<IActionResult> GetTestCaseImagesFilePaths(string testCaseResultId)
+    {
+        var response = await _imageService.GetTestCaseResultImagesFilePathsAsync(testCaseResultId);
+        
+        return Ok(response);
+    }
 }
 

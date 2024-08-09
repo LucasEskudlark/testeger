@@ -12,4 +12,12 @@ public class ImageRepository : Repository<Image>, IImageRepository
     {
         _dbSet = _dbContext.Set<Image>();
     }
+
+    public async Task<IEnumerable<string>> GetTestCaseResultImagesFilePathsAsync(string testCaseResultId)
+    {
+        return await _dbSet
+            .Where(i => i.TestCaseResultId == testCaseResultId)
+            .Select(i => i.FilePath)
+            .ToListAsync();
+    }
 }
