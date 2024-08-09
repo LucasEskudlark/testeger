@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Testeger.Application.Services.Image;
 using Testeger.Application.Services.Project;
 using Testeger.Application.Services.TestCase;
 using Testeger.Application.Services.TestCaseResult;
@@ -14,5 +15,6 @@ public static class ServicesConfiguration
         services.AddScoped<ITestRequestService, TestRequestService>();
         services.AddScoped<ITestCaseService, TestCaseService>();
         services.AddScoped<ITestCaseResultService, TestCaseResultService>();
+        services.AddScoped<IImageService, ImageService>();
     }
 }
