@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using AutoMapper.Extensions.EnumMapping;
-using ApiEnum = Testeger.Application.DTOs.Enumerations;
+using ApiEnum = Testeger.Shared.DTOs.Enumerations;
 using DomainEnum = Testeger.Domain.Enumerations;
 
 namespace Testeger.Application.MappingProfiles;

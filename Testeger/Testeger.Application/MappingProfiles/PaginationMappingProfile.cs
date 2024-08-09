@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using Testeger.Application.DTOs.Responses;
 using Testeger.Domain.Models.Pagination;
+using Testeger.Shared.DTOs.Responses;
 
 namespace Testeger.Application.MappingProfiles;
 

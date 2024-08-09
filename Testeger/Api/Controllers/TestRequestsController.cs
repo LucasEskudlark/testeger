@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Testeger.Application.DTOs.Requests.Common;
-using Testeger.Application.DTOs.Requests.CreateTestRequest;
 using Testeger.Application.Services.TestRequest;
+using Testeger.Shared.DTOs.Requests.Common;
+using Testeger.Shared.DTOs.Requests.CreateTestRequest;
 
 namespace Testeger.Api.Controllers;
 

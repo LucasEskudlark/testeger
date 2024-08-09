@@ -1,7 +1,7 @@
-﻿using Testeger.Application.DTOs.Requests.Common;
-using Testeger.Application.DTOs.Requests.CreateTestRequest;
-using Testeger.Application.DTOs.Responses;
-using Testeger.Application.DTOs.Responses.TestRequest;
+﻿using Testeger.Shared.DTOs.Requests.Common;
+using Testeger.Shared.DTOs.Requests.CreateTestRequest;
+using Testeger.Shared.DTOs.Responses;
+using Testeger.Shared.DTOs.Responses.TestRequest;
 
 namespace Testeger.Application.Services.TestRequest;
 

@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
-using Testeger.Application.DTOs.Requests.Common;
-using Testeger.Application.DTOs.Requests.CreateTestCaseResult;
-using Testeger.Application.DTOs.Responses;
-using Testeger.Application.DTOs.Responses.TestCaseResult;
 using Testeger.Application.Exceptions;
 using Testeger.Infra.UnitOfWork;
+using Testeger.Shared.DTOs.Requests.Common;
+using Testeger.Shared.DTOs.Requests.CreateTestCaseResult;
+using Testeger.Shared.DTOs.Responses;
+using Testeger.Shared.DTOs.Responses.TestCaseResult;
 using DomainTestCaseResult = Testeger.Domain.Models.Entities.TestCaseResult;
 
 namespace Testeger.Application.Services.TestCaseResult;
