@@ -26,7 +26,7 @@ public class ImagesController : ControllerBase
     public async Task<IActionResult> GetTestCaseImagesFilePaths(string testCaseResultId)
     {
         var response = await _imageService.GetTestCaseResultImagesFilePathsAsync(testCaseResultId);
-        
+
         return Ok(response);
     }
 }

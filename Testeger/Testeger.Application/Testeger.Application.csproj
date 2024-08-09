@@ -14,6 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Shared\Testeger.Shared.csproj" />
     <ProjectReference Include="..\Testeger.Infra\Testeger.Infra.csproj" />
   </ItemGroup>
 

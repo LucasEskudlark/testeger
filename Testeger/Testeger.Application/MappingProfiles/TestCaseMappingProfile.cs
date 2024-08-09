@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
-using Testeger.Application.DTOs.Requests.Common;
-using Testeger.Application.DTOs.Requests.CreateTestCase;
-using Testeger.Application.DTOs.Responses.TestCase;
 using Testeger.Domain.Models.Entities;
 using Testeger.Domain.Models.ValueObjects;
+using Testeger.Shared.DTOs.Requests.Common;
+using Testeger.Shared.DTOs.Requests.CreateTestCase;
+using Testeger.Shared.DTOs.Responses.TestCase;
 
 namespace Testeger.Application.MappingProfiles;
 

@@ -1,7 +1,7 @@
-﻿using Testeger.Application.DTOs.Requests.Common;
-using Testeger.Application.DTOs.Requests.CreateTestCaseResult;
-using Testeger.Application.DTOs.Responses;
-using Testeger.Application.DTOs.Responses.TestCaseResult;
+﻿using Testeger.Shared.DTOs.Requests.Common;
+using Testeger.Shared.DTOs.Requests.CreateTestCaseResult;
+using Testeger.Shared.DTOs.Responses;
+using Testeger.Shared.DTOs.Responses.TestCaseResult;
 
 namespace Testeger.Application.Services.TestCaseResult;
 

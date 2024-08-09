@@ -1,9 +1,9 @@
 ﻿using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
-using Testeger.Application.DTOs.Requests.CreateProject;
-using Testeger.Application.DTOs.Requests.CreateTestCase;
-using Testeger.Application.DTOs.Requests.CreateTestCaseResult;
-using Testeger.Application.DTOs.Requests.CreateTestRequest;
+using Testeger.Shared.DTOs.Requests.CreateProject;
+using Testeger.Shared.DTOs.Requests.CreateTestCase;
+using Testeger.Shared.DTOs.Requests.CreateTestCaseResult;
+using Testeger.Shared.DTOs.Requests.CreateTestRequest;
 
 namespace Testeger.Application.Configuration;
 

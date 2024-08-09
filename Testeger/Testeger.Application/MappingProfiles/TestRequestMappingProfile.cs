@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
-using Testeger.Application.DTOs.Requests.CreateTestRequest;
-using Testeger.Application.DTOs.Responses.TestRequest;
 using Testeger.Domain.Models.Entities;
+using Testeger.Shared.DTOs.Requests.CreateTestRequest;
+using Testeger.Shared.DTOs.Responses.TestRequest;
 
 namespace Testeger.Application.MappingProfiles;
 
