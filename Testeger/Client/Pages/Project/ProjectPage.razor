@@ -1,8 +1,12 @@
 ﻿@page "/project/{Id}"
+@using Testeger.Client.Services.Projects
+@using Testeger.Shared.DTOs.Responses.Project
 @layout DefaultLayout
-@inject ProjectService ProjectService
+@inject IProjectServiceNV ProjectService
 @inject TestRequestService TestRequestService
 @inject NavigationManager NavigationManager
+
+@inject HttpClient HttpClient
 
 <PageTitle>@project?.Name - Testeger</PageTitle>
 
@@ -35,14 +39,17 @@
     [Inject]
     protected DialogService DialogService { get; set; }
 
-    private Project? project;
+    private GetProjectResponse? project;
+
+
+
     private Dictionary<RequestStatus, List<TestRequest>> testRequestsByStatus = new();
 
     protected override async Task OnParametersSetAsync()
     {
         if (project == null || project.Id != Id) 
         {
-            project = await ProjectService.GetProjectById(Id);
+            project = await ProjectService.GetProjectByIdAsync(Id);
             testRequestsByStatus = await TestRequestService.GetTestRequestsByProjectIdGroupedByStatus(Id);
             StateHasChanged();
         }
@@ -50,7 +57,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        project = await ProjectService.GetProjectById(Id);
+        project = await ProjectService.GetProjectByIdAsync(Id);
         TestRequestService.OnChange += StateHasChanged;
         TestRequestService.OnTestRequestAdded += UpdateTestRequests;
         TestRequestService.OnTestRequestDeleted += UpdateTestRequests;

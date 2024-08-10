@@ -32,6 +32,19 @@ builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddRequestValidators();
 builder.Services.AddAutoMapper(typeof(ProjectMappingProfile));
 
+var BlazorClientPolicy = "BlazorClientPolicy";
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: BlazorClientPolicy,
+        policy =>
+    {
+        policy.WithOrigins("https://localhost:7299")
+               .AllowAnyHeader()
+               .AllowAnyMethod();
+    });
+});
+
 builder.Services.AddApplicationServices();
 
 var app = builder.Build();
@@ -54,8 +67,9 @@ app.UseHttpsRedirection();
 app.UseBlazorFrameworkFiles();
 app.UseStaticFiles();
 
-app.UseRouting();
+app.UseCors(BlazorClientPolicy);
 
+app.UseRouting();
 
 app.MapRazorPages();
 app.MapControllers();

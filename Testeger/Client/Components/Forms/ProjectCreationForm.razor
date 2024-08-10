@@ -1,5 +1,8 @@
-﻿@inject ProjectService ProjectService
+﻿@using Testeger.Client.Services.Projects
+@using Testeger.Shared.DTOs.Requests.CreateProject
 @inject DialogService DialogService
+
+@inject IProjectServiceNV ProjectServiceNV
 
 <EditForm Model="newProject" OnValidSubmit="NotifyParent">
     <DataAnnotationsValidator />
@@ -67,7 +70,7 @@
 </EditForm>
 @code {
     [Parameter]
-    public EventCallback<Project> OnFormSubmitted { get; set; }
+    public EventCallback<string> OnFormSubmitted { get; set; }
 
     private ProjectCreationViewModel newProject = new();
 
@@ -75,24 +78,24 @@
 
     private async Task NotifyParent()
     {
-        var projectEntity = GetProject();
+        var request = GetCreateProjectRequest();
+        var response = await ProjectServiceNV.CreateProjectAsync(request);
+
         DialogService.Close(true);
-        await OnFormSubmitted.InvokeAsync(projectEntity);
+        await OnFormSubmitted.InvokeAsync(response?.Id);
         newProject = new();
     }
 
-    private Project GetProject()
+    private CreateProjectRequest GetCreateProjectRequest()
     {
-        return new Project
+        return new CreateProjectRequest
             {
-                Id = Guid.NewGuid().ToString(),
-                Name = newProject.ProjectName,
-                Members = GetMembers(),
-                CreatorId = "Lucas", // Temporary
-                CreatedDate = DateTime.Now
+                Name = newProject.ProjectName ?? string.Empty,
+                UserId = Guid.NewGuid().ToString()
             };
     }
 
+    // NEED TO BE FIXED WHEN USERS ARE IMPLEMENTED
     private List<User> GetMembers()
     {
         var members = new List<User>();
