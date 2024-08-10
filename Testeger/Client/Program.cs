@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Radzen;
 using Testeger.Client;
+using Testeger.Client.Services.Projects;
 using Testeger.Shared.Services;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
@@ -16,6 +17,8 @@ builder.Services.AddScoped<TestRequestService>();
 builder.Services.AddBlazoredLocalStorage();
 builder.Services.AddScoped<TestCaseService>();
 builder.Services.AddScoped<LocalStorageService>();
+
+builder.Services.AddScoped<IProjectServiceNV, ProjectServiceNV>();
 
 builder.Services.AddScoped(sp =>
     new HttpClient

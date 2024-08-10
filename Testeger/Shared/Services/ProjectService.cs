@@ -5,6 +5,9 @@ namespace Testeger.Shared.Services;
 
 public class ProjectService
 {
+    private readonly HttpClient _httpClient;
+
+
     private readonly LocalStorageService _localStorage;
     private const string StorageKey = "projects";
     public event Action? OnChange;
@@ -12,9 +15,10 @@ public class ProjectService
     public event Action? OnProjectDeleted;
     public event Action? OnProjectUpdated;
 
-    public ProjectService(LocalStorageService localStorage)
+    public ProjectService(LocalStorageService localStorage, HttpClient httpClient)
     {
         _localStorage = localStorage;
+        _httpClient = httpClient;
     }
 
     public async Task<List<Project>> GetAllProjects()
