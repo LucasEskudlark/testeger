@@ -11,12 +11,11 @@
     [Parameter]
     public EventCallback OnProjectAdded { get; set; }
 
-    public async Task HandleSubmission(Project project)
+    public async Task HandleSubmission(string id)
     {
-        await ProjectService.AddProject(project);
         await OnProjectAdded.InvokeAsync();
         await InvokeAsync(StateHasChanged);
-        NavigationManager.NavigateTo($"/project/{project.Id}");
+        NavigationManager.NavigateTo($"/project/{id}");
     }
 }
 
