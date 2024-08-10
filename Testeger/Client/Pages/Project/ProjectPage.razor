@@ -1,9 +1,11 @@
 ﻿@page "/project/{Id}"
 @using Testeger.Client.Services.Projects
+@using Testeger.Client.Services.TestRequests
 @using Testeger.Shared.DTOs.Responses.Project
+@using Testeger.Shared.DTOs.Responses.TestRequest
 @layout DefaultLayout
 @inject IProjectServiceNV ProjectService
-@inject TestRequestService TestRequestService
+@inject ITestRequestServiceNV TestRequestService
 @inject NavigationManager NavigationManager
 
 @inject HttpClient HttpClient
@@ -43,7 +45,7 @@
 
 
 
-    private Dictionary<RequestStatus, List<TestRequest>> testRequestsByStatus = new();
+    private Dictionary<Testeger.Shared.DTOs.Enumerations.RequestStatus, IEnumerable<GetTestRequestResponse>> testRequestsByStatus = new();
 
     protected override async Task OnParametersSetAsync()
     {
@@ -65,15 +67,10 @@
         testRequestsByStatus = await TestRequestService.GetTestRequestsByProjectIdGroupedByStatus(Id);
     }
 
-    private string GetStatusName(RequestStatus status)
+    private string GetStatusName(Testeger.Shared.DTOs.Enumerations.RequestStatus status)
     {
         string name = status.ToString();
         return System.Text.RegularExpressions.Regex.Replace(name, "(\\B[A-Z])", " $1");
-    }
-
-    public async Task Clear()
-    {
-        await TestRequestService.ClearStorage();
     }
 
     public async Task OpenTestRequestCreationDialog()
