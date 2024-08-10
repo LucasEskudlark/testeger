@@ -17,4 +17,12 @@ builder.Services.AddBlazoredLocalStorage();
 builder.Services.AddScoped<TestCaseService>();
 builder.Services.AddScoped<LocalStorageService>();
 
+builder.Services.AddScoped(sp =>
+    new HttpClient
+    {
+        BaseAddress = new Uri("https://localhost:5000")
+    });
+builder.Services.AddHttpClient();
+
+
 await builder.Build().RunAsync();
