@@ -1,4 +1,5 @@
-﻿using Testeger.Shared.DTOs.Enumerations;
+﻿using System.Text.Json.Serialization;
+using Testeger.Shared.DTOs.Enumerations;
 
 namespace Testeger.Shared.DTOs.Responses.TestRequest;
 
@@ -12,7 +13,9 @@ public class GetTestRequestResponse
     public required string Description { get; set; }
     public required string StoryLink { get; set; }
     public required string UserAssignedId { get; set; }
+    [JsonConverter(typeof(JsonStringEnumConverter))]
     public RequestStatus Status { get; set; }
+    [JsonConverter(typeof(JsonStringEnumConverter))]
     public PriorityLevel PriorityLevel { get; set; }
     public DateTime DueDate { get; set; }
     public DateTime CreatedDate { get; set; }

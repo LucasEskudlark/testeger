@@ -1,9 +1,10 @@
-﻿<div class="row card mt-3 shadow-sm" style="min-width: 900px;">
+﻿@using Testeger.Shared.DTOs.Responses.TestRequest
+<div class="row card mt-3 shadow-sm" style="min-width: 900px;">
     <div class="col-12 px-0 mx-0">
         <div class="card-header row-titlebar d-flex justify-content-start align-items-center ps-2 px-0" style="min-width: 900px; height: 35px;">
             @RowTitle
         </div>
-        @if (Requests.Count > 0)
+        @if (Requests.Any())
         {
             <div class="card-body my-2 mt-2" style="min-width: 900px;">
 
@@ -24,11 +25,12 @@
 
 @code {
     [Parameter]
-    public List<TestRequest>? Requests { get; set; }
+    public IEnumerable<GetTestRequestResponse>? Requests { get; set; }
 
     [Parameter]
     public RenderFragment? RowTitle { get; set; }
 
     [Parameter]
-    public RequestStatus Status { get; set; }
+    public Testeger.Shared.DTOs.Enumerations.RequestStatus Status { get; set; }
+
 }

@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using Testeger.Shared.Models.Enumerations;
+using Testeger.Shared.DTOs.Enumerations;
 
 namespace Testeger.Client.ViewModels;
 
