@@ -1,8 +1,10 @@
 ﻿@page "/project/{ProjectId}/metrics"
+@using Testeger.Client.Services.Projects
+@using Testeger.Shared.DTOs.Responses.Project
 @layout DefaultLayout
 @inject TestRequestService TestRequestService
 @inject TestCaseService TestCaseService
-@inject ProjectService ProjectService
+@inject IProjectServiceNV ProjectService
 
 <PageTitle>@Project?.Name Metrics - Testeger</PageTitle>
 
@@ -118,7 +120,8 @@
     [Parameter]
     public string ProjectId { get; set; }
 
-    private Project Project { get; set; }
+    private GetProjectResponse Project { get; set; }
+
     private List<TestRequest> TestRequests { get; set; }
     private List<TestCase> TestCases { get; set; }
     private Dictionary<RequestStatus, List<TestRequest>> TestRequestsByStatus { get; set; }
@@ -130,7 +133,7 @@
         TestRequestsByStatus = await TestRequestService.GetTestRequestsByProjectIdGroupedByStatus(ProjectId);
         TestCasesByStatus = await TestCaseService.GetTestCasesByProjectIdGroupedByStatus(ProjectId);
         TestCases = await TestCaseService.GetTestCasesByProjectId(ProjectId);
-        Project = await ProjectService.GetProjectById(ProjectId);
+        Project = await ProjectService.GetProjectByIdAsync(ProjectId);
     }
 
     string selectedTimeFrame = "1d";
