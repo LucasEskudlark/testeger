@@ -1,6 +1,8 @@
 ﻿@page "/project/{ProjectId}/manage"
+@using Testeger.Client.Services.Projects
+@using Testeger.Shared.DTOs.Responses.Project
 @layout DefaultLayout
-@inject ProjectService ProjectService
+@inject IProjectServiceNV ProjectService
 @inject TooltipService TooltipService
 
 
@@ -37,7 +39,7 @@
             </div>
             <div class="col-2 d-flex flex-column">
                 <RadzenLabel Text="Created by" Style="@LabelStyle" />
-                <RadzenTextBox Disabled="true" @bind-Value="Project.CreatorId" Style="width: 100%;" />
+                <RadzenTextBox Disabled="true" @bind-Value="Project.CreatedByUserId" Style="width: 100%;" />
             </div>
         </div>
         <div class="row">
@@ -61,7 +63,7 @@
                                       MouseEnter="@(args => ShowAddMemberTooltip(args))" />
                     </div>
                 </div>
-                <ProjectMembersDataGrid Members="@Project.Members" SelectedUsersChanged="HandleSelectionChange" />
+                @* <ProjectMembersDataGrid Members="@Project.Members" SelectedUsersChanged="HandleSelectionChange" /> *@
             </div>
         </div>
     </div>
@@ -73,7 +75,7 @@
     [Parameter]
     public string ProjectId { get; set; }
 
-    private Project Project { get; set; }
+    private GetProjectResponse Project { get; set; }
 
     private IList<User> SelectedUsers { get; set; }
 
@@ -84,7 +86,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        Project = await ProjectService.GetProjectById(ProjectId);
+        Project = await ProjectService.GetProjectByIdAsync(ProjectId);
 
         ProjectService.OnProjectUpdated += StateHasChanged;
     }
