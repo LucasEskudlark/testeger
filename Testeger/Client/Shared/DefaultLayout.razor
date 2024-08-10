@@ -1,5 +1,7 @@
-﻿@inherits LayoutComponentBase
-@inject ProjectService ProjectService
+﻿@using Testeger.Client.Services.Projects
+@using Testeger.Shared.DTOs.Responses.Project
+@inherits LayoutComponentBase
+@inject IProjectServiceNV ProjectService
 @inject NavigationManager NavigationManager
 
 <RadzenComponents />
@@ -38,7 +40,7 @@
 }
 
 @code {
-    private List<Project> Projects { get; set; }
+    private IEnumerable<GetProjectResponse> Projects { get; set; }
 
     bool sidebarExpanded = true;
     private bool isDataLoaded = false;
@@ -47,7 +49,8 @@
 
     protected override async Task OnInitializedAsync()
     {
-        Projects = await ProjectService.GetAllProjects();
+        var pagedProjects =  await ProjectService.GetAllProjectsPagedAsync();
+        Projects = pagedProjects.Items;
         NavigationManager.LocationChanged += HandleLocationChanged;
         ProjectService.OnChange += StateHasChanged;
         ProjectService.OnProjectAdded += UpdateProjects;
@@ -64,7 +67,8 @@
 
     private async void UpdateProjects()
     {
-        Projects = await ProjectService.GetAllProjects();
+        var pagedProjects = await ProjectService.GetAllProjectsPagedAsync();
+        Projects = pagedProjects.Items;
         StateHasChanged();
     }
 
