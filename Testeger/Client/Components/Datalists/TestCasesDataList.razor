@@ -1,7 +1,8 @@
-﻿@inject NavigationManager NavigationManager
+﻿@using Testeger.Shared.DTOs.Responses.TestCase
+@inject NavigationManager NavigationManager
 
 <RadzenDataList AllowVirtualization="false" AllowPaging="true"
-                Data="@TestCases" TItem="TestCase" PageSize="6" PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true">
+                Data="@TestCases" TItem="GetTestCaseResponse" PageSize="6" PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true">
     <Template Context="TestCase">
         <RadzenCard Style="width: 100%; max-height: 50px !important; margin: 0; padding: 0 !important;">
             <RadzenRow Gap="0" Style="padding: 0;">
@@ -16,7 +17,7 @@
                         </RadzenColumn>
                         <RadzenColumn Size="8" SizeMD="8" SizeLG="8" Class="d-flex flex-column justify-content-center">
                             <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H5" Class="rz-mb-0" Style="align-self: center;">Completed Date</RadzenText>
-                            @if (@TestCase.CompletedDate != null)
+                            @if (@TestCase.CompletedDate != default)
                             {
                                 <RadzenText TextStyle="TextStyle.Caption" Style="align-self: center;">@(TestCase.CompletedDate)</RadzenText>
                             }
@@ -28,7 +29,7 @@
                     </RadzenRow>
                 </RadzenColumn>
                 <RadzenColumn Size="2" SizeLG="2" Class="rz-p-2 d-flex flex-column justify-content-center" Style="max-height: 50px;">
-                    <RadzenButton Click="@(() => OpenTestCaseDetails(TestCase))" Text="Details" Size="ButtonSize.Small" Style="font-size: 10px !important;" />
+                    <RadzenButton Click="@(() => OpenTestCaseDetails(TestCase.Id))" Text="Details" Size="ButtonSize.Small" Style="font-size: 10px !important;" />
                 </RadzenColumn>
             </RadzenRow>
         </RadzenCard>
@@ -36,35 +37,35 @@
 </RadzenDataList>
 @code {
     [Parameter]
-    public List<TestCase> TestCases { get; set; }
+    public IEnumerable<GetTestCaseResponse> TestCases { get; set; }
 
-    private TestCase TestCase { get; set; }
+    private GetTestCaseResponse TestCase { get; set; }
 
-    public void OpenTestCaseDetails(TestCase testCase)
+    public void OpenTestCaseDetails(string testCaseId)
     {
-        NavigationManager.NavigateTo($"/test-case/{testCase.Id}");
+        NavigationManager.NavigateTo($"/test-case/{testCaseId}");
     }
 
-    private string GetTitleTextColor(TestCaseStatus status)
+    private string GetTitleTextColor(Testeger.Shared.DTOs.Enumerations.TestCaseStatus status)
     {
         switch (status)
         {
-            case TestCaseStatus.Failed:
+            case Testeger.Shared.DTOs.Enumerations.TestCaseStatus.Failed:
                 return "rz-color-danger-darker me-1";
-            case TestCaseStatus.Completed:
+            case Testeger.Shared.DTOs.Enumerations.TestCaseStatus.Completed:
                 return "rz-color-success-darker me-1";
             default:
                 return "rz-color-secondary-darker me-1";
         }
     }
 
-    private string GetTitleBackgroundColor(TestCaseStatus status)
+    private string GetTitleBackgroundColor(Testeger.Shared.DTOs.Enumerations.TestCaseStatus status)
     {
         switch (status)
         {
-            case TestCaseStatus.Failed:
+            case Testeger.Shared.DTOs.Enumerations.TestCaseStatus.Failed:
                 return "d-flex flex-column justify-content-center rz-background-color-danger-lighter ps-2";
-            case TestCaseStatus.Completed:
+            case Testeger.Shared.DTOs.Enumerations.TestCaseStatus.Completed:
                 return "d-flex flex-column justify-content-center rz-background-color-success-lighter ps-2";
             default:
                 return "d-flex flex-column justify-content-center rz-background-color-secondary-lighter ps-2";
