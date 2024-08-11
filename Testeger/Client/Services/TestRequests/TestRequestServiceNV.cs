@@ -26,9 +26,25 @@ public class TestRequestServiceNV : BaseService, ITestRequestServiceNV
         NotifyStateChanged();
     }
 
+    public async Task DeleteTestRequestAsync(string id)
+    {
+        var address = BaseAddress + $"/delete/{id}";
+        await _httpClient.PostAsJsonAsync(address, id);
+        OnTestRequestDeleted?.Invoke();
+        NotifyStateChanged();
+    }
+
     public async Task<PagedResponse<GetTestRequestResponse>> GetAllTestRequestsPagedAsync()
     {
         var response = await _httpClient.GetFromJsonAsync<PagedResponse<GetTestRequestResponse>>(BaseAddress);
+
+        return response;
+    }
+
+    public async Task<GetTestRequestResponse> GetTestRequestByIdAsync(string id)
+    {
+        var address = BaseAddress + $"/{id}";
+        var response = await _httpClient.GetFromJsonAsync<GetTestRequestResponse>(address);
 
         return response;
     }

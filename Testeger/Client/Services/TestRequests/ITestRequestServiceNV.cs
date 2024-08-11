@@ -13,4 +13,6 @@ public interface ITestRequestServiceNV
 
     Task CreateTestRequestAsync(CreateTestRequestRequest request);
     Task<Dictionary<RequestStatus, IEnumerable<GetTestRequestResponse>>> GetTestRequestsByProjectIdGroupedByStatus(string projectId);
+    Task<GetTestRequestResponse> GetTestRequestByIdAsync(string id);
+    Task DeleteTestRequestAsync(string id);
 }
