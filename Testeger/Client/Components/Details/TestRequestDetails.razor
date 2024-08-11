@@ -1,6 +1,6 @@
-﻿@inject TooltipService TooltipService
+﻿@using Testeger.Shared.DTOs.Responses.TestRequest
+@inject TooltipService TooltipService
 @inject DialogService DialogService
-@inject TestRequestService TestRequestService
 
 <RadzenContent>
     <div class="container-fluid">
@@ -11,9 +11,9 @@
             </div>
             <div class="col-md-4">
                 <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H3">Assigned to</RadzenText>
-                <RadzenDropDown Data="names"
+                @* <RadzenDropDown Data="names"
                                 @bind-Value="Request.AssignedTo.Name"
-                                Style="width:100%;" />
+                                Style="width:100%;" /> *@
             </div>
         </div>
         <div class="row mt-2">
@@ -31,9 +31,9 @@
         <div class="row mt-2">
             <div class="col-md-4">
                 <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H3">Status</RadzenText>
-                <RadzenDropDown Data="@EnumHelper.GetSpacedNames(typeof(RequestStatus))"
+                @* <RadzenDropDown Data="@EnumHelper.GetSpacedNames(typeof(RequestStatus))"
                                 @bind-Value="StatusAsString"
-                                Style="width:100%;" />
+                                Style="width:100%;" /> *@
             </div>
             <div class="col-md-4">
                 <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H3">Priority Level</RadzenText>
@@ -42,7 +42,7 @@
             </div>
             <div class="col-md-4">
                 <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H3">Created By</RadzenText>
-                <RadzenTextBox Disabled="true" @bind-Value="Request.CreatorId" Style="width:100%;" />
+                <RadzenTextBox Disabled="true" @bind-Value="Request.CreatedByUserId" Style="width:100%;" />
             </div>
         </div>
         <div class="row mt-2">
@@ -72,7 +72,7 @@
 
 @code {
     [Parameter]
-    public TestRequest Request { get; set; }
+    public GetTestRequestResponse Request { get; set; }
 
     // Temporary
     private List<string> names = new()
@@ -84,37 +84,37 @@
     public string PriorityAsString
     {
         get => Request.PriorityLevel.ToString().Replace("_", " ");
-        set => Request.PriorityLevel = Enum.Parse<PriorityLevel>(value.Replace(" ", "_"));
+        set => Request.PriorityLevel = Enum.Parse<Testeger.Shared.DTOs.Enumerations.PriorityLevel>(value.Replace(" ", "_"));
     }
 
-    public string StatusAsString
-    {
-        get => EnumHelper.AddSpacesToEnumName(Request.Status.ToString());
-        set
-        {
-            var newStatus = Enum.Parse<RequestStatus>(value.Replace(" ", ""), true);
-            if (Request.Status != newStatus)
-            {
-                var history = new TestRequestHistory
-                    {
-                        TestRequestId = Request.Id,
-                        ChangedByUserId = "CurrentUserId", // Temporary
-                        OldStatus = Request.Status,
-                        NewStatus = newStatus,
-                        ChangedDate = DateTime.Now
-                    };
+    // public string StatusAsString
+    // {
+    //     get => EnumHelper.AddSpacesToEnumName(Request.Status.ToString());
+    //     set
+    //     {
+    //         var newStatus = Enum.Parse<Testeger.Shared.DTOs.Enumerations.RequestStatus>(value.Replace(" ", ""), true);
+    //         if (Request.Status != newStatus)
+    //         {
+    //             var history = new TestRequestHistory
+    //                 {
+    //                     TestRequestId = Request.Id,
+    //                     ChangedByUserId = "CurrentUserId", // Temporary
+    //                     OldStatus = Request.Status,
+    //                     NewStatus = newStatus,
+    //                     ChangedDate = DateTime.Now
+    //                 };
 
-                Request.History.Add(history);
+    //             Request.History.Add(history);
 
-                Request.Status = newStatus;
+    //             Request.Status = newStatus;
 
-                if (Request.Status == RequestStatus.Completed)
-                {
-                    Request.CompletedDate = DateTime.Now;
-                }
-            }
-        }
-    }
+    //             if (Request.Status == RequestStatus.Completed)
+    //             {
+    //                 Request.CompletedDate = DateTime.Now;
+    //             }
+    //         }
+    //     }
+    // }
 
     private void ShowCompletedDateTooltip(ElementReference elementReference, TooltipOptions options = null)
                     => TooltipService.Open(elementReference, "This date will be set when the request is marked as completed.", options);

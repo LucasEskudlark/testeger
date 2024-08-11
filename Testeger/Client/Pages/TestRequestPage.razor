@@ -1,7 +1,9 @@
 ﻿@page "/test-request/{RequestId}"
+@using Testeger.Client.Services.TestRequests
+@using Testeger.Shared.DTOs.Responses.TestRequest
 @layout DefaultLayout
 @inject DialogService DialogService
-@inject TestRequestService TestRequestService
+@inject ITestRequestServiceNV TestRequestService
 @inject TestCaseService TestCaseService
 @inject NavigationManager NavigationManager
 @inject TooltipService TooltipService
@@ -14,8 +16,8 @@
         <div class="row justify-content-between">
             <div class="col-auto">
                 <RadzenBreadCrumb>
-                    <RadzenBreadCrumbItem Path="@BreadCrumbHelper.GetProjectUrlBasedOnRequest(Request)" Text="Project" />
-                    <RadzenBreadCrumbItem Text="@BreadCrumbHelper.GetRequestText(Request)" />
+                    <RadzenBreadCrumbItem Path="@Testeger.Client.Helpers.BreadCrumbHelper.GetProjectUrl(Request.ProjectId)" Text="Project" />
+                    <RadzenBreadCrumbItem Text="@Testeger.Client.Helpers.BreadCrumbHelper.GetRequestText(Request.Number)" />
                 </RadzenBreadCrumb>
             </div>
             <div class="col-auto d-flex">
@@ -41,7 +43,7 @@
     <div class="container">
         <div class="row d-flex justify-content-between">
             <div class="col-6 pb-2 right-divider">
-                <TestRequestDetails Request="Request"/>
+                <TestRequestDetails Request="Request"/> 
             </div>
 
             <div class="col-6 pb-2">
@@ -66,7 +68,7 @@
 }
 
 @code {
-    private TestRequest? Request;
+    private GetTestRequestResponse? Request;
 
     [Parameter]
     public EventCallback OnRequestDeleted { get; set; }
@@ -85,7 +87,7 @@
     {
         await base.OnInitializedAsync();
 
-        Request = await TestRequestService.GetTestRequestById(RequestId);
+        Request = await TestRequestService.GetTestRequestByIdAsync(RequestId);
 
         TestRequestService.OnChange += StateHasChanged;
         TestCaseService.OnTestCaseAdded += UpdateTestCases;
@@ -105,8 +107,8 @@
     {
         if (Request != null)
         {
-            await TestRequestService.RemoveTestRequest(Request);
-            NavigationManager.NavigateTo(BreadCrumbHelper.GetProjectUrlBasedOnRequest(Request));
+            await TestRequestService.DeleteTestRequestAsync(Request.Id);
+            NavigationManager.NavigateTo(Testeger.Client.Helpers.BreadCrumbHelper.GetProjectUrl(Request.ProjectId));
             await OnRequestDeleted.InvokeAsync();
             await InvokeAsync(StateHasChanged);
         }
@@ -116,7 +118,7 @@
     {
         if (Request != null)
         {
-            await TestRequestService.UpdateTestRequest(Request);
+            //await TestRequestService.UpdateTestRequest(Request);
             await OnRequestUpdated.InvokeAsync();
             await InvokeAsync(StateHasChanged); 
         }
