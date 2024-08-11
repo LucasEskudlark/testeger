@@ -1,4 +1,5 @@
-﻿using Testeger.Shared.DTOs.Enumerations;
+﻿using System.Text.Json.Serialization;
+using Testeger.Shared.DTOs.Enumerations;
 
 namespace Testeger.Shared.DTOs.Responses.TestCase;
 
@@ -12,6 +13,7 @@ public class GetTestCaseResponse
     public required TestCaseDetailsResponse Details { get; set; }
     public DateTime CreatedDate { get; set; }
     public DateTime CompletedDate { get; set; }
+    [JsonConverter(typeof(JsonStringEnumConverter))]
     public TestCaseStatus Status { get; set; }
     public bool NeedCorrection { get; set; }
     public DateTime ScheduledDate { get; set; }
