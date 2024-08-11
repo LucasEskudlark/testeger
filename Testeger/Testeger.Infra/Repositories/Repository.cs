@@ -46,7 +46,7 @@ public class Repository<T> : IRepository<T> where T : class
     {
         var totalItems = await _dbSet.AsNoTracking().CountAsync();
 
-        var categories = await _dbSet
+        var items = await _dbSet
             .AsNoTracking()
             .Skip((pageNumber - 1) * pageSize)
             .Take(pageSize)
@@ -54,7 +54,7 @@ public class Repository<T> : IRepository<T> where T : class
 
         return new PagedResult<T>
         {
-            Items = categories,
+            Items = items,
             TotalItems = totalItems,
             PageNumber = pageNumber,
             PageSize = pageSize
