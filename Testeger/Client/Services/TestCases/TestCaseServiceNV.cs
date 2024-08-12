@@ -1,4 +1,5 @@
 ﻿using System.Net.Http.Json;
+using Testeger.Client.ViewModels;
 using Testeger.Client.ViewModels.TestCases;
 using Testeger.Shared.DTOs.Requests.CreateTestCase;
 
@@ -39,7 +40,7 @@ public class TestCaseServiceNV : BaseService, ITestCaseServiceNV
         OnTestCaseDeleted?.Invoke();
     }
 
-    public async Task CreateTestCaseAsync(CreateTestCaseRequest request)
+    public async Task CreateTestCaseAsync(TestCaseCreationViewModel request)
     {
         await _httpClient.PostAsJsonAsync(BaseAddress, request);
         OnTestCaseAdded?.Invoke();

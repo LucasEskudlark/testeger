@@ -1,5 +1,4 @@
-﻿using Testeger.Shared.DTOs.Enumerations;
-using Testeger.Shared.DTOs.Requests.Common;
+﻿using Testeger.Shared.DTOs.Requests.Common;
 
 namespace Testeger.Shared.DTOs.Requests.CreateTestCase;
 
