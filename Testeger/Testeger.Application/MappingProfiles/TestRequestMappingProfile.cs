@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Testeger.Domain.Models.Entities;
+using Testeger.Domain.Models.ValueObjects;
 using Testeger.Shared.DTOs.Requests.CreateTestRequest;
 using Testeger.Shared.DTOs.Responses.TestRequest;
 
@@ -16,5 +17,7 @@ public class TestRequestMappingProfile : Profile
         CreateMap<TestRequest, CreateTestRequestResponse>();
 
         CreateMap<TestRequest, GetTestRequestResponse>();
+
+        CreateMap<TestRequestHistory, TestRequestHistoryResponse>();
     }
 }

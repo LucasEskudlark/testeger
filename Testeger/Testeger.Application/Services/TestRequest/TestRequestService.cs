@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
 using Testeger.Application.Exceptions;
+using Testeger.Domain.Enumerations;
+using Testeger.Domain.Models.ValueObjects;
 using Testeger.Infra.UnitOfWork;
 using Testeger.Shared.DTOs.Requests.Common;
 using Testeger.Shared.DTOs.Requests.CreateTestRequest;
@@ -25,8 +27,11 @@ public class TestRequestService : BaseService, ITestRequestService
         testRequest.CreatedDate = DateTime.Now;
         testRequest.Number = await GetTestRequestNumber(request.ProjectId);
 
-        var response = _mapper.Map<CreateTestRequestResponse>(testRequest);
+        var history = GetRequestHistory(request.UserId, RequestStatus.None, RequestStatus.Waiting);
 
+        testRequest.History.Add(history);
+
+        var response = _mapper.Map<CreateTestRequestResponse>(testRequest);
 
         await _unitOfWork.TestRequestRepository.AddAsync(testRequest);
         await _unitOfWork.CompleteAsync();
@@ -36,7 +41,7 @@ public class TestRequestService : BaseService, ITestRequestService
 
     public async Task<GetTestRequestResponse> GetTestRequestByIdAsync(string id)
     {
-        var testRequest = await _unitOfWork.TestRequestRepository.GetByIdAsync(id) ??
+        var testRequest = await _unitOfWork.TestRequestRepository.GetTestRequestByIdAsync(id) ??
             throw new NotFoundException($"TestRequest with id {id} not found");
 
         var response = _mapper.Map<GetTestRequestResponse>(testRequest);
@@ -71,5 +76,19 @@ public class TestRequestService : BaseService, ITestRequestService
     private async Task<int> GetTestRequestNumber(string projectId)
     {
         return await _unitOfWork.TestRequestRepository.GetNextNumberAsync(projectId);
+    }
+
+    private static TestRequestHistory GetRequestHistory(
+        string userId,
+        RequestStatus oldStatus,
+        RequestStatus newStatus)
+    {
+        return new TestRequestHistory
+        {
+            ChangedByUserId = userId,
+            OldStatus = oldStatus,
+            NewStatus = newStatus,
+            ChangedDate = DateTime.Now
+        };
     }
 }

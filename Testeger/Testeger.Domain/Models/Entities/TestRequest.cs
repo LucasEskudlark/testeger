@@ -27,7 +27,7 @@ public class TestRequest
     public DateTime? CompletedDate { get; set; }
 
 
-    public ICollection<TestRequestHistory>? History { get; set; }
+    public ICollection<TestRequestHistory> History { get; set; }
     public ICollection<TestCase>? TestCases { get; set; }
 
     [JsonIgnore]

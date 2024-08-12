@@ -17,5 +17,8 @@ public enum RequestStatus
     FixingIssues = 3,
 
     [Description("The request has been completed.")]
-    Completed = 4
+    Completed = 4,
+
+    [Description("None")]
+    None = 9999
 }

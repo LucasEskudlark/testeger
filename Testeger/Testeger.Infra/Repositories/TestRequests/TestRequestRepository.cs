@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Testeger.Domain.Models.Entities;
+using Testeger.Domain.Models.ValueObjects;
 using Testeger.Infra.Context;
 
 namespace Testeger.Infra.Repositories.TestRequests;
@@ -7,6 +8,7 @@ namespace Testeger.Infra.Repositories.TestRequests;
 public class TestRequestRepository : Repository<TestRequest>, ITestRequestRepository
 {
     private readonly DbSet<TestRequest> _dbSet;
+
     public TestRequestRepository(AppDbContext dbContext) : base(dbContext)
     {
         _dbSet = _dbContext.Set<TestRequest>();
@@ -19,5 +21,13 @@ public class TestRequestRepository : Repository<TestRequest>, ITestRequestReposi
             .MaxAsync(tr => (int?)tr.Number) ?? 0;
 
         return maxNumber + 1;
+    }
+
+    public async Task<TestRequest> GetTestRequestByIdAsync(string id)
+    {
+        var testRequest = await _dbSet
+                            .Include(tr => tr.History)
+                            .FirstOrDefaultAsync(tr => tr.Id == id);
+        return testRequest;
     }
 }
