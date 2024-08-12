@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
 using Testeger.Application.Exceptions;
+using Testeger.Domain.Enumerations;
+using Testeger.Domain.Models.ValueObjects;
 using Testeger.Infra.UnitOfWork;
 using Testeger.Shared.DTOs.Requests.Common;
 using Testeger.Shared.DTOs.Requests.CreateTestCase;
@@ -25,6 +27,10 @@ public class TestCaseService : BaseService, ITestCaseService
 
         testCase.Id = GenerateGuid();
         testCase.CreatedDate = DateTime.Now;
+
+        var history = GetTestCaseHistory(request.UserId, TestCaseStatus.None, TestCaseStatus.Pending);
+
+        testCase.History.Add(history);
 
         var response = _mapper.Map<CreateTestCaseResponse>(testCase);
 
@@ -83,5 +89,19 @@ public class TestCaseService : BaseService, ITestCaseService
     {
         _ = await _unitOfWork.ProjectRepository.GetByIdAsync(projectId)
             ?? throw new NotFoundException($"You must inform an existing project. Project with id {projectId} not found");
+    }
+
+    private static TestCaseHistory GetTestCaseHistory(
+        string userId,
+        TestCaseStatus oldStatus,
+        TestCaseStatus newStatus)
+    {
+        return new TestCaseHistory
+        {
+            ChangedByUserId = userId,
+            OldStatus = oldStatus,
+            NewStatus = newStatus,
+            ChangedDate = DateTime.Now
+        };
     }
 }
