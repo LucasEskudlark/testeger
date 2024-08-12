@@ -1,5 +1,4 @@
-﻿using System.Net;
-using System.Net.Http.Json;
+﻿using System.Net.Http.Json;
 using Testeger.Client.ViewModels.Projects;
 using Testeger.Shared.DTOs.Requests.CreateProject;
 using Testeger.Shared.DTOs.Responses;
@@ -33,7 +32,7 @@ public class ProjectServiceNV : BaseService, IProjectServiceNV
 
     public async Task<PagedResponse<ProjectViewModel>> GetAllProjectsPagedAsync()
     {
-        var response =  await _httpClient.GetFromJsonAsync<PagedResponse<ProjectViewModel>>(BaseAddress);
+        var response = await _httpClient.GetFromJsonAsync<PagedResponse<ProjectViewModel>>(BaseAddress);
 
         return response;
     }
