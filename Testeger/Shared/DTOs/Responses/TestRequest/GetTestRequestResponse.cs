@@ -20,4 +20,5 @@ public class GetTestRequestResponse
     public DateTime DueDate { get; set; }
     public DateTime CreatedDate { get; set; }
     public DateTime CompletedDate { get; set; }
+    public required IEnumerable<TestRequestHistoryResponse> History { get; set; }
 }
