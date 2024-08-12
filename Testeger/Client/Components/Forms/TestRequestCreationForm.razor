@@ -78,28 +78,12 @@
 
     private async Task NotifyParent()
     {
-        var request = GetTestRequest();
-        await TestRequestService.CreateTestRequestAsync(request);
+        testRequestViewModel.ProjectId = ProjectId;
+        testRequestViewModel.UserId = Guid.NewGuid().ToString();
+        await TestRequestService.CreateTestRequestAsync(testRequestViewModel);
         DialogService.Close(true);
         await OnFormSubmitted.InvokeAsync();
         testRequestViewModel = new();
-    }
-
-    private CreateTestRequestRequest GetTestRequest()
-    {
-        var testRequest = new CreateTestRequestRequest
-            {
-                ProjectId = ProjectId,
-                UserId = Guid.NewGuid().ToString(),
-                Title = testRequestViewModel.Title ?? String.Empty,
-                Description = testRequestViewModel.Description ?? String.Empty,
-                StoryLink = testRequestViewModel.StoryLink ?? String.Empty,
-                PriorityLevel = testRequestViewModel.PriorityLevel,
-                Status = Testeger.Shared.DTOs.Enumerations.RequestStatus.Waiting,
-                DueDate = testRequestViewModel.DueDate.GetValueOrDefault(),                
-            };
-
-        return testRequest;
     }
 }
 
