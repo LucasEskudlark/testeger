@@ -27,8 +27,5 @@ public class CreateTestCaseRequestValidator : AbstractValidator<CreateTestCaseRe
         RuleFor(r => r.Details)
             .NotEmpty()
             .SetValidator(new TestCaseDetailsRequestValidator());
-
-        RuleFor(r => r.Status)
-            .IsInEnum();
     }
 }

@@ -27,6 +27,7 @@ public class TestCaseService : BaseService, ITestCaseService
 
         testCase.Id = GenerateGuid();
         testCase.CreatedDate = DateTime.Now;
+        testCase.Status = TestCaseStatus.Pending;
 
         var history = GetTestCaseHistory(request.UserId, TestCaseStatus.None, TestCaseStatus.Pending);
 
