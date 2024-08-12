@@ -1,4 +1,5 @@
 ﻿using System.Net.Http.Json;
+using Testeger.Shared.DTOs.Requests.CreateTestCase;
 using Testeger.Shared.DTOs.Responses.TestCase;
 
 namespace Testeger.Client.Services.TestCases;
@@ -35,5 +36,12 @@ public class TestCaseServiceNV : BaseService, ITestCaseServiceNV
     {
         var address = BaseAddress + $"/delete/{id}";
         await _httpClient.PostAsJsonAsync(address, id);
+        OnTestCaseDeleted?.Invoke();
+    }
+
+    public async Task CreateTestCaseAsync(CreateTestCaseRequest request)
+    {
+        await _httpClient.PostAsJsonAsync(BaseAddress, request);
+        OnTestCaseAdded?.Invoke();
     }
 }
