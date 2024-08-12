@@ -1,5 +1,6 @@
 ﻿@page "/project/{ProjectId}/manage"
 @using Testeger.Client.Services.Projects
+@using Testeger.Client.ViewModels.Projects
 @using Testeger.Shared.DTOs.Responses.Project
 @layout DefaultLayout
 @inject IProjectServiceNV ProjectService
@@ -75,7 +76,7 @@
     [Parameter]
     public string ProjectId { get; set; }
 
-    private GetProjectResponse Project { get; set; }
+    private ProjectViewModel Project { get; set; }
 
     private IList<User> SelectedUsers { get; set; }
 
