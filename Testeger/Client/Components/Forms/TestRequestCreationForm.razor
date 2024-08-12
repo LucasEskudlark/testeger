@@ -99,17 +99,6 @@
                 DueDate = testRequestViewModel.DueDate.GetValueOrDefault(),                
             };
 
-        // var history = new TestRequestHistory
-        //     {
-        //         TestRequestId = testRequest.Id,
-        //         ChangedByUserId = "CurrentUserId", // Temporary
-        //         OldStatus = null,
-        //         NewStatus = testRequest.Status,
-        //         ChangedDate = DateTime.Now
-        //     };
-
-        // testRequest.History.Add(history);
-
         return testRequest;
     }
 }
