@@ -1,10 +1,15 @@
 ﻿@page "/test-case/{TestCaseId}"
+@using Testeger.Client.Services.TestCases
+@using Testeger.Client.Services.TestRequests
+@using Testeger.Shared.DTOs.Responses.TestCase
+@using Testeger.Shared.DTOs.Responses.TestRequest
 @layout DefaultLayout
-@inject TestCaseService TestCaseService
-@inject TestRequestService TestRequestService
 @inject NavigationManager NavigationManager
 @inject TooltipService TooltipService
 @inject DialogService DialogService
+@inject ITestCaseServiceNV TestCaseService
+@inject ITestRequestServiceNV TestRequestService
+
 
 @if (TestCase is not null)
 {
@@ -14,8 +19,8 @@
         <div class="row justify-content-between">
             <div class="col-auto">
                 <RadzenBreadCrumb>
-                    <RadzenBreadCrumbItem Path="@BreadCrumbHelper.GetProjectUrlBasedOnRequest(Request)" Text="Project" />
-                    <RadzenBreadCrumbItem Path="@BreadCrumbHelper.GetRequestUrl(Request)" Text="@BreadCrumbHelper.GetRequestText(Request)" />
+                    <RadzenBreadCrumbItem Path="@Testeger.Client.Helpers.BreadCrumbHelper.GetProjectUrl(Request.ProjectId)" Text="Project" />
+                    <RadzenBreadCrumbItem Path="@Testeger.Client.Helpers.BreadCrumbHelper.GetRequestUrl(Request.Id)" Text="@Testeger.Client.Helpers.BreadCrumbHelper.GetRequestText(Request.Number)" />
                     <RadzenBreadCrumbItem Text="@TestCase.Title" />
                 </RadzenBreadCrumb>
             </div>
@@ -70,8 +75,8 @@
     [Parameter]
     public EventCallback OnTestCaseUpdated { get; set; }
 
-    public TestRequest Request { get; set; }
-    private TestCase TestCase { get; set; }
+    public GetTestRequestResponse Request { get; set; }
+    private GetTestCaseResponse TestCase { get; set; }
 
     private bool isNotScheduled;
     private bool isTestRunning = false;
@@ -80,9 +85,9 @@
 
     protected override async Task OnInitializedAsync()
     {
-        TestCase = await TestCaseService.GetTestCaseById(TestCaseId);
-        Request = await TestRequestService.GetTestRequestById(TestCase.RequestId);
-        isNotScheduled = !TestCase.ScheduledDate.HasValue;
+        TestCase = await TestCaseService.GetTestCaseByIdAsync(TestCaseId);
+        Request = await TestRequestService.GetTestRequestByIdAsync(TestCase.TestRequestId);
+        isNotScheduled = TestCase.ScheduledDate != default;
         TestCaseService.OnChange += StateHasChanged;
         TestCaseService.OnTestCaseUpdated += UpdateTestCase;
     }
@@ -91,8 +96,8 @@
     {
         if (TestCase != null)
         {
-            await TestCaseService.RemoveTestCase(TestCase);
-            NavigationManager.NavigateTo(BreadCrumbHelper.GetRequestUrl(Request));
+            await TestCaseService.DeleteTestCaseByIdAsync(TestCase.Id);
+            NavigationManager.NavigateTo(Testeger.Client.Helpers.BreadCrumbHelper.GetRequestUrl(Request.Id));
             await OnTestCaseDeleted.InvokeAsync();
         }
     }
@@ -101,9 +106,9 @@
     {
         if (TestCase != null)
         {
-            await TestCaseService.UpdateTestCase(TestCase);
-            await OnTestCaseUpdated.InvokeAsync();
-            isNotScheduled = !TestCase.ScheduledDate.HasValue;
+            // await TestCaseService.UpdateTestCase(TestCase);
+            // await OnTestCaseUpdated.InvokeAsync();
+            // isNotScheduled = !TestCase.ScheduledDate.HasValue;
         }
     }
 
@@ -135,7 +140,7 @@
 
     private async void UpdateTestCase()
     {
-        TestCase = await TestCaseService.GetTestCaseById(TestCaseId);
+        TestCase = await TestCaseService.GetTestCaseByIdAsync(TestCaseId);
         StateHasChanged();
     }
 }

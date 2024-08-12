@@ -62,6 +62,17 @@ public class TestCaseService : BaseService, ITestCaseService
         await _unitOfWork.CompleteAsync();
     }
 
+    public async Task<IEnumerable<GetTestCaseResponse>> GetTestCasesByTestRequestIdAsync(string testRequestId)
+    {
+        await ValidateTestRequestExistenceAsync(testRequestId);
+
+        var testCases = await _unitOfWork.TestCaseRepository.GetTestCasesByTestRequestIdAsync(testRequestId);
+
+        var response = _mapper.Map<IEnumerable<GetTestCaseResponse>>(testCases);
+
+        return response;
+    }
+
     private async Task ValidateTestRequestExistenceAsync(string testRequestId)
     {
         _ = await _unitOfWork.TestRequestRepository.GetByIdAsync(testRequestId) ??
@@ -73,5 +84,4 @@ public class TestCaseService : BaseService, ITestCaseService
         _ = await _unitOfWork.ProjectRepository.GetByIdAsync(projectId)
             ?? throw new NotFoundException($"You must inform an existing project. Project with id {projectId} not found");
     }
-
 }

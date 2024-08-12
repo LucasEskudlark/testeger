@@ -1,23 +1,23 @@
 ﻿@page "/dialogcard/create-test-case"
-@inject TestCaseService TestCaseService
 
-<TestCaseCreationForm OnFormSubmitted="HandleValidSubmit"></TestCaseCreationForm>
+<TestCaseCreationForm
+    OnFormSubmitted="HandleValidSubmit"
+    ProjectId="@ProjectId"
+    TestRequestId="@RequestId">
+</TestCaseCreationForm>
 
 @code {
     [Parameter]
-    public string RequestId { get; set; }
+    public required string RequestId { get; set; }
 
     [Parameter]
-    public string ProjectId { get; set; }
+    public required string ProjectId { get; set; }
 
     [Parameter]
     public EventCallback OnTestCaseAdded { get; set; }
 
-    private async Task HandleValidSubmit(TestCase testCase)
+    private async Task HandleValidSubmit()
     {
-        testCase.RequestId = RequestId;
-        testCase.ProjectId = ProjectId;
-        await TestCaseService.AddTestCase(testCase);
         await OnTestCaseAdded.InvokeAsync();
         await InvokeAsync(StateHasChanged);
     }

@@ -1,4 +1,8 @@
-﻿@inject DialogService DialogService
+﻿@using Testeger.Client.Services.TestCases
+@using Testeger.Shared.DTOs.Requests.Common
+@using Testeger.Shared.DTOs.Requests.CreateTestCase
+@inject DialogService DialogService
+@inject ITestCaseServiceNV TestCaseService
 
 <EditForm Model="@testCaseCreationViewModel" OnValidSubmit="@NotifyParent">
     <DataAnnotationsValidator />
@@ -73,49 +77,57 @@
     [Parameter]
     public EventCallback<TestCase> OnFormSubmitted { get; set; }
 
+    [Parameter]
+    public required string ProjectId { get; set; }
+
+    [Parameter]
+    public required string TestRequestId { get; set; }
+
     private TestCaseCreationViewModel testCaseCreationViewModel = new();
 
     private async Task NotifyParent()
     {
-        var testCase = GetTestCase();
+        var createTestCaseRequest = GetTestCase();
+
+        await TestCaseService.CreateTestCaseAsync(createTestCaseRequest);
+        
         DialogService.Close(true);
-        await OnFormSubmitted.InvokeAsync(testCase);
+        await OnFormSubmitted.InvokeAsync();
         testCaseCreationViewModel = new();
     }
 
-    private TestCase GetTestCase()
+    private CreateTestCaseRequest GetTestCase()
     {
-        var testCase = new TestCase
+        var request = new CreateTestCaseRequest
             {
-                Id = Guid.NewGuid().ToString(),
                 Title = testCaseCreationViewModel.Title,
-                Status = TestCaseStatus.Pending,
-                Details = new TestCaseDetails
+                ProjectId = ProjectId,
+                UserId = Guid.NewGuid().ToString(),
+                TestRequestId = TestRequestId,
+                Status = Testeger.Shared.DTOs.Enumerations.TestCaseStatus.Pending,
+                Details = new TestCaseDetailsRequest
                 {
                     Description = testCaseCreationViewModel.Description,
                     PreConditions = testCaseCreationViewModel.PreConditions,
                     Steps = testCaseCreationViewModel.Steps,
                     ExpectedResult = testCaseCreationViewModel.ExpectedResult,
                     Environment = testCaseCreationViewModel.Environment
-                },
-                CreatedDate = DateTime.Now,
-                CreatedBy = "Lucas", // Temporary
-                NeedCorrection = false
+                }
             };
 
-        var history = new TestCaseHistory
-            {
-                TestCaseId = testCase.Id,
-                ChangedByUserId = "CurrentUserId", // Temporary
-                OldStatus = null,
-                NewStatus = testCase.Status,
-                ChangedDate = DateTime.Now
-            };
+        // var history = new TestCaseHistory
+        //     {
+        //         TestCaseId = testCase.Id,
+        //         ChangedByUserId = "CurrentUserId", // Temporary
+        //         OldStatus = null,
+        //         NewStatus = testCase.Status,
+        //         ChangedDate = DateTime.Now
+        //     };
 
-        testCase.History.Add(history);
-        testCase.Results.Add(new());
+        // testCase.History.Add(history);
+        // testCase.Results.Add(new());
 
-        return testCase;
+        return request;
     }
 
     protected override void OnInitialized()

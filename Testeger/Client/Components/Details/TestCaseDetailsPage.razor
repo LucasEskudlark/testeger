@@ -1,4 +1,6 @@
-﻿@inject TooltipService TooltipService
+﻿@using Testeger.Shared.DTOs.Responses.TestCase
+@using Testeger.Shared.DTOs.Responses.TestRequest
+@inject TooltipService TooltipService
 @inject DialogService DialogService
 
 
@@ -24,7 +26,7 @@
 
         <div class="col-3">
             <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H3">Created by</RadzenText>
-            <RadzenTextBox Disabled="true" @bind-Value="TestCase.CreatedBy" Style="width:100%;" />
+            <RadzenTextBox Disabled="true" @bind-Value="TestCase.CreatedByUserId" Style="width:100%;" />
         </div>
     </div>
 
@@ -61,7 +63,7 @@
         <div class="col-4 pb-2 test-schedule pt-1 ms-2">
             <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H3">Scheduled date</RadzenText>
             <RadzenDatePicker @bind-Value="TestCase.ScheduledDate"
-                                Disabled="@(Request.Status != RequestStatus.ReadyForTesting)"
+                                Disabled="@(Request.Status != Testeger.Shared.DTOs.Enumerations.RequestStatus.ReadyForTesting)"
                                 Style="width:100%;" Min="@(DateTime.Today)"
                                 DateFormat="dd/MM/yyyy"
                                 MouseEnter="@(args => ShowScheduledDateTooltip(args) )" />
@@ -72,10 +74,10 @@
 
 @code {
     [Parameter]
-    public TestCase TestCase { get; set; }
+    public GetTestCaseResponse TestCase { get; set; }
 
     [Parameter]
-    public TestRequest Request { get; set; }
+    public GetTestRequestResponse Request { get; set; }
 
     private string NeedCorrectionString
     {

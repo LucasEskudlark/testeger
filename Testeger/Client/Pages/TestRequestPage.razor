@@ -1,10 +1,12 @@
 ﻿@page "/test-request/{RequestId}"
+@using Testeger.Client.Services.TestCases
 @using Testeger.Client.Services.TestRequests
+@using Testeger.Shared.DTOs.Responses.TestCase
 @using Testeger.Shared.DTOs.Responses.TestRequest
 @layout DefaultLayout
 @inject DialogService DialogService
 @inject ITestRequestServiceNV TestRequestService
-@inject TestCaseService TestCaseService
+@inject ITestCaseServiceNV TestCaseService
 @inject NavigationManager NavigationManager
 @inject TooltipService TooltipService
 
@@ -79,9 +81,7 @@
     [Parameter]
     public string? RequestId { get; set; }
 
-    private List<TestCase> TestCases = new();
-
-    private TestCase TestCase { get; set; }
+    private IEnumerable<GetTestCaseResponse> TestCases { get; set; } = new List<GetTestCaseResponse>();
 
     protected override async Task OnInitializedAsync()
     {
@@ -94,12 +94,12 @@
         TestCaseService.OnTestCaseDeleted += UpdateTestCases;
         TestCaseService.OnTestCaseUpdated += UpdateTestCases;
 
-        TestCases = await TestCaseService.GetTestCasesByRequestId(Request.Id);
+        TestCases = await TestCaseService.GetTestCasesByTestRequestIdPagedAsync(Request.Id);
     }
 
     private async void UpdateTestCases()
     {
-        TestCases = await TestCaseService.GetTestCasesByRequestId(Request.Id);
+        TestCases = await TestCaseService.GetTestCasesByTestRequestIdPagedAsync(Request.Id);
         StateHasChanged();
     }
 
