@@ -9,7 +9,6 @@ public class CreateTestRequestRequest
     public required string Title { get; set; }
     public required string Description { get; set; }
     public required string StoryLink { get; set; }
-    public RequestStatus Status { get; set; }
     public PriorityLevel PriorityLevel { get; set; }
     public DateTime DueDate { get; set; }
 }

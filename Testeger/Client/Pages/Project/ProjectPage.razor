@@ -1,6 +1,7 @@
 ﻿@page "/project/{Id}"
 @using Testeger.Client.Services.Projects
 @using Testeger.Client.Services.TestRequests
+@using Testeger.Client.ViewModels.TestRequests
 @using Testeger.Shared.DTOs.Responses.Project
 @using Testeger.Shared.DTOs.Responses.TestRequest
 @layout DefaultLayout
@@ -45,7 +46,7 @@
 
 
 
-    private Dictionary<Testeger.Shared.DTOs.Enumerations.RequestStatus, IEnumerable<GetTestRequestResponse>> testRequestsByStatus = new();
+    private Dictionary<Testeger.Shared.DTOs.Enumerations.RequestStatus, IEnumerable<TestRequestViewModel>> testRequestsByStatus = new();
 
     protected override async Task OnParametersSetAsync()
     {

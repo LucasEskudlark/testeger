@@ -1,9 +1,10 @@
-﻿@using Testeger.Shared.DTOs.Responses.TestRequest
+﻿@using Testeger.Client.ViewModels.TestRequests
+@using Testeger.Shared.DTOs.Responses.TestRequest
 @inject TestRequestService TestRequestService
 @inject NavigationManager NavigationManager
 
 <RadzenDataList AllowVirtualization="false" AllowPaging="true"
-                Data="@Requests.OrderBy(x => x.Number)" TItem="GetTestRequestResponse" PageSize="5" PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true" >
+                Data="@Requests.OrderBy(x => x.Number)" TItem="TestRequestViewModel" PageSize="5" PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true">
     <Template Context="Request">
         <RadzenCard Style="width: 100%; max-height: 50px !important; margin: 0 !important; padding: 0 !important;">
             <RadzenRow Gap="0" Style="padding: 0;">
@@ -52,14 +53,14 @@
 
 @code {
     [Parameter]
-    public IEnumerable<GetTestRequestResponse>? Requests { get; set; }
+    public IEnumerable<TestRequestViewModel>? Requests { get; set; }
 
-    public TestRequest Request { get; set; }
+    public TestRequestViewModel Request { get; set; }
 
     [Parameter]
     public Testeger.Shared.DTOs.Enumerations.RequestStatus Status { get; set; }
 
-    public void OpenTestRequest(GetTestRequestResponse testRequest)
+    public void OpenTestRequest(TestRequestViewModel testRequest)
     {
         NavigationManager.NavigateTo($"/test-request/{testRequest.Id}");
     }

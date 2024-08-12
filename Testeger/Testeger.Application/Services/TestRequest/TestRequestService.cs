@@ -25,6 +25,7 @@ public class TestRequestService : BaseService, ITestRequestService
 
         testRequest.Id = GenerateGuid();
         testRequest.CreatedDate = DateTime.Now;
+        testRequest.Status = RequestStatus.Waiting;
         testRequest.Number = await GetTestRequestNumber(request.ProjectId);
 
         var history = GetRequestHistory(request.UserId, RequestStatus.None, RequestStatus.Waiting);

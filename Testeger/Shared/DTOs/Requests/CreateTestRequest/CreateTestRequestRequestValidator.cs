@@ -31,9 +31,6 @@ public class CreateTestRequestRequestValidator : AbstractValidator<CreateTestReq
             .MinimumLength(5)
             .MaximumLength(512);
 
-        RuleFor(r => r.Status)
-            .IsInEnum();
-
         RuleFor(r => r.PriorityLevel)
             .IsInEnum();
 

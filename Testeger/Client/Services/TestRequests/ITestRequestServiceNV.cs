@@ -1,6 +1,6 @@
-﻿using Testeger.Shared.DTOs.Enumerations;
-using Testeger.Shared.DTOs.Requests.CreateTestRequest;
-using Testeger.Shared.DTOs.Responses.TestRequest;
+﻿using Testeger.Client.ViewModels;
+using Testeger.Client.ViewModels.TestRequests;
+using Testeger.Shared.DTOs.Enumerations;
 
 namespace Testeger.Client.Services.TestRequests;
 
@@ -11,8 +11,8 @@ public interface ITestRequestServiceNV
     public event Action? OnTestRequestDeleted;
     public event Action? OnTestRequestUpdated;
 
-    Task CreateTestRequestAsync(CreateTestRequestRequest request);
-    Task<Dictionary<RequestStatus, IEnumerable<GetTestRequestResponse>>> GetTestRequestsByProjectIdGroupedByStatus(string projectId);
-    Task<GetTestRequestResponse> GetTestRequestByIdAsync(string id);
+    Task CreateTestRequestAsync(TestRequestCreationViewModel request);
+    Task<Dictionary<RequestStatus, IEnumerable<TestRequestViewModel>>> GetTestRequestsByProjectIdGroupedByStatus(string projectId);
+    Task<TestRequestViewModel> GetTestRequestByIdAsync(string id);
     Task DeleteTestRequestAsync(string id);
 }

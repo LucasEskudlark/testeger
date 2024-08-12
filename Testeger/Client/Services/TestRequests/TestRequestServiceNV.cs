@@ -1,8 +1,8 @@
 ﻿using System.Net.Http.Json;
+using Testeger.Client.ViewModels;
+using Testeger.Client.ViewModels.TestRequests;
 using Testeger.Shared.DTOs.Enumerations;
-using Testeger.Shared.DTOs.Requests.CreateTestRequest;
 using Testeger.Shared.DTOs.Responses;
-using Testeger.Shared.DTOs.Responses.TestRequest;
 
 namespace Testeger.Client.Services.TestRequests;
 
@@ -19,7 +19,7 @@ public class TestRequestServiceNV : BaseService, ITestRequestServiceNV
     public event Action? OnTestRequestDeleted;
     public event Action? OnTestRequestUpdated;
 
-    public async Task CreateTestRequestAsync(CreateTestRequestRequest request)
+    public async Task CreateTestRequestAsync(TestRequestCreationViewModel request)
     {
         await _httpClient.PostAsJsonAsync(BaseAddress, request);
         OnTestRequestAdded?.Invoke();
@@ -34,22 +34,22 @@ public class TestRequestServiceNV : BaseService, ITestRequestServiceNV
         NotifyStateChanged();
     }
 
-    public async Task<PagedResponse<GetTestRequestResponse>> GetAllTestRequestsPagedAsync()
+    public async Task<PagedResponse<TestRequestViewModel>> GetAllTestRequestsPagedAsync()
     {
-        var response = await _httpClient.GetFromJsonAsync<PagedResponse<GetTestRequestResponse>>(BaseAddress);
+        var response = await _httpClient.GetFromJsonAsync<PagedResponse<TestRequestViewModel>>(BaseAddress);
 
         return response;
     }
 
-    public async Task<GetTestRequestResponse> GetTestRequestByIdAsync(string id)
+    public async Task<TestRequestViewModel> GetTestRequestByIdAsync(string id)
     {
         var address = BaseAddress + $"/{id}";
-        var response = await _httpClient.GetFromJsonAsync<GetTestRequestResponse>(address);
+        var response = await _httpClient.GetFromJsonAsync<TestRequestViewModel>(address);
 
         return response;
     }
 
-    public async Task<Dictionary<RequestStatus, IEnumerable<GetTestRequestResponse>>> GetTestRequestsByProjectIdGroupedByStatus(string projectId)
+    public async Task<Dictionary<RequestStatus, IEnumerable<TestRequestViewModel>>> GetTestRequestsByProjectIdGroupedByStatus(string projectId)
     {
         var testRequests = await GetAllTestRequestsPagedAsync();
 

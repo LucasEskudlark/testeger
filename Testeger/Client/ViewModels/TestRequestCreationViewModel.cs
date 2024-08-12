@@ -5,6 +5,9 @@ namespace Testeger.Client.ViewModels;
 
 public class TestRequestCreationViewModel
 {
+    public string? ProjectId { get; set; }
+    public string? UserId { get; set; }
+
     [Required(ErrorMessage = "Title is required")]
     [MinLength(5, ErrorMessage = "Title must be at least 5 characters")]
     [MaxLength(50, ErrorMessage = "Title must be at 50 characters at most")]
