@@ -20,5 +20,7 @@ public class TestCaseMappingProfile : Profile
 
         CreateMap<TestCaseDetailsRequest, TestCaseDetails>();
         CreateMap<TestCaseDetails, TestCaseDetailsResponse>();
+
+        CreateMap<TestCaseHistory, TestCaseHistoryResponse>();
     }
 }

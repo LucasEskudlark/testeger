@@ -12,4 +12,7 @@ public enum TestCaseStatus
 
     [Description("The test case has been successfully tested and completed.")]
     Completed = 2,
+
+    [Description("None")]
+    None = 9999
 }

@@ -100,32 +100,20 @@
     {
         var request = new CreateTestCaseRequest
             {
-                Title = testCaseCreationViewModel.Title,
+                Title = testCaseCreationViewModel.Title ?? String.Empty,
                 ProjectId = ProjectId,
                 UserId = Guid.NewGuid().ToString(),
                 TestRequestId = TestRequestId,
                 Status = Testeger.Shared.DTOs.Enumerations.TestCaseStatus.Pending,
                 Details = new TestCaseDetailsRequest
                 {
-                    Description = testCaseCreationViewModel.Description,
-                    PreConditions = testCaseCreationViewModel.PreConditions,
-                    Steps = testCaseCreationViewModel.Steps,
-                    ExpectedResult = testCaseCreationViewModel.ExpectedResult,
-                    Environment = testCaseCreationViewModel.Environment
+                    Description = testCaseCreationViewModel.Description ?? String.Empty,
+                    PreConditions = testCaseCreationViewModel.PreConditions ?? String.Empty,
+                    Steps = testCaseCreationViewModel.Steps ?? String.Empty,
+                    ExpectedResult = testCaseCreationViewModel.ExpectedResult ?? String.Empty,
+                    Environment = testCaseCreationViewModel.Environment ?? String.Empty
                 }
             };
-
-        // var history = new TestCaseHistory
-        //     {
-        //         TestCaseId = testCase.Id,
-        //         ChangedByUserId = "CurrentUserId", // Temporary
-        //         OldStatus = null,
-        //         NewStatus = testCase.Status,
-        //         ChangedDate = DateTime.Now
-        //     };
-
-        // testCase.History.Add(history);
-        // testCase.Results.Add(new());
 
         return request;
     }

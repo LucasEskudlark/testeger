@@ -11,11 +11,6 @@ public static class ValueObjectsMappingHelper
     {
         builder.ToTable("TestCaseHistory");
 
-        builder.Property(th => th.TestCaseId)
-            .HasColumnName("TestCaseId")
-            .HasMaxLength(36)
-            .IsRequired();
-
         builder.Property(th => th.ChangedByUserId)
             .HasColumnName("ChangedByUserId")
             .HasMaxLength(36)
