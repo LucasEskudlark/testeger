@@ -1,6 +1,6 @@
 ﻿using System.Net.Http.Json;
+using Testeger.Client.ViewModels;
 using Testeger.Client.ViewModels.Projects;
-using Testeger.Shared.DTOs.Requests.CreateProject;
 using Testeger.Shared.DTOs.Responses;
 using Testeger.Shared.DTOs.Responses.Project;
 
@@ -19,7 +19,7 @@ public class ProjectServiceNV : BaseService, IProjectServiceNV
     public event Action? OnProjectDeleted;
     public event Action? OnProjectUpdated;
 
-    public async Task<CreateProjectResponse> CreateProjectAsync(CreateProjectRequest request)
+    public async Task<CreateProjectResponse> CreateProjectAsync(ProjectCreationViewModel request)
     {
         var response = await _httpClient.PostAsJsonAsync(BaseAddress, request);
 
