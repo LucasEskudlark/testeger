@@ -25,7 +25,12 @@ public class TestCaseRepository : Repository<TestCase>, ITestCaseRepository
 
     public async Task<IEnumerable<TestCase>> GetTestCasesByTestRequestIdAsync(string testRequestId)
     {
-        var testCases = await _dbSet.Where(tc => tc.TestRequestId == testRequestId).ToListAsync();
+        var testCases = await _dbSet
+            .Include(tc => tc.Details)
+            .Include(tc => tc.History)
+            .Where(tc => tc.TestRequestId == testRequestId)
+            .ToListAsync();
+
         return testCases;
     }
 }
