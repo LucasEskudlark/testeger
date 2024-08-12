@@ -1,5 +1,6 @@
 ﻿@page "/project/{ProjectId}/metrics"
 @using Testeger.Client.Services.Projects
+@using Testeger.Client.ViewModels.Projects
 @using Testeger.Shared.DTOs.Responses.Project
 @layout DefaultLayout
 @inject TestRequestService TestRequestService
@@ -120,7 +121,7 @@
     [Parameter]
     public string ProjectId { get; set; }
 
-    private GetProjectResponse Project { get; set; }
+    private ProjectViewModel Project { get; set; }
 
     private List<TestRequest> TestRequests { get; set; }
     private List<TestCase> TestCases { get; set; }

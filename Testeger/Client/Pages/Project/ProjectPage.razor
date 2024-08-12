@@ -1,6 +1,7 @@
 ﻿@page "/project/{Id}"
 @using Testeger.Client.Services.Projects
 @using Testeger.Client.Services.TestRequests
+@using Testeger.Client.ViewModels.Projects
 @using Testeger.Client.ViewModels.TestRequests
 @using Testeger.Shared.DTOs.Responses.Project
 @using Testeger.Shared.DTOs.Responses.TestRequest
@@ -42,7 +43,7 @@
     [Inject]
     protected DialogService DialogService { get; set; }
 
-    private GetProjectResponse? project;
+    private ProjectViewModel? project;
 
 
 

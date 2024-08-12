@@ -1,5 +1,4 @@
 ﻿using Testeger.Shared.DTOs.Requests.CreateTestCase;
-using Testeger.Shared.DTOs.Responses;
 using Testeger.Shared.DTOs.Responses.TestCase;
 
 namespace Testeger.Client.Services.TestCases;

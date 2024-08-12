@@ -13,8 +13,8 @@
             <InputText id="name"
                        class="form-control inputtext"
                        placeholder="Enter the project name"
-                       @bind-Value="newProject.ProjectName" />
-            <ValidationMessage For="@(() => newProject.ProjectName)" />
+                       @bind-Value="newProject.Name" />
+            <ValidationMessage For="@(() => newProject.Name)" />
         </div>
     </div>
 
@@ -30,7 +30,7 @@
     </div>
 
     <div class="row mb-2 d-flex flex-column justify-content-start" style="min-height: 250px;">
-        @foreach (var member in newProject.Members)
+        @* @foreach (var member in newProject.Members)
         {
             <div class="row mb-2">
                 <div class="col-8 mb-0 pb-0">
@@ -53,7 +53,7 @@
                     </InputSelect>
                     <ValidationMessage For="@(() => member.Role)" />
                 </div>
-            </div>
+            </div> *@
 
         }
     </div>
@@ -78,8 +78,8 @@
 
     private async Task NotifyParent()
     {
-        var request = GetCreateProjectRequest();
-        var response = await ProjectServiceNV.CreateProjectAsync(request);
+        newProject.UserId = Guid.NewGuid().ToString();
+        var response = await ProjectServiceNV.CreateProjectAsync(newProject);
 
         DialogService.Close(true);
         await OnFormSubmitted.InvokeAsync(response?.Id);
@@ -90,48 +90,48 @@
     {
         return new CreateProjectRequest
             {
-                Name = newProject.ProjectName ?? string.Empty,
+                Name = newProject.Name ?? string.Empty,
                 UserId = Guid.NewGuid().ToString()
             };
     }
 
     // NEED TO BE FIXED WHEN USERS ARE IMPLEMENTED
-    private List<User> GetMembers()
-    {
-        var members = new List<User>();
+    // private List<User> GetMembers()
+    // {
+    //     var members = new List<User>();
 
-        foreach (UserViewModel memberVM in newProject.Members)
-        {
-            var user = new User
-            {
-                Id = Guid.NewGuid().ToString(),
-                Name = "User",
-                Email = memberVM.Email,
-                Role = memberVM.Role
-            };
+    //     foreach (UserViewModel memberVM in newProject.Members)
+    //     {
+    //         var user = new User
+    //         {
+    //             Id = Guid.NewGuid().ToString(),
+    //             Name = "User",
+    //             Email = memberVM.Email,
+    //             Role = memberVM.Role
+    //         };
 
-            members.Add(user);
-        }
+    //         members.Add(user);
+    //     }
 
-        members.Add(GetProjectCreator());
+    //     members.Add(GetProjectCreator());
 
-        return members;
-    }
+    //     return members;
+    // }
 
-    private User GetProjectCreator() // Temporary
-    {
-        return new User
-            {
-                Id = Guid.NewGuid().ToString(),
-                Name = "Lucas",
-                Email = "lucasbeskudlark@gmail.com",
-                Role = RoleType.ProjectManager
-            };
-    }
+    // private User GetProjectCreator() // Temporary
+    // {
+    //     return new User
+    //         {
+    //             Id = Guid.NewGuid().ToString(),
+    //             Name = "Lucas",
+    //             Email = "lucasbeskudlark@gmail.com",
+    //             Role = RoleType.ProjectManager
+    //         };
+    // }
 
     private void AddMember()
     {
-        newProject.Members.Add(new UserViewModel());
+        // newProject.Members.Add(new UserViewModel());
     }
 
     private bool CanDisplayRole(RoleType role) => role != RoleType.ProjectManager;

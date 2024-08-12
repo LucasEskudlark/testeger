@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Testeger.Domain.Models.Entities;
-using Testeger.Domain.Models.ValueObjects;
 using Testeger.Infra.Context;
 
 namespace Testeger.Infra.Repositories.TestRequests;
