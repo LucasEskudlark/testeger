@@ -6,6 +6,7 @@ namespace Testeger.Client.Services.TestCases;
 public interface ITestCaseServiceNV
 {
     Task<IEnumerable<GetTestCaseResponse>> GetTestCasesByTestRequestIdPagedAsync(string testRequestId);
+    Task<GetTestCaseResponse> GetTestCaseByIdAsync(string id);
 
     public event Action? OnChange;
     public event Action? OnTestCaseAdded;

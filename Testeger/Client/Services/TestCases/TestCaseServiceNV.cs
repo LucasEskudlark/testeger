@@ -22,4 +22,12 @@ public class TestCaseServiceNV : BaseService, ITestCaseServiceNV
 
         return response;
     }
+
+    public async Task<GetTestCaseResponse> GetTestCaseByIdAsync(string id)
+    {
+        var address = BaseAddress + $"/{id}";
+        var response = await _httpClient.GetFromJsonAsync<GetTestCaseResponse>(address);
+
+        return response;
+    }
 }

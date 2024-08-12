@@ -1,8 +1,10 @@
-﻿@code {
+﻿@using Testeger.Shared.DTOs.Responses.TestCase
+@code {
     [Parameter]
-    public TestCase TestCase { get; set; }
+    public GetTestCaseResponse TestCase { get; set; }
 
-    private bool HasSingleResult => TestCase.Results.Count <= 1;
+    // private bool HasSingleResult => TestCase.Results.Count <= 1;
+    private bool HasSingleResult = true;
 }
 
 @if (HasSingleResult)
@@ -11,11 +13,11 @@
 }
 else
 {
-    @foreach (var result in TestCase.Results)
+    @* @foreach (var result in TestCase.Results)
     {
         if (result.ActualResult != null)
         {
             <TestResultDisplay Result="result" />
         }
-    }
+    } *@
 }
