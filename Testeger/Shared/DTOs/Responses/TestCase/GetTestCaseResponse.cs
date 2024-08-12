@@ -17,4 +17,5 @@ public class GetTestCaseResponse
     public TestCaseStatus Status { get; set; }
     public bool NeedCorrection { get; set; }
     public DateTime ScheduledDate { get; set; }
+    public required IEnumerable<TestCaseHistoryResponse> History { get; set; }
 }

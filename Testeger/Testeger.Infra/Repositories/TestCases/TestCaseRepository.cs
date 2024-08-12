@@ -13,6 +13,16 @@ public class TestCaseRepository : Repository<TestCase>, ITestCaseRepository
         _dbSet = _dbContext.Set<TestCase>();
     }
 
+    public async Task<TestCase> GetTestCaseByIdAsync(string id)
+    {
+        var testCase = await _dbSet
+            .Include(tc => tc.Details)
+            .Include(tc => tc.History)
+            .FirstOrDefaultAsync(tc => tc.Id == id);
+
+        return testCase;
+    }
+
     public async Task<IEnumerable<TestCase>> GetTestCasesByTestRequestIdAsync(string testRequestId)
     {
         var testCases = await _dbSet.Where(tc => tc.TestRequestId == testRequestId).ToListAsync();
