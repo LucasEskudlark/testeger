@@ -1,6 +1,7 @@
 ﻿using System.Net.Http.Json;
+using Testeger.Client.ViewModels;
+using Testeger.Client.ViewModels.TestCases;
 using Testeger.Shared.DTOs.Requests.CreateTestCase;
-using Testeger.Shared.DTOs.Responses.TestCase;
 
 namespace Testeger.Client.Services.TestCases;
 
@@ -16,18 +17,18 @@ public class TestCaseServiceNV : BaseService, ITestCaseServiceNV
     public event Action? OnTestCaseDeleted;
     public event Action? OnTestCaseUpdated;
 
-    public async Task<IEnumerable<GetTestCaseResponse>> GetTestCasesByTestRequestIdPagedAsync(string testRequestId)
+    public async Task<IEnumerable<TestCaseViewModel>> GetTestCasesByTestRequestIdPagedAsync(string testRequestId)
     {
         var address = BaseAddress + $"/request/{testRequestId}";
-        var response = await _httpClient.GetFromJsonAsync<IEnumerable<GetTestCaseResponse>>(address);
+        var response = await _httpClient.GetFromJsonAsync<IEnumerable<TestCaseViewModel>>(address);
 
         return response;
     }
 
-    public async Task<GetTestCaseResponse> GetTestCaseByIdAsync(string id)
+    public async Task<TestCaseViewModel> GetTestCaseByIdAsync(string id)
     {
         var address = BaseAddress + $"/{id}";
-        var response = await _httpClient.GetFromJsonAsync<GetTestCaseResponse>(address);
+        var response = await _httpClient.GetFromJsonAsync<TestCaseViewModel>(address);
 
         return response;
     }
@@ -39,7 +40,7 @@ public class TestCaseServiceNV : BaseService, ITestCaseServiceNV
         OnTestCaseDeleted?.Invoke();
     }
 
-    public async Task CreateTestCaseAsync(CreateTestCaseRequest request)
+    public async Task CreateTestCaseAsync(TestCaseCreationViewModel request)
     {
         await _httpClient.PostAsJsonAsync(BaseAddress, request);
         OnTestCaseAdded?.Invoke();

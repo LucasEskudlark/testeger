@@ -1,14 +1,15 @@
-﻿using Testeger.Shared.DTOs.Requests.CreateTestCase;
-using Testeger.Shared.DTOs.Responses.TestCase;
+﻿using Testeger.Client.ViewModels;
+using Testeger.Client.ViewModels.TestCases;
+using Testeger.Shared.DTOs.Requests.CreateTestCase;
 
 namespace Testeger.Client.Services.TestCases;
 
 public interface ITestCaseServiceNV
 {
-    Task<IEnumerable<GetTestCaseResponse>> GetTestCasesByTestRequestIdPagedAsync(string testRequestId);
-    Task<GetTestCaseResponse> GetTestCaseByIdAsync(string id);
+    Task<IEnumerable<TestCaseViewModel>> GetTestCasesByTestRequestIdPagedAsync(string testRequestId);
+    Task<TestCaseViewModel> GetTestCaseByIdAsync(string id);
     Task DeleteTestCaseByIdAsync(string id);
-    Task CreateTestCaseAsync(CreateTestCaseRequest request);
+    Task CreateTestCaseAsync(TestCaseCreationViewModel request);
 
     public event Action? OnChange;
     public event Action? OnTestCaseAdded;

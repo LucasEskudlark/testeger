@@ -1,6 +1,7 @@
 ﻿@page "/test-case/{TestCaseId}"
 @using Testeger.Client.Services.TestCases
 @using Testeger.Client.Services.TestRequests
+@using Testeger.Client.ViewModels.TestCases
 @using Testeger.Client.ViewModels.TestRequests
 @using Testeger.Shared.DTOs.Responses.TestCase
 @using Testeger.Shared.DTOs.Responses.TestRequest
@@ -77,7 +78,7 @@
     public EventCallback OnTestCaseUpdated { get; set; }
 
     public TestRequestViewModel Request { get; set; }
-    private GetTestCaseResponse TestCase { get; set; }
+    private TestCaseViewModel TestCase { get; set; }
 
     private bool isNotScheduled;
     private bool isTestRunning = false;

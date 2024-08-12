@@ -1,7 +1,8 @@
-﻿@using Testeger.Shared.DTOs.Responses.TestCase
+﻿@using Testeger.Client.ViewModels.TestCases
+@using Testeger.Shared.DTOs.Responses.TestCase
 @code {
     [Parameter]
-    public GetTestCaseResponse TestCase { get; set; }
+    public TestCaseViewModel TestCase { get; set; }
 
     // private bool HasSingleResult => TestCase.Results.Count <= 1;
     private bool HasSingleResult = true;

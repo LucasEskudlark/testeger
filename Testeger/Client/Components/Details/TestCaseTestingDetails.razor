@@ -1,4 +1,5 @@
-﻿@using Testeger.Shared.DTOs.Responses.TestCase
+﻿@using Testeger.Client.ViewModels.TestCases
+@using Testeger.Shared.DTOs.Responses.TestCase
 <div class="accordion" id="accordionExample">
     <div class="accordion-item">
         <h5 class="accordion-header row-titlebar" style="height: 40px;">
@@ -32,7 +33,7 @@
 
 @code {
     [Parameter]
-    public GetTestCaseResponse TestCase { get; set; }
+    public TestCaseViewModel TestCase { get; set; }
 }
 
 <style>
