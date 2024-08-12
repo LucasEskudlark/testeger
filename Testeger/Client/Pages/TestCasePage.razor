@@ -96,9 +96,9 @@
     {
         if (TestCase != null)
         {
-            // await TestCaseService.RemoveTestCase(TestCase);
-            // NavigationManager.NavigateTo(BreadCrumbHelper.GetRequestUrl(Request));
-            // await OnTestCaseDeleted.InvokeAsync();
+            await TestCaseService.DeleteTestCaseByIdAsync(TestCase.Id);
+            NavigationManager.NavigateTo(Testeger.Client.Helpers.BreadCrumbHelper.GetRequestUrl(Request.Id));
+            await OnTestCaseDeleted.InvokeAsync();
         }
     }
 

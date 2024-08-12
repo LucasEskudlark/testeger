@@ -7,6 +7,7 @@ public interface ITestCaseServiceNV
 {
     Task<IEnumerable<GetTestCaseResponse>> GetTestCasesByTestRequestIdPagedAsync(string testRequestId);
     Task<GetTestCaseResponse> GetTestCaseByIdAsync(string id);
+    Task DeleteTestCaseByIdAsync(string id);
 
     public event Action? OnChange;
     public event Action? OnTestCaseAdded;

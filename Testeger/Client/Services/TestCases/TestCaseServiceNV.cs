@@ -30,4 +30,10 @@ public class TestCaseServiceNV : BaseService, ITestCaseServiceNV
 
         return response;
     }
+    
+    public async Task DeleteTestCaseByIdAsync(string id)
+    {
+        var address = BaseAddress + $"/delete/{id}";
+        await _httpClient.PostAsJsonAsync(address, id);
+    }
 }
