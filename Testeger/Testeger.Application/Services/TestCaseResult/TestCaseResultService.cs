@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using Testeger.Application.Exceptions;
 using Testeger.Infra.UnitOfWork;
 using Testeger.Shared.DTOs.Requests.Common;
 using Testeger.Shared.DTOs.Requests.CreateTestCaseResult;
+using Testeger.Shared.DTOs.Requests.UpdateTestCaseResult;
 using Testeger.Shared.DTOs.Responses;
 using Testeger.Shared.DTOs.Responses.TestCaseResult;
 using DomainTestCaseResult = Testeger.Domain.Models.Entities.TestCaseResult;
@@ -40,7 +42,6 @@ public class TestCaseResultService : BaseService, ITestCaseResultService
 
         return response;
     }
-
     public async Task<GetTestCaseResultResponse> GetTestCaseResultByIdAsync(string id)
     {
         var testCaseResult = await _unitOfWork.TestCaseResultRepository.GetByIdAsync(id)
@@ -49,6 +50,26 @@ public class TestCaseResultService : BaseService, ITestCaseResultService
         var response = _mapper.Map<GetTestCaseResultResponse>(testCaseResult);
 
         return response;
+    }
+
+    public async Task<IEnumerable<GetTestCaseResultResponse>> GetResultsByTestCaseId(string testCaseId)
+    {
+        var testCaseResults = await _unitOfWork.TestCaseResultRepository.GetResultsByTestCaseId(testCaseId);
+
+        var response = _mapper.Map<IEnumerable<GetTestCaseResultResponse>>(testCaseResults);
+
+        return response;
+    }
+
+    public async Task UpdateTestCaseResult(UpdateTestCaseResultRequest request)
+    {
+        var testCaseResult = await _unitOfWork.TestCaseResultRepository.GetByIdAsync(request.Id)
+            ?? throw new NotFoundException($"TestCaseResult with id {request.Id} not found");
+
+        _mapper.Map(request, testCaseResult);
+
+        await _unitOfWork.TestCaseResultRepository.UpdateTestCaseResult(testCaseResult);
+        await _unitOfWork.CompleteAsync();
     }
 
     private async Task ValidateTestCaseExistence(string testCaseId)
@@ -60,14 +81,5 @@ public class TestCaseResultService : BaseService, ITestCaseResultService
     private async Task<int> GetTestCaseResultNumberAsync(string testCaseId)
     {
         return await _unitOfWork.TestCaseResultRepository.GetNextNumberAsync(testCaseId);
-    }
-
-    public async Task<IEnumerable<GetTestCaseResultResponse>> GetResultsByTestCaseId(string testCaseId)
-    {
-        var testCaseResults = await _unitOfWork.TestCaseResultRepository.GetResultsByTestCaseId(testCaseId);
-
-        var response = _mapper.Map<IEnumerable<GetTestCaseResultResponse>>(testCaseResults);
-
-        return response;
     }
 }

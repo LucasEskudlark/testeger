@@ -6,4 +6,5 @@ public interface ITestCaseResultService
 {
     Task<IEnumerable<TestCaseResultViewModel>> GetResultsByTestCaseIdAsync(string testCaseId);
     Task<TestCaseResultViewModel> GetLastResultOrDefaultForTestCaseAsync(string testCaseId);
+    Task HandleTestFinished(TestCaseResultViewModel viewModel);
 }

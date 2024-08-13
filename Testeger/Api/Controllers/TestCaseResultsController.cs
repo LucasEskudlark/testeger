@@ -2,6 +2,7 @@
 using Testeger.Application.Services.TestCaseResult;
 using Testeger.Shared.DTOs.Requests.Common;
 using Testeger.Shared.DTOs.Requests.CreateTestCaseResult;
+using Testeger.Shared.DTOs.Requests.UpdateTestCaseResult;
 
 namespace Testeger.Api.Controllers;
 
@@ -46,5 +47,13 @@ public class TestCaseResultsController : ControllerBase
         var response = await _testCaseResultService.GetResultsByTestCaseId(testCaseId);
 
         return Ok(response);
+    }
+
+    [HttpPost("update")]
+    public async Task<IActionResult> UpdateTestCaseResultAsync([FromBody] UpdateTestCaseResultRequest request)
+    {
+        await _testCaseResultService.UpdateTestCaseResult(request);
+
+        return NoContent();
     }
 }

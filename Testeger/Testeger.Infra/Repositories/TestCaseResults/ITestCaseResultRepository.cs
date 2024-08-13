@@ -6,4 +6,5 @@ public interface ITestCaseResultRepository : IRepository<TestCaseResult>
 {
     Task<int> GetNextNumberAsync(string testCaseId);
     Task<IEnumerable<TestCaseResult>> GetResultsByTestCaseId(string testCaseId);
+    Task UpdateTestCaseResult(TestCaseResult testCaseResult);
 }

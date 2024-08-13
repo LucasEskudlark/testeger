@@ -33,4 +33,9 @@ public class TestCaseResultService : BaseService, ITestCaseResultService
 
         return lastTestCaseResult;
     }
+
+    public Task HandleTestFinished(TestCaseResultViewModel viewModel)
+    {
+        throw new NotImplementedException();
+    }
 }
