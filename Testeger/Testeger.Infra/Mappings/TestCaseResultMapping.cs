@@ -30,6 +30,10 @@ public class TestCaseResultMapping : IEntityTypeConfiguration<TestCaseResult>
             .HasColumnName("IsSuccess")
             .HasColumnType("bit");
 
+        builder.Property(t => t.IsFinished)
+           .HasColumnName("IsFinished")
+           .HasColumnType("bit");
+
         builder.Property(e => e.ElapsedTime)
             .HasColumnName("ElapsedTime")
             .HasColumnType("time");
