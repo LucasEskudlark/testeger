@@ -7,6 +7,5 @@ public class TestCaseResultViewModel
     public string? TestCaseId { get; set; }
     public string? ActualResult { get; set; }
     public TimeSpan ElapsedTime { get; set; }
-    public TimeSpan AmountOfTimeSpentToTest { get; set; }
     public bool IsSuccess { get; set; }
 }

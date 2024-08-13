@@ -13,5 +13,11 @@ public class CreateTestCaseResultRequestValidator : AbstractValidator<CreateTest
         RuleFor(r => r.ActualResult)
             .MinimumLength(5)
             .MaximumLength(1500);
+
+        RuleFor(r => r.ElapsedTime)
+            .NotEmpty();
+
+        RuleFor(r => r.IsSuccess)
+            .NotEmpty();
     }
 }
