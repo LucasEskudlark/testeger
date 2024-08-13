@@ -1,12 +1,15 @@
-﻿@inject TestCaseService TestCaseService
-@using System.Timers
+﻿@using System.Timers
+@using Testeger.Client.ViewModels.TestCaseResults
 
 @code {
     [Parameter]
-    public TestCase TestCase { get; set; }
+    public TestCaseResultViewModel TestCaseResult { get; set; }
 
     [Parameter]
     public EventCallback OnStopwatchStopped { get; set; }
+
+    private Timer timer;
+    private TimeSpan elapsedTime => TestCaseResult.ElapsedTime;
 
     private bool IsStartButtonDisabled = false;
     private bool IsStopButtonDisabled = true;
@@ -16,9 +19,6 @@
         timer = new Timer(1000);
         timer.Elapsed += (sender, e) => UpdateElapsedTime();
     }
-
-    private Timer timer;
-    private TimeSpan elapsedTime => TestCase.GetLatestTestCaseResult().ElapsedTime;
 
     private void StartStopwatch()
     {
@@ -32,29 +32,17 @@
         timer.Stop();
         IsStartButtonDisabled = false;
         IsStopButtonDisabled = true;
-        await SaveTime();
         await OnStopwatchStopped.InvokeAsync();
-    }
-
-    private async Task SaveTime()
-    {
-        TestCase.GetLatestTestCaseResult().SavedTimes.Add(elapsedTime.ToString(@"hh\:mm\:ss"));
-        await SaveTestCase();
     }
 
     private void UpdateElapsedTime()
     {
-        TestCase.GetLatestTestCaseResult().ElapsedTime = TestCase.GetLatestTestCaseResult().ElapsedTime.Add(TimeSpan.FromSeconds(1));
+        TestCaseResult.ElapsedTime = TestCaseResult.ElapsedTime.Add(TimeSpan.FromSeconds(1));
         InvokeAsync(StateHasChanged);
-    }
-
-    private async Task SaveTestCase()
-    {
-        await TestCaseService.UpdateTestCase(TestCase);
     }
 }
 
-@if (TestCase is not null)
+@if (TestCaseResult is not null)
 {
     <div class="container card" style="height: 120px; width: 250px;">
         <div class="row mt-2">
