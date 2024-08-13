@@ -39,4 +39,12 @@ public class TestCaseResultsController : ControllerBase
 
         return Ok(response);
     }
+
+    [HttpGet("testcase/{testCaseId}")]
+    public async Task<IActionResult> GetResultsByTestCaseIdAsync([FromRoute] string testCaseId)
+    {
+        var response = await _testCaseResultService.GetResultsByTestCaseId(testCaseId);
+
+        return Ok(response);
+    }
 }

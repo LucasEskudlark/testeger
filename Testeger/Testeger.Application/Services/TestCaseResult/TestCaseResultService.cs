@@ -61,4 +61,13 @@ public class TestCaseResultService : BaseService, ITestCaseResultService
     {
         return await _unitOfWork.TestCaseResultRepository.GetNextNumberAsync(testCaseId);
     }
+
+    public async Task<IEnumerable<GetTestCaseResultResponse>> GetResultsByTestCaseId(string testCaseId)
+    {
+        var testCaseResults = await _unitOfWork.TestCaseResultRepository.GetResultsByTestCaseId(testCaseId);
+
+        var response = _mapper.Map<IEnumerable<GetTestCaseResultResponse>>(testCaseResults);
+
+        return response;
+    }
 }

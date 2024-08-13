@@ -21,4 +21,11 @@ public class TestCaseResultRepository : Repository<TestCaseResult>, ITestCaseRes
 
         return maxNumber + 1;
     }
+
+    public async Task<IEnumerable<TestCaseResult>> GetResultsByTestCaseId(string testCaseId)
+    {
+        var testCases = await _dbSet.Where(tr => tr.TestCaseId == testCaseId).ToListAsync();
+
+        return testCases;
+    }
 }
