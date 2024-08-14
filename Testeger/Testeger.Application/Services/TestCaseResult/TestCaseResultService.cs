@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
-using Microsoft.EntityFrameworkCore;
 using Testeger.Application.Exceptions;
 using Testeger.Infra.UnitOfWork;
 using Testeger.Shared.DTOs.Requests.Common;
 using Testeger.Shared.DTOs.Requests.CreateTestCaseResult;
+using Testeger.Shared.DTOs.Requests.FinishTestCaseResult;
 using Testeger.Shared.DTOs.Requests.UpdateTestCaseResult;
 using Testeger.Shared.DTOs.Responses;
 using Testeger.Shared.DTOs.Responses.TestCaseResult;
@@ -70,6 +70,23 @@ public class TestCaseResultService : BaseService, ITestCaseResultService
 
         await _unitOfWork.TestCaseResultRepository.UpdateTestCaseResult(testCaseResult);
         await _unitOfWork.CompleteAsync();
+    }
+
+    public async Task FinishTestCaseResult(FinishTestCaseResultRequest request)
+    {
+        var testCaseResult = _mapper.Map<DomainTestCaseResult>(request);
+
+        testCaseResult.IsFinished = true;
+
+        if (testCaseResult.Id is null)
+        {
+            var creationRequest = _mapper.Map<CreateTestCaseResultRequest>(testCaseResult);
+            await CreateTestCaseResultAsync(creationRequest);
+            return;
+        }
+
+        var updateRequest = _mapper.Map<UpdateTestCaseResultRequest>(testCaseResult);
+        await UpdateTestCaseResult(updateRequest);
     }
 
     private async Task ValidateTestCaseExistence(string testCaseId)

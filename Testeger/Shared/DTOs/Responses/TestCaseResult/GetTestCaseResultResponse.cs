@@ -9,4 +9,5 @@ public class GetTestCaseResultResponse
     public TimeSpan ElapsedTime { get; set; }
     public TimeSpan AmountOfTimeSpentToTest { get; set; }
     public bool IsSuccess { get; set; }
+    public bool IsFinished { get; set; }
 }

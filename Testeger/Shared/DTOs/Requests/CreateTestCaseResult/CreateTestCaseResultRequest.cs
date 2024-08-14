@@ -6,4 +6,5 @@ public class CreateTestCaseResultRequest
     public string? ActualResult { get; set; }
     public TimeSpan? ElapsedTime { get; set; }
     public bool IsSuccess { get; set; }
+    public bool IsFinished { get; set; }
 }
