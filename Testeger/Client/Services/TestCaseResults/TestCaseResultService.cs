@@ -23,19 +23,21 @@ public class TestCaseResultService : BaseService, ITestCaseResultService
     public async Task<TestCaseResultViewModel> GetLastResultOrDefaultForTestCaseAsync(string testCaseId)
     {
         var testCaseResults = await GetResultsByTestCaseIdAsync(testCaseId);
+        var nonFinishedTestCaseResults = testCaseResults.Where(tr => tr.IsFinished == false);
 
-        if (!testCaseResults.Any())
+        if (!nonFinishedTestCaseResults.Any())
         {
-            return new TestCaseResultViewModel();
+            return new TestCaseResultViewModel(testCaseId);
         }
 
-        var lastTestCaseResult = testCaseResults.LastOrDefault() ?? new TestCaseResultViewModel();
+        var lastTestCaseResult = nonFinishedTestCaseResults.LastOrDefault() ?? new TestCaseResultViewModel(testCaseId);
 
         return lastTestCaseResult;
     }
 
-    public Task HandleTestFinished(TestCaseResultViewModel viewModel)
+    public async Task HandleTestFinished(TestCaseResultViewModel viewModel)
     {
-        throw new NotImplementedException();
+        var address = BaseAddress + $"/finish";
+        var response = await _httpClient.PostAsJsonAsync(address, viewModel);
     }
 }

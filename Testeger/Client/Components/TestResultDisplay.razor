@@ -1,4 +1,6 @@
-﻿<div class="col-12 my-2 shadow-sm p-0">
+﻿@using Testeger.Client.ViewModels.TestCaseResults
+
+<div class="col-12 my-2 shadow-sm p-0">
     <ToggleComponent>
         <Header>
             <div class="row d-flex justify-content-between" style="width: 100%;">
@@ -40,7 +42,7 @@
 
 @code {
     [Parameter]
-    public TestCaseResults Result { get; set; }
+    public TestCaseResultViewModel Result { get; set; }
 }
 
 <style>
