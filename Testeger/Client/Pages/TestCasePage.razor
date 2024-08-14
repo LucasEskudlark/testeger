@@ -31,8 +31,8 @@
             </div>
             <div class="col-auto d-flex">
                 <RadzenButton Icon="play_arrow"
-                              Text="@testButtonText"
-                              ButtonStyle="@testButtonStyle"
+                              Text="@TestButtonText"
+                              ButtonStyle="@TestButtonStyle"
                               Size="ButtonSize.Small"
                               Click="@HandleTestButtonClick"
                               Disabled="@isNotScheduled"
@@ -85,8 +85,10 @@
     private bool isInitialized;
     private bool isNotScheduled;
     private bool isTestRunning = false;
-    private string testButtonText => isTestRunning ? "Continue Test" : "Start Test";
-    private ButtonStyle testButtonStyle => isTestRunning ? ButtonStyle.Warning : ButtonStyle.Success;
+
+    private string TestButtonText => isTestRunning ? "Continue Test" : "Start Test";
+    private ButtonStyle TestButtonStyle => isTestRunning ? ButtonStyle.Warning : ButtonStyle.Success;
+
 
     protected override async Task OnInitializedAsync()
     {
