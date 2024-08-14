@@ -12,7 +12,7 @@ public interface ITestCaseResultService
     Task<CreateTestCaseResultResponse> CreateTestCaseResultAsync(CreateTestCaseResultRequest request);
     Task<PagedResponse<GetTestCaseResultResponse>> GetAllTestCaseResultsPagedAsync(PagedRequest request);
     Task<GetTestCaseResultResponse> GetTestCaseResultByIdAsync(string id);
-    Task<IEnumerable<GetTestCaseResultResponse>> GetResultsByTestCaseId(string testCaseId);
-    Task UpdateTestCaseResult(UpdateTestCaseResultRequest request);
-    Task FinishTestCaseResult(FinishTestCaseResultRequest request);
+    Task<IEnumerable<GetTestCaseResultResponse>> GetResultsByTestCaseIdAsync(string testCaseId);
+    Task UpdateTestCaseResultAsync(UpdateTestCaseResultRequest request);
+    Task FinishTestCaseResultAsync(FinishTestCaseResultRequest request);
 }

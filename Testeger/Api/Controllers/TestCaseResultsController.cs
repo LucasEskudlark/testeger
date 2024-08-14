@@ -45,7 +45,7 @@ public class TestCaseResultsController : ControllerBase
     [HttpGet("testcase/{testCaseId}")]
     public async Task<IActionResult> GetResultsByTestCaseIdAsync([FromRoute] string testCaseId)
     {
-        var response = await _testCaseResultService.GetResultsByTestCaseId(testCaseId);
+        var response = await _testCaseResultService.GetResultsByTestCaseIdAsync(testCaseId);
 
         return Ok(response);
     }
@@ -53,7 +53,7 @@ public class TestCaseResultsController : ControllerBase
     [HttpPost("update")]
     public async Task<IActionResult> UpdateTestCaseResultAsync([FromBody] UpdateTestCaseResultRequest request)
     {
-        await _testCaseResultService.UpdateTestCaseResult(request);
+        await _testCaseResultService.UpdateTestCaseResultAsync(request);
 
         return NoContent();
     }
@@ -61,7 +61,7 @@ public class TestCaseResultsController : ControllerBase
     [HttpPost("finish")]
     public async Task<IActionResult> FinishTestCaseResultAsync([FromBody] FinishTestCaseResultRequest request)
     {
-        await _testCaseResultService.FinishTestCaseResult(request);
+        await _testCaseResultService.FinishTestCaseResultAsync(request);
 
         return NoContent();
     }
