@@ -38,10 +38,6 @@ public class TestCaseResultMapping : IEntityTypeConfiguration<TestCaseResult>
             .HasColumnName("ElapsedTime")
             .HasColumnType("time");
 
-        builder.Property(e => e.AmountOfTimeSpentToTest)
-            .HasColumnName("AmountOfTimeSpentToTest")
-            .HasColumnType("time");
-
         builder.HasOne(tr => tr.TestCase)
             .WithMany(tc => tc.Results)
             .HasForeignKey(tr => tr.TestCaseId)
