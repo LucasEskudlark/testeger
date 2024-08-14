@@ -7,7 +7,7 @@
 @inject ITestCaseServiceNV TestCaseService
 @inject ITestCaseResultService TestCaseResultService
 
-@if (TestCase is not null)
+@if (isInitialized)
 {
     <div class="container-fluid">
         <div class="row">
@@ -58,55 +58,66 @@
         </div>
 
         <div class="row mt-5">
-            <div class="col-7 p2 d-flex align-items-center my-0">
+            <div class="col-6 p2 d-flex align-items-center my-0">
                 <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H3">Was the test successful?</RadzenText>
                 <RadzenDropDown Data="@TestResultOptions"
                                 @bind-Value="TestResult" Style="width:30%; margin-left: 10px;" />
             </div>
 
-            <div class="col-5 p2 d-flex justify-content-end">
+            <div class="col-6 p2 d-flex justify-content-end">
+                <RadzenButton Icon="save"
+                              Text="Save progress"
+                              ButtonStyle="ButtonStyle.Primary"
+                              Size="ButtonSize.ExtraSmall"
+                              Click="HandleTestSaved"
+                              class="mx-2"/>
+
                 @if (TestResult != null && LatestTestCaseResult.ActualResult != null)
                 {
                     <RadzenButton Icon="check"
                                   Text="Finish test"
                                   ButtonStyle="ButtonStyle.Success"
-                                  Size="ButtonSize.Small"
-                                  Click="HandleTestFinished" />
-                } else
+                                  Size="ButtonSize.ExtraSmall"
+                                  Click="HandleTestFinished"
+                                  class="mx-2" />
+                }
+                else
                 {
                     <RadzenButton Icon="check"
                                   Text="Finish test"
                                   ButtonStyle="ButtonStyle.Success"
-                                  Size="ButtonSize.Small"
+                                  Size="ButtonSize.ExtraSmall"
                                   Disabled="true"
-                                  Click="HandleTestFinished" />
+                                  Click="HandleTestFinished"
+                                  class="mx-2"  />
                 }
-                
             </div>
         </div>
     </div>
 }
 
 @code {
-    [Parameter]
-    public string TestCaseId { get; set; }
 
     [Parameter]
     public EventCallback OnTestFinished { get; set; }
-
-    private TestCaseViewModel TestCase { get; set; }
-
-    private TestCaseResultViewModel LatestTestCaseResult { get; set; }
+    [Parameter]
+    public EventCallback OnTestSaved { get; set; }
+    [Parameter]
+    public TestCaseViewModel TestCase { get; set; }
+    [Parameter]
+    public TestCaseResultViewModel LatestTestCaseResult { get; set; }
 
     private List<String> TestResultOptions = new List<string> { "Yes", "No" };
     private string TestResult { get; set; }
 
+    private bool isInitialized;
+
     protected override async Task OnInitializedAsync()
     {
-        TestCase = await TestCaseService.GetTestCaseByIdAsync(TestCaseId);
-        LatestTestCaseResult = await TestCaseResultService.GetLastResultOrDefaultForTestCaseAsync(TestCaseId);
+
         TestCaseService.OnChange += StateHasChanged;
-        await base.OnInitializedAsync();  
+        await base.OnInitializedAsync();
+        isInitialized = true;
     }
 
     private void HandleStopwatchStopped()
@@ -117,8 +128,16 @@
     private async Task HandleTestFinished()
     {
         LatestTestCaseResult.IsSuccess = SetTestResult();
+        LatestTestCaseResult.IsFinished = true;
         await TestCaseResultService.HandleTestFinished(LatestTestCaseResult);
         await OnTestFinished.InvokeAsync();
+        DialogService.Close();
+    }
+
+    private async Task HandleTestSaved()
+    {
+        await TestCaseResultService.HandleTestFinished(LatestTestCaseResult);
+        await OnTestSaved.InvokeAsync();
         DialogService.Close();
     }
 
@@ -148,3 +167,9 @@
     //     TestCase.CompletedDate = DateTime.Now;
     // }
 }
+
+<style>
+    .rz-dialog{
+        padding-bottom: 0px;
+    }
+</style>

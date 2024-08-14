@@ -76,8 +76,6 @@ public class TestCaseResultService : BaseService, ITestCaseResultService
     {
         var testCaseResult = _mapper.Map<DomainTestCaseResult>(request);
 
-        testCaseResult.IsFinished = true;
-
         if (testCaseResult.Id is null)
         {
             var creationRequest = _mapper.Map<CreateTestCaseResultRequest>(testCaseResult);

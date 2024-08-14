@@ -26,9 +26,9 @@
     }
     else
     {
-        @foreach (var result in TestCaseResults)
+        @foreach (var result in TestCaseResults.OrderBy(x => x.Number))
         {
-            if (result.ActualResult != null)
+            if (result.ActualResult != null && result.IsFinished == true)
             {
                 <TestResultDisplay Result="result" />
             }
