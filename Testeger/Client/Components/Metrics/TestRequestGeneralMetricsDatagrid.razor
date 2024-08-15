@@ -112,12 +112,12 @@
 
     private static int CountRequestsThatNeededToBeFixed(IEnumerable<TestRequestViewModel> requests)
     {
-        return requests.Count(tr => tr.History.Any(h => h.NewStatus == Testeger.Shared.DTOs.Enumerations.RequestStatus.FixingIssues));
+        return requests.Count(tr => tr.History.Any(h => h.NewStatus == RequestStatus.FixingIssues));
     }
 
     private static int CountRequestsThatDidntNeedToBeFixed(IEnumerable<TestRequestViewModel> requests)
     {
-        return requests.Count(tr => !tr.History.Any(h => h.NewStatus == Testeger.Shared.DTOs.Enumerations.RequestStatus.FixingIssues));
+        return requests.Count(tr => !tr.History.Any(h => h.NewStatus == RequestStatus.FixingIssues));
     }
 
     private static double CalculateAverageLeadTime(IEnumerable<TestRequestViewModel> testRequests)
@@ -133,12 +133,12 @@
         foreach (var request in testRequests)
         {
             var started = request.History
-                .Where(h => h.NewStatus == Testeger.Shared.DTOs.Enumerations.RequestStatus.Waiting)
+                .Where(h => h.NewStatus == RequestStatus.Waiting)
                 .OrderBy(h => h.ChangedDate)
                 .FirstOrDefault()?.ChangedDate;
 
             var completed = request.History
-                .Where(h => h.NewStatus == Testeger.Shared.DTOs.Enumerations.RequestStatus.Completed && h.ChangedDate >= started)
+                .Where(h => h.NewStatus == RequestStatus.Completed && h.ChangedDate >= started)
                 .OrderBy(h => h.ChangedDate)
                 .FirstOrDefault()?.ChangedDate;
 
@@ -171,12 +171,12 @@
         foreach (var request in testRequests)
         {
             var started = request.History
-                .Where(h => h.NewStatus == Testeger.Shared.DTOs.Enumerations.RequestStatus.InProgress)
+                .Where(h => h.NewStatus == RequestStatus.InProgress)
                 .OrderBy(h => h.ChangedDate)
                 .FirstOrDefault()?.ChangedDate;
 
             var completed = request.History
-                .Where(h => h.NewStatus == Testeger.Shared.DTOs.Enumerations.RequestStatus.Completed && h.ChangedDate >= started)
+                .Where(h => h.NewStatus == RequestStatus.Completed && h.ChangedDate >= started)
                 .OrderBy(h => h.ChangedDate)
                 .FirstOrDefault()?.ChangedDate;
 

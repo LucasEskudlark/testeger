@@ -1,5 +1,4 @@
 ﻿@using Testeger.Client.ViewModels.TestRequests
-@using Testeger.Shared.DTOs.Responses.TestRequest
 <div class="row card mt-3 shadow-sm" style="min-width: 900px;">
     <div class="col-12 px-0 mx-0">
         <div class="card-header row-titlebar d-flex justify-content-start align-items-center ps-2 px-0" style="min-width: 900px; height: 35px;">
@@ -32,6 +31,6 @@
     public RenderFragment? RowTitle { get; set; }
 
     [Parameter]
-    public Testeger.Shared.DTOs.Enumerations.RequestStatus Status { get; set; }
+    public RequestStatus Status { get; set; }
 
 }

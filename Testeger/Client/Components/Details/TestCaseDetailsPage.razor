@@ -1,7 +1,5 @@
 ﻿@using Testeger.Client.ViewModels.TestCases
 @using Testeger.Client.ViewModels.TestRequests
-@using Testeger.Shared.DTOs.Responses.TestCase
-@using Testeger.Shared.DTOs.Responses.TestRequest
 @inject TooltipService TooltipService
 @inject DialogService DialogService
 
@@ -65,7 +63,7 @@
         <div class="col-4 pb-2 test-schedule pt-1 ms-2">
             <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H3">Scheduled date</RadzenText>
             <RadzenDatePicker @bind-Value="TestCase.ScheduledDate"
-                                Disabled="@(Request.Status != Testeger.Shared.DTOs.Enumerations.RequestStatus.ReadyForTesting)"
+                                Disabled="@(Request.Status != RequestStatus.ReadyForTesting)"
                                 Style="width:100%;" Min="@(DateTime.Today)"
                                 DateFormat="dd/MM/yyyy"
                                 MouseEnter="@(args => ShowScheduledDateTooltip(args) )" />

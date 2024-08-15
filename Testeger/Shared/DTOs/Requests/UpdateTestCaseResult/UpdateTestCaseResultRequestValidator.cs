@@ -2,7 +2,7 @@
 
 namespace Testeger.Shared.DTOs.Requests.UpdateTestCaseResult;
 
-public class UpdateTestCaseResultRequestValidator :AbstractValidator<UpdateTestCaseResultRequest>
+public class UpdateTestCaseResultRequestValidator : AbstractValidator<UpdateTestCaseResultRequest>
 {
     public UpdateTestCaseResultRequestValidator()
     {

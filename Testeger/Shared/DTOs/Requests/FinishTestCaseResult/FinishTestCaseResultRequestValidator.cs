@@ -2,7 +2,7 @@
 
 namespace Testeger.Shared.DTOs.Requests.FinishTestCaseResult;
 
-public class FinishTestCaseResultRequestValidator :AbstractValidator<FinishTestCaseResultRequest>
+public class FinishTestCaseResultRequestValidator : AbstractValidator<FinishTestCaseResultRequest>
 {
     public FinishTestCaseResultRequestValidator()
     {

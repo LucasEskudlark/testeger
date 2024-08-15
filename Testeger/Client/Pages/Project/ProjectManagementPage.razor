@@ -1,7 +1,4 @@
 ﻿@page "/project/{ProjectId}/manage"
-@using Testeger.Client.Services.Projects
-@using Testeger.Client.ViewModels.Projects
-@using Testeger.Shared.DTOs.Responses.Project
 @layout DefaultLayout
 @inject IProjectServiceNV ProjectService
 @inject TooltipService TooltipService
@@ -78,12 +75,12 @@
 
     private ProjectViewModel Project { get; set; }
 
-    private IList<User> SelectedUsers { get; set; }
+    // private IList<User> SelectedUsers { get; set; }
 
-    private void HandleSelectionChange(IList<User> selectedUsers)
-    {
-        SelectedUsers = selectedUsers;
-    }
+    // private void HandleSelectionChange(IList<User> selectedUsers)
+    // {
+    //     SelectedUsers = selectedUsers;
+    // }
 
     protected override async Task OnInitializedAsync()
     {

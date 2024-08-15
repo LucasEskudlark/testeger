@@ -1,6 +1,4 @@
-﻿@using Testeger.Client.Services.TestRequests
-@using Testeger.Shared.DTOs.Requests.CreateTestRequest
-@inject DialogService DialogService
+﻿@inject DialogService DialogService
 @inject ITestRequestServiceNV TestRequestService
 
 @if (ProjectId is not null)
@@ -34,7 +32,7 @@
                 <InputSelect id="priorityLevel"
                              class="form-select inputtext"
                              @bind-Value="testRequestViewModel.PriorityLevel">
-                    @foreach (var priority in Enum.GetValues<Testeger.Shared.DTOs.Enumerations.PriorityLevel>())
+                    @foreach (var priority in Enum.GetValues<PriorityLevel>())
                     {
                         <option value="@priority">@priority</option>
                     }

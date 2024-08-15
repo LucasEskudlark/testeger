@@ -119,13 +119,13 @@
 
     private static int CountFailedTestCases(IEnumerable<TestCaseViewModel> testCases)
     {
-        int count = testCases.Count(tc => tc.History.Any(h => h.NewStatus == Testeger.Shared.DTOs.Enumerations.TestCaseStatus.Failed));
+        int count = testCases.Count(tc => tc.History.Any(h => h.NewStatus == TestCaseStatus.Failed));
         return count;
     }
 
     private static int CountNeverFailedTestCases(IEnumerable<TestCaseViewModel> testCases)
     {
-        int count = testCases.Count(tc => !tc.History.Any(h => h.NewStatus == Testeger.Shared.DTOs.Enumerations.TestCaseStatus.Failed));
+        int count = testCases.Count(tc => !tc.History.Any(h => h.NewStatus == TestCaseStatus.Failed));
         return count;
     }
 }

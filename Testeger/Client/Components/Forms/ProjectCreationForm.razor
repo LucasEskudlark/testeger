@@ -1,7 +1,4 @@
-﻿@using Testeger.Client.Services.Projects
-@using Testeger.Shared.DTOs.Requests.CreateProject
-@inject DialogService DialogService
-
+﻿@inject DialogService DialogService
 @inject IProjectServiceNV ProjectServiceNV
 
 <EditForm Model="newProject" OnValidSubmit="NotifyParent">
@@ -134,5 +131,5 @@
         // newProject.Members.Add(new UserViewModel());
     }
 
-    private bool CanDisplayRole(RoleType role) => role != RoleType.ProjectManager;
+    //private bool CanDisplayRole(RoleType role) => role != RoleType.ProjectManager;
 }
