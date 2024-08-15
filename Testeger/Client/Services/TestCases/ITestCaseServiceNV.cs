@@ -1,6 +1,6 @@
 ﻿using Testeger.Client.ViewModels;
 using Testeger.Client.ViewModels.TestCases;
-using Testeger.Shared.DTOs.Requests.CreateTestCase;
+using Testeger.Shared.DTOs.Enumerations;
 
 namespace Testeger.Client.Services.TestCases;
 
@@ -10,6 +10,8 @@ public interface ITestCaseServiceNV
     Task<TestCaseViewModel> GetTestCaseByIdAsync(string id);
     Task DeleteTestCaseByIdAsync(string id);
     Task CreateTestCaseAsync(TestCaseCreationViewModel request);
+    Task<IEnumerable<TestCaseViewModel>> GetTestCasesByProjectIdAsync(string projectId);
+    Task<Dictionary<TestCaseStatus, IEnumerable<TestCaseViewModel>>> GetTestCasesByProjectIdGroupedByStatus(string projectId);
 
     public event Action? OnChange;
     public event Action? OnTestCaseAdded;

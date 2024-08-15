@@ -1,7 +1,7 @@
 ﻿using System.Net.Http.Json;
 using Testeger.Client.ViewModels;
 using Testeger.Client.ViewModels.TestCases;
-using Testeger.Shared.DTOs.Requests.CreateTestCase;
+using Testeger.Shared.DTOs.Enumerations;
 
 namespace Testeger.Client.Services.TestCases;
 
@@ -44,5 +44,23 @@ public class TestCaseServiceNV : BaseService, ITestCaseServiceNV
     {
         await _httpClient.PostAsJsonAsync(BaseAddress, request);
         OnTestCaseAdded?.Invoke();
+    }
+
+    public async Task<IEnumerable<TestCaseViewModel>> GetTestCasesByProjectIdAsync(string projectId)
+    {
+        var address = BaseAddress + $"/project/{projectId}";
+        var response = await _httpClient.GetFromJsonAsync<IEnumerable<TestCaseViewModel>>(address);
+
+        return response;
+    }
+
+    public async Task<Dictionary<TestCaseStatus, IEnumerable<TestCaseViewModel>>> GetTestCasesByProjectIdGroupedByStatus(string projectId)
+    {
+        var testCases = await GetTestCasesByProjectIdAsync(projectId);
+
+        return Enum.GetValues(typeof(TestCaseStatus)).Cast<TestCaseStatus>()
+            .ToDictionary(
+                status => status,
+                status => testCases.Where(tr => tr.Status == status));
     }
 }

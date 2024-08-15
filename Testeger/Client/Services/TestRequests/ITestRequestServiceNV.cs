@@ -1,6 +1,7 @@
 ﻿using Testeger.Client.ViewModels;
 using Testeger.Client.ViewModels.TestRequests;
 using Testeger.Shared.DTOs.Enumerations;
+using Testeger.Shared.DTOs.Responses.TestRequest;
 
 namespace Testeger.Client.Services.TestRequests;
 
@@ -15,4 +16,5 @@ public interface ITestRequestServiceNV
     Task<Dictionary<RequestStatus, IEnumerable<TestRequestViewModel>>> GetTestRequestsByProjectIdGroupedByStatus(string projectId);
     Task<TestRequestViewModel> GetTestRequestByIdAsync(string id);
     Task DeleteTestRequestAsync(string id);
+    Task<IEnumerable<TestRequestViewModel>> GetTestRequestsByProjectIdAsync(string projectId);
 }
