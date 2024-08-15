@@ -17,7 +17,7 @@
 
 @code {
     [Parameter]
-    public Dictionary<Testeger.Shared.DTOs.Enumerations.TestCaseStatus, IEnumerable<TestCaseViewModel>> TestCasesByStatus { get; set; }
+    public Dictionary<TestCaseStatus, IEnumerable<TestCaseViewModel>> TestCasesByStatus { get; set; }
 
     private class DataItem
     {

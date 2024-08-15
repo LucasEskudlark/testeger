@@ -1,11 +1,4 @@
 ﻿@page "/project/{ProjectId}/metrics"
-@using Testeger.Client.Services.Projects
-@using Testeger.Client.Services.TestCases
-@using Testeger.Client.Services.TestRequests
-@using Testeger.Client.ViewModels.Projects
-@using Testeger.Client.ViewModels.TestCases
-@using Testeger.Client.ViewModels.TestRequests
-@using Testeger.Shared.DTOs.Responses.Project
 @layout DefaultLayout
 @inject ITestRequestServiceNV TestRequestService
 @inject ITestCaseServiceNV TestCaseService
@@ -131,8 +124,8 @@
     private ProjectViewModel Project { get; set; }
     private IEnumerable<TestRequestViewModel> TestRequests { get; set; }
     private IEnumerable<TestCaseViewModel> TestCases { get; set; }
-    private Dictionary<Testeger.Shared.DTOs.Enumerations.RequestStatus, IEnumerable<TestRequestViewModel>> TestRequestsByStatus { get; set; }
-    private Dictionary<Testeger.Shared.DTOs.Enumerations.TestCaseStatus, IEnumerable<TestCaseViewModel>> TestCasesByStatus { get; set; }
+    private Dictionary<RequestStatus, IEnumerable<TestRequestViewModel>> TestRequestsByStatus { get; set; }
+    private Dictionary<TestCaseStatus, IEnumerable<TestCaseViewModel>> TestCasesByStatus { get; set; }
 
     private bool isInitialized;
 

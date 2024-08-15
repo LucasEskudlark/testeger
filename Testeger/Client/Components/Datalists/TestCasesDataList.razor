@@ -1,5 +1,4 @@
 ﻿@using Testeger.Client.ViewModels.TestCases
-@using Testeger.Shared.DTOs.Responses.TestCase
 @inject NavigationManager NavigationManager
 
 <RadzenDataList AllowVirtualization="false" AllowPaging="true"
@@ -47,26 +46,26 @@
         NavigationManager.NavigateTo($"/test-case/{testCaseId}");
     }
 
-    private string GetTitleTextColor(Testeger.Shared.DTOs.Enumerations.TestCaseStatus status)
+    private string GetTitleTextColor(TestCaseStatus status)
     {
         switch (status)
         {
-            case Testeger.Shared.DTOs.Enumerations.TestCaseStatus.Failed:
+            case TestCaseStatus.Failed:
                 return "rz-color-danger-darker me-1";
-            case Testeger.Shared.DTOs.Enumerations.TestCaseStatus.Completed:
+            case TestCaseStatus.Completed:
                 return "rz-color-success-darker me-1";
             default:
                 return "rz-color-secondary-darker me-1";
         }
     }
 
-    private string GetTitleBackgroundColor(Testeger.Shared.DTOs.Enumerations.TestCaseStatus status)
+    private string GetTitleBackgroundColor(TestCaseStatus status)
     {
         switch (status)
         {
-            case Testeger.Shared.DTOs.Enumerations.TestCaseStatus.Failed:
+            case TestCaseStatus.Failed:
                 return "d-flex flex-column justify-content-center rz-background-color-danger-lighter ps-2";
-            case Testeger.Shared.DTOs.Enumerations.TestCaseStatus.Completed:
+            case TestCaseStatus.Completed:
                 return "d-flex flex-column justify-content-center rz-background-color-success-lighter ps-2";
             default:
                 return "d-flex flex-column justify-content-center rz-background-color-secondary-lighter ps-2";

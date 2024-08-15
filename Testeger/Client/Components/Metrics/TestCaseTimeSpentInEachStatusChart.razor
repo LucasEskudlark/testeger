@@ -16,7 +16,7 @@
                         <p>Average time spent in the "Pending" Status:</p>
                     </div>
                     <div class="col-3 d-flex justify-content-center">
-                        @CalculateAverageTimeInSpecificStatus(TestCases, Testeger.Shared.DTOs.Enumerations.TestCaseStatus.Pending).ToHoursAndMinutes()
+                        @CalculateAverageTimeInSpecificStatus(TestCases, TestCaseStatus.Pending).ToHoursAndMinutes()
                     </div>
                 </div>
 
@@ -25,7 +25,7 @@
                         <p>Average time spent in the "Failed" Status:</p>
                     </div>
                     <div class="col-3 d-flex justify-content-center">
-                        @CalculateAverageTimeInSpecificStatus(TestCases, Testeger.Shared.DTOs.Enumerations.TestCaseStatus.Failed).ToHoursAndMinutes()
+                        @CalculateAverageTimeInSpecificStatus(TestCases, TestCaseStatus.Failed).ToHoursAndMinutes()
                     </div>
                 </div>
             </div>        
@@ -35,7 +35,7 @@
 
 @code {
     [Parameter]
-    public Dictionary<Testeger.Shared.DTOs.Enumerations.TestCaseStatus, IEnumerable<TestCaseViewModel>> TestCasesByStatus { get; set; }
+    public Dictionary<TestCaseStatus, IEnumerable<TestCaseViewModel>> TestCasesByStatus { get; set; }
 
     [Parameter]
     public IEnumerable<TestCaseViewModel> TestCases { get; set; }
@@ -52,7 +52,7 @@
         int i = 0;
         foreach (var entry in TestCasesByStatus)
         {
-            if (entry.Key != Testeger.Shared.DTOs.Enumerations.TestCaseStatus.Completed)
+            if (entry.Key != TestCaseStatus.Completed)
             {
                 dataArray[i++] = new DataItem
                     {
@@ -65,7 +65,7 @@
         return dataArray;
     }
 
-    public double CalculateAverageTimeInSpecificStatus(IEnumerable<TestCaseViewModel> testCases, Testeger.Shared.DTOs.Enumerations.TestCaseStatus status)
+    public double CalculateAverageTimeInSpecificStatus(IEnumerable<TestCaseViewModel> testCases, TestCaseStatus status)
     {
         List<double> durations = new List<double>();
 

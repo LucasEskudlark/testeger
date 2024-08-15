@@ -1,11 +1,8 @@
 ﻿using System.Net.Http.Json;
-using System.Text.Json;
-using System.Text.Json.Serialization;
 using Testeger.Client.ViewModels;
 using Testeger.Client.ViewModels.TestRequests;
 using Testeger.Shared.DTOs.Enumerations;
 using Testeger.Shared.DTOs.Responses;
-using Testeger.Shared.DTOs.Responses.TestRequest;
 
 namespace Testeger.Client.Services.TestRequests;
 

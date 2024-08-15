@@ -1,10 +1,4 @@
 ﻿@page "/project/{Id}"
-@using Testeger.Client.Services.Projects
-@using Testeger.Client.Services.TestRequests
-@using Testeger.Client.ViewModels.Projects
-@using Testeger.Client.ViewModels.TestRequests
-@using Testeger.Shared.DTOs.Responses.Project
-@using Testeger.Shared.DTOs.Responses.TestRequest
 @layout DefaultLayout
 @inject IProjectServiceNV ProjectService
 @inject ITestRequestServiceNV TestRequestService
@@ -47,7 +41,7 @@
 
 
 
-    private Dictionary<Testeger.Shared.DTOs.Enumerations.RequestStatus, IEnumerable<TestRequestViewModel>> testRequestsByStatus = new();
+    private Dictionary<RequestStatus, IEnumerable<TestRequestViewModel>> testRequestsByStatus = new();
 
     protected override async Task OnParametersSetAsync()
     {
@@ -69,7 +63,7 @@
         testRequestsByStatus = await TestRequestService.GetTestRequestsByProjectIdGroupedByStatus(Id);
     }
 
-    private string GetStatusName(Testeger.Shared.DTOs.Enumerations.RequestStatus status)
+    private string GetStatusName(RequestStatus status)
     {
         string name = status.ToString();
         return System.Text.RegularExpressions.Regex.Replace(name, "(\\B[A-Z])", " $1");

@@ -1,7 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 using Testeger.Client.ViewModels.TestCaseResults;
 using Testeger.Shared.DTOs.Enumerations;
-using Testeger.Shared.DTOs.Responses.TestCase;
 
 namespace Testeger.Client.ViewModels.TestCases;
 

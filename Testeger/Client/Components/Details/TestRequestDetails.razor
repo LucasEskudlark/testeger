@@ -1,5 +1,4 @@
 ﻿@using Testeger.Client.ViewModels.TestRequests
-@using Testeger.Shared.DTOs.Responses.TestRequest
 @inject TooltipService TooltipService
 @inject DialogService DialogService
 
@@ -85,7 +84,7 @@
     public string PriorityAsString
     {
         get => Request.PriorityLevel.ToString().Replace("_", " ");
-        set => Request.PriorityLevel = Enum.Parse<Testeger.Shared.DTOs.Enumerations.PriorityLevel>(value.Replace(" ", "_"));
+        set => Request.PriorityLevel = Enum.Parse<PriorityLevel>(value.Replace(" ", "_"));
     }
 
     // public string StatusAsString
@@ -93,7 +92,7 @@
     //     get => EnumHelper.AddSpacesToEnumName(Request.Status.ToString());
     //     set
     //     {
-    //         var newStatus = Enum.Parse<Testeger.Shared.DTOs.Enumerations.RequestStatus>(value.Replace(" ", ""), true);
+    //         var newStatus = Enum.Parse<RequestStatus>(value.Replace(" ", ""), true);
     //         if (Request.Status != newStatus)
     //         {
     //             var history = new TestRequestHistory

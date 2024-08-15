@@ -1,7 +1,6 @@
 ﻿using Testeger.Client.ViewModels;
 using Testeger.Client.ViewModels.TestRequests;
 using Testeger.Shared.DTOs.Enumerations;
-using Testeger.Shared.DTOs.Responses.TestRequest;
 
 namespace Testeger.Client.Services.TestRequests;
 

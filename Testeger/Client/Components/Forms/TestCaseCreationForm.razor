@@ -1,8 +1,4 @@
-﻿@using Testeger.Client.Services.TestCases
-@using Testeger.Client.ViewModels.TestCases
-@using Testeger.Shared.DTOs.Requests.Common
-@using Testeger.Shared.DTOs.Requests.CreateTestCase
-@inject DialogService DialogService
+﻿@inject DialogService DialogService
 @inject ITestCaseServiceNV TestCaseService
 
 <EditForm Model="@testCaseCreationViewModel" OnValidSubmit="@NotifyParent">
@@ -76,7 +72,7 @@
 
 @code {
     [Parameter]
-    public EventCallback<TestCase> OnFormSubmitted { get; set; }
+    public EventCallback OnFormSubmitted { get; set; }
 
     [Parameter]
     public required string ProjectId { get; set; }
