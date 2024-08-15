@@ -1,24 +1,38 @@
-﻿@using Testeger.Client.ViewModels.TestCases
+﻿@using Testeger.Client.Services.TestCaseResults
+@using Testeger.Client.ViewModels.TestCaseResults
+@using Testeger.Client.ViewModels.TestCases
 @using Testeger.Shared.DTOs.Responses.TestCase
+@inject ITestCaseResultService TestCaseResultService
+
 @code {
     [Parameter]
-    public TestCaseViewModel TestCase { get; set; }
+    public string TestCaseId { get; set; }
 
-    // private bool HasSingleResult => TestCase.Results.Count <= 1;
-    private bool HasSingleResult = true;
-}
+    private IEnumerable<TestCaseResultViewModel> TestCaseResults { get; set; }
+    private bool isInitialized;
 
-@if (HasSingleResult)
-{
-    <small class="description-text"><i>Tests results will be shown here after the test is done.</i></small>
-}
-else
-{
-    @* @foreach (var result in TestCase.Results)
+    protected override async Task OnInitializedAsync()
     {
-        if (result.ActualResult != null)
-        {
-            <TestResultDisplay Result="result" />
-        }
-    } *@
+        TestCaseResults = await TestCaseResultService.GetResultsByTestCaseIdAsync(TestCaseId);
+        isInitialized = true;
+    }
 }
+
+@if (isInitialized)
+{
+    @if (!TestCaseResults.Any())
+    {
+        <small class="description-text"><i>Tests results will be shown here after the test is done.</i></small>
+    }
+    else
+    {
+        @foreach (var result in TestCaseResults.OrderBy(x => x.Number))
+        {
+            if (result.ActualResult != null && result.IsFinished == true)
+            {
+                <TestResultDisplay Result="result" />
+            }
+        }
+    }
+}
+

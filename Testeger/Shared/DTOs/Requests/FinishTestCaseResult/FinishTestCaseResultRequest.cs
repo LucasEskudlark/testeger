@@ -1,9 +1,8 @@
-﻿namespace Testeger.Shared.DTOs.Responses.TestCaseResult;
+﻿namespace Testeger.Shared.DTOs.Requests.FinishTestCaseResult;
 
-public class GetTestCaseResultResponse
+public class FinishTestCaseResultRequest
 {
-    public required string Id { get; set; }
-    public int Number { get; set; }
+    public string? Id { get; set; }
     public required string TestCaseId { get; set; }
     public required string ActualResult { get; set; }
     public TimeSpan ElapsedTime { get; set; }

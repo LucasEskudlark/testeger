@@ -1,6 +1,8 @@
 ﻿@page "/test-case/{TestCaseId}"
+@using Testeger.Client.Services.TestCaseResults
 @using Testeger.Client.Services.TestCases
 @using Testeger.Client.Services.TestRequests
+@using Testeger.Client.ViewModels.TestCaseResults
 @using Testeger.Client.ViewModels.TestCases
 @using Testeger.Client.ViewModels.TestRequests
 @using Testeger.Shared.DTOs.Responses.TestCase
@@ -11,9 +13,10 @@
 @inject DialogService DialogService
 @inject ITestCaseServiceNV TestCaseService
 @inject ITestRequestServiceNV TestRequestService
+@inject ITestCaseResultService TestCaseResultService
 
 
-@if (TestCase is not null)
+@if (isInitialized)
 {
     <PageTitle>@TestCase.Title - Testeger</PageTitle>
 
@@ -28,10 +31,10 @@
             </div>
             <div class="col-auto d-flex">
                 <RadzenButton Icon="play_arrow"
-                              Text="@testButtonText"
-                              ButtonStyle="@testButtonStyle"
+                              Text="@TestButtonText"
+                              ButtonStyle="@TestButtonStyle"
                               Size="ButtonSize.Small"
-                              Click="@HandleButtonClick"
+                              Click="@HandleTestButtonClick"
                               Disabled="@isNotScheduled"
                               class="me-2" />
 
@@ -70,28 +73,50 @@
 @code {
     [Parameter]
     public string TestCaseId { get; set; }
-
     [Parameter]
     public EventCallback OnTestCaseDeleted { get; set; }
-
     [Parameter]
     public EventCallback OnTestCaseUpdated { get; set; }
 
-    public TestRequestViewModel Request { get; set; }
     private TestCaseViewModel TestCase { get; set; }
+    private TestRequestViewModel Request { get; set; }
+    private TestCaseResultViewModel LatestTestCaseResult { get; set; }
 
+    private bool isInitialized;
     private bool isNotScheduled;
     private bool isTestRunning = false;
-    private string testButtonText => isTestRunning ? "Continue Test" : "Start Test";
-    private ButtonStyle testButtonStyle => isTestRunning ? ButtonStyle.Warning : ButtonStyle.Success;
+
+    private string TestButtonText => isTestRunning ? "Continue Test" : "Start Test";
+    private ButtonStyle TestButtonStyle => isTestRunning ? ButtonStyle.Warning : ButtonStyle.Success;
+
 
     protected override async Task OnInitializedAsync()
     {
-        TestCase = await TestCaseService.GetTestCaseByIdAsync(TestCaseId);
+        await GetTestCase();
+        await GetLatestTestCaseResult();
         Request = await TestRequestService.GetTestRequestByIdAsync(TestCase.TestRequestId);
-        isNotScheduled = TestCase.ScheduledDate != default;
+        LatestTestCaseResult = await TestCaseResultService.GetLastResultOrDefaultForTestCaseAsync(TestCase.Id);
         TestCaseService.OnChange += StateHasChanged;
-        TestCaseService.OnTestCaseUpdated += UpdateTestCase;
+        isNotScheduled = TestCase.ScheduledDate != default;
+        
+        if (LatestTestCaseResult.Id is not null)
+        {
+            isTestRunning = true;
+        }
+
+        isInitialized = true;
+    }
+
+    private async Task GetTestCase()
+    {
+        TestCase = await TestCaseService.GetTestCaseByIdAsync(TestCaseId);
+        StateHasChanged();
+    }
+
+    private async Task GetLatestTestCaseResult()
+    {
+        TestCase = await TestCaseService.GetTestCaseByIdAsync(TestCaseId);
+        StateHasChanged();
     }
 
     private async Task HandleTestCaseDeletion()
@@ -114,7 +139,7 @@
         }
     }
 
-    private async Task HandleButtonClick()
+    private async Task HandleTestButtonClick()
     {
         isTestRunning = true;
         await OpenTestCaseTestingDialog();
@@ -124,7 +149,11 @@
     {
         var options = new DialogOptions { Width = "700px", Height = "630px", Resizable = false, Draggable = true };
         await DialogService.OpenAsync<TestCaseTestingDialog>("Testing",
-            new Dictionary<string, object> { { "TestCaseId", TestCaseId }, { nameof(TestCaseTestingDialog.OnTestFinished), UpdateTestCaseResult } },
+            new Dictionary<string, object> { 
+                { "TestCase", TestCase },
+                { "LatestTestCaseResult", LatestTestCaseResult },
+                { nameof(TestCaseTestingDialog.OnTestFinished), HandleTestFinished },
+                { nameof(TestCaseTestingDialog.OnTestSaved), HandleTestSaved }},
             options);
     }
 
@@ -133,16 +162,18 @@
         TooltipService.Open(elementReference, message, options);
     }
 
-    private EventCallback UpdateTestCaseResult => new(this, async () =>
+    private EventCallback HandleTestFinished => new(this, async () =>
     {
-        UpdateTestCase();
+        await GetTestCase();
+        await GetLatestTestCaseResult();
         isTestRunning = false;
         await InvokeAsync(StateHasChanged);
     });
 
-    private async void UpdateTestCase()
+    private EventCallback HandleTestSaved => new(this, async () =>
     {
-        TestCase = await TestCaseService.GetTestCaseByIdAsync(TestCaseId);
-        StateHasChanged();
-    }
+        await GetTestCase();
+        await GetLatestTestCaseResult();
+        await InvokeAsync(StateHasChanged);
+    });
 }

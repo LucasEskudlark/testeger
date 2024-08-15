@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Testeger.Infra.Context;
 
@@ -11,9 +12,11 @@ using Testeger.Infra.Context;
 namespace Testeger.Infra.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240813012144_AddIsTestFinishedColumn")]
+    partial class AddIsTestFinishedColumn
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -62,7 +65,7 @@ namespace Testeger.Infra.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime")
-                        .HasDefaultValue(new DateTime(2024, 8, 14, 23, 45, 32, 615, DateTimeKind.Utc).AddTicks(2255))
+                        .HasDefaultValue(new DateTime(2024, 8, 13, 1, 21, 44, 129, DateTimeKind.Utc).AddTicks(2777))
                         .HasColumnName("CreatedDate");
 
                     b.Property<string>("Name")
@@ -94,7 +97,7 @@ namespace Testeger.Infra.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime")
-                        .HasDefaultValue(new DateTime(2024, 8, 14, 23, 45, 32, 617, DateTimeKind.Utc).AddTicks(1336))
+                        .HasDefaultValue(new DateTime(2024, 8, 13, 1, 21, 44, 131, DateTimeKind.Utc).AddTicks(4197))
                         .HasColumnName("CreatedDate");
 
                     b.Property<ulong>("NeedCorrection")
@@ -145,6 +148,10 @@ namespace Testeger.Infra.Migrations
                         .HasColumnType("varchar(700)")
                         .HasColumnName("ActualResult");
 
+                    b.Property<TimeSpan?>("AmountOfTimeSpentToTest")
+                        .HasColumnType("time")
+                        .HasColumnName("AmountOfTimeSpentToTest");
+
                     b.Property<TimeSpan?>("ElapsedTime")
                         .HasColumnType("time")
                         .HasColumnName("ElapsedTime");
@@ -192,7 +199,7 @@ namespace Testeger.Infra.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime")
-                        .HasDefaultValue(new DateTime(2024, 8, 14, 23, 45, 32, 615, DateTimeKind.Utc).AddTicks(6587))
+                        .HasDefaultValue(new DateTime(2024, 8, 13, 1, 21, 44, 129, DateTimeKind.Utc).AddTicks(8053))
                         .HasColumnName("CreatedDate");
 
                     b.Property<string>("Description")
@@ -332,7 +339,7 @@ namespace Testeger.Infra.Migrations
                             b1.Property<DateTime>("ChangedDate")
                                 .ValueGeneratedOnAdd()
                                 .HasColumnType("datetime")
-                                .HasDefaultValue(new DateTime(2024, 8, 14, 23, 45, 32, 620, DateTimeKind.Utc).AddTicks(5285))
+                                .HasDefaultValue(new DateTime(2024, 8, 13, 1, 21, 44, 135, DateTimeKind.Utc).AddTicks(332))
                                 .HasColumnName("ChangedDate");
 
                             b1.Property<string>("NewStatus")
@@ -400,7 +407,7 @@ namespace Testeger.Infra.Migrations
                             b1.Property<DateTime>("ChangedDate")
                                 .ValueGeneratedOnAdd()
                                 .HasColumnType("datetime")
-                                .HasDefaultValue(new DateTime(2024, 8, 14, 23, 45, 32, 616, DateTimeKind.Utc).AddTicks(7155))
+                                .HasDefaultValue(new DateTime(2024, 8, 13, 1, 21, 44, 130, DateTimeKind.Utc).AddTicks(9803))
                                 .HasColumnName("ChangedDate");
 
                             b1.Property<string>("NewStatus")

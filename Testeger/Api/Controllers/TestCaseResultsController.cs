@@ -2,6 +2,8 @@
 using Testeger.Application.Services.TestCaseResult;
 using Testeger.Shared.DTOs.Requests.Common;
 using Testeger.Shared.DTOs.Requests.CreateTestCaseResult;
+using Testeger.Shared.DTOs.Requests.FinishTestCaseResult;
+using Testeger.Shared.DTOs.Requests.UpdateTestCaseResult;
 
 namespace Testeger.Api.Controllers;
 
@@ -38,5 +40,29 @@ public class TestCaseResultsController : ControllerBase
         var response = await _testCaseResultService.GetTestCaseResultByIdAsync(id);
 
         return Ok(response);
+    }
+
+    [HttpGet("testcase/{testCaseId}")]
+    public async Task<IActionResult> GetResultsByTestCaseIdAsync([FromRoute] string testCaseId)
+    {
+        var response = await _testCaseResultService.GetResultsByTestCaseIdAsync(testCaseId);
+
+        return Ok(response);
+    }
+
+    [HttpPost("update")]
+    public async Task<IActionResult> UpdateTestCaseResultAsync([FromBody] UpdateTestCaseResultRequest request)
+    {
+        await _testCaseResultService.UpdateTestCaseResultAsync(request);
+
+        return NoContent();
+    }
+
+    [HttpPost("finish")]
+    public async Task<IActionResult> FinishTestCaseResultAsync([FromBody] FinishTestCaseResultRequest request)
+    {
+        await _testCaseResultService.FinishTestCaseResultAsync(request);
+
+        return NoContent();
     }
 }

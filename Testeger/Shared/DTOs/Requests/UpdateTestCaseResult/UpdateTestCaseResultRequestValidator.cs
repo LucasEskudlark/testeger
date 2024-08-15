@@ -1,11 +1,15 @@
 ﻿using FluentValidation;
 
-namespace Testeger.Shared.DTOs.Requests.CreateTestCaseResult;
+namespace Testeger.Shared.DTOs.Requests.UpdateTestCaseResult;
 
-public class CreateTestCaseResultRequestValidator : AbstractValidator<CreateTestCaseResultRequest>
+public class UpdateTestCaseResultRequestValidator :AbstractValidator<UpdateTestCaseResultRequest>
 {
-    public CreateTestCaseResultRequestValidator()
+    public UpdateTestCaseResultRequestValidator()
     {
+        RuleFor(r => r.Id)
+            .NotEmpty()
+            .MaximumLength(36);
+
         RuleFor(r => r.TestCaseId)
             .NotEmpty()
             .MaximumLength(36);
