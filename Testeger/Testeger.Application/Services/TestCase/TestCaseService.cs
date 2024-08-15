@@ -80,6 +80,16 @@ public class TestCaseService : BaseService, ITestCaseService
         return response;
     }
 
+    public async Task<IEnumerable<GetTestCaseResponse>> GetTestCasesByProjectIdAsync(string projectId)
+    {
+        await ValidateProjectExistenceAsync(projectId);
+
+        var testCases = await _unitOfWork.TestCaseRepository.GetTestCasesByProjectIdAsync(projectId);
+
+        var response = _mapper.Map<IEnumerable<GetTestCaseResponse>>(testCases);
+        return response;
+    }
+
     private async Task ValidateTestRequestExistenceAsync(string testRequestId)
     {
         _ = await _unitOfWork.TestRequestRepository.GetByIdAsync(testRequestId) ??

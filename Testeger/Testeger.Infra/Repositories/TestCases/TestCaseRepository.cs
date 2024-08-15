@@ -23,6 +23,18 @@ public class TestCaseRepository : Repository<TestCase>, ITestCaseRepository
         return testCase;
     }
 
+    public async Task<IEnumerable<TestCase>> GetTestCasesByProjectIdAsync(string projectId)
+    {
+        var testCases = await _dbSet
+            .Include(tc => tc.Details)
+            .Include(tc => tc.History)
+            .Include(tc => tc.Results)
+            .Where(tc => tc.ProjectId == projectId)
+            .ToListAsync();
+
+        return testCases;
+    }
+
     public async Task<IEnumerable<TestCase>> GetTestCasesByTestRequestIdAsync(string testRequestId)
     {
         var testCases = await _dbSet

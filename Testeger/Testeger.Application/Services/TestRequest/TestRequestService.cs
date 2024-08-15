@@ -68,6 +68,16 @@ public class TestRequestService : BaseService, ITestRequestService
         await _unitOfWork.CompleteAsync();
     }
 
+    public async Task<IEnumerable<GetTestRequestResponse>> GetTestRequestsByProjectIdAsync(string projectId)
+    {
+        await ValidateProjectExistence(projectId);
+
+        var testRequests = await _unitOfWork.TestRequestRepository.GetTestRequestsByProjectIdAsync(projectId);
+
+        var response = _mapper.Map<IEnumerable<GetTestRequestResponse>>(testRequests);
+        return response;
+    }
+
     private async Task ValidateProjectExistence(string projectId)
     {
         _ = await _unitOfWork.ProjectRepository.GetByIdAsync(projectId)
