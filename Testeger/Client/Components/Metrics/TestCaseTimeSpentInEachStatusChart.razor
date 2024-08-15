@@ -1,4 +1,5 @@
-﻿<h6>Average time a test case spend in each status:</h6>
+﻿@using Testeger.Client.ViewModels.TestCases
+<h6>Average time a test case spend in each status:</h6>
 <RadzenCard>
     <div class="row">
         <div class="col-6">
@@ -15,7 +16,7 @@
                         <p>Average time spent in the "Pending" Status:</p>
                     </div>
                     <div class="col-3 d-flex justify-content-center">
-                        @CalculateAverageTimeInSpecificStatus(TestCases, TestCaseStatus.Pending).ToHoursAndMinutes()
+                        @CalculateAverageTimeInSpecificStatus(TestCases, Testeger.Shared.DTOs.Enumerations.TestCaseStatus.Pending).ToHoursAndMinutes()
                     </div>
                 </div>
 
@@ -24,7 +25,7 @@
                         <p>Average time spent in the "Failed" Status:</p>
                     </div>
                     <div class="col-3 d-flex justify-content-center">
-                        @CalculateAverageTimeInSpecificStatus(TestCases, TestCaseStatus.Failed).ToHoursAndMinutes()
+                        @CalculateAverageTimeInSpecificStatus(TestCases, Testeger.Shared.DTOs.Enumerations.TestCaseStatus.Failed).ToHoursAndMinutes()
                     </div>
                 </div>
             </div>        
@@ -34,10 +35,10 @@
 
 @code {
     [Parameter]
-    public Dictionary<TestCaseStatus, List<TestCase>> TestCasesByStatus { get; set; }
+    public Dictionary<Testeger.Shared.DTOs.Enumerations.TestCaseStatus, IEnumerable<TestCaseViewModel>> TestCasesByStatus { get; set; }
 
     [Parameter]
-    public List<TestCase> TestCases { get; set; }
+    public IEnumerable<TestCaseViewModel> TestCases { get; set; }
 
     private class DataItem
     {
@@ -51,7 +52,7 @@
         int i = 0;
         foreach (var entry in TestCasesByStatus)
         {
-            if (entry.Key != TestCaseStatus.Completed)
+            if (entry.Key != Testeger.Shared.DTOs.Enumerations.TestCaseStatus.Completed)
             {
                 dataArray[i++] = new DataItem
                     {
@@ -64,7 +65,7 @@
         return dataArray;
     }
 
-    public double CalculateAverageTimeInSpecificStatus(List<TestCase> testCases, TestCaseStatus status)
+    public double CalculateAverageTimeInSpecificStatus(IEnumerable<TestCaseViewModel> testCases, Testeger.Shared.DTOs.Enumerations.TestCaseStatus status)
     {
         List<double> durations = new List<double>();
 

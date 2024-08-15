@@ -1,4 +1,5 @@
-﻿<h6>Test request count per status</h6>
+﻿@using Testeger.Client.ViewModels.TestRequests
+<h6>Test request count per status</h6>
 <RadzenCard>
     <RadzenChart>
         <RadzenColumnSeries Fills="@(new [] { "#4F4F50", "#4668BC", "#C2840D", "#B90D41", "#00763E" })" Data="@GetChartData()" CategoryProperty="Status" LineType="LineType.Dashed" ValueProperty="RequestCount">
@@ -16,7 +17,7 @@
 
 @code {
     [Parameter]
-    public Dictionary<RequestStatus, List<TestRequest>> TestRequestsByStatus { get; set; }
+    public Dictionary<Testeger.Shared.DTOs.Enumerations.RequestStatus, IEnumerable<TestRequestViewModel>> TestRequestsByStatus { get; set; }
 
     private class DataItem
     {
@@ -33,7 +34,7 @@
             dataArray[i++] = new DataItem
                 {
                     Status = entry.Key.ToString(),
-                    RequestCount = entry.Value.Count,
+                    RequestCount = entry.Value.Count(),
                 };
         }
 

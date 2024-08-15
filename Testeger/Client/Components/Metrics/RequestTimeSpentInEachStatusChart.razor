@@ -1,4 +1,5 @@
-﻿<h6>Average time a request spend in each status:</h6>
+﻿@using Testeger.Client.ViewModels.TestRequests
+<h6>Average time a request spend in each status:</h6>
 <RadzenCard>
     <RadzenChart>
         <RadzenPieSeries Data="@GetPieChartData()" Title="HoursSpent" CategoryProperty="Status" ValueProperty="HoursSpent">
@@ -9,7 +10,7 @@
             <p>Average time spent in the "Waiting" Status:</p>
         </div>
         <div class="col-3 d-flex justify-content-center">
-            @CalculateAverageTimeInSpecificStatus(TestRequests, RequestStatus.Waiting).ToHoursAndMinutes()
+            @CalculateAverageTimeInSpecificStatus(TestRequests, Testeger.Shared.DTOs.Enumerations.RequestStatus.Waiting).ToHoursAndMinutes()
         </div>
     </div>
 
@@ -18,7 +19,7 @@
             <p>Average time spent in the "In Progress" Status:</p>
         </div>
         <div class="col-3 d-flex justify-content-center">
-            @CalculateAverageTimeInSpecificStatus(TestRequests, RequestStatus.InProgress).ToHoursAndMinutes()
+            @CalculateAverageTimeInSpecificStatus(TestRequests, Testeger.Shared.DTOs.Enumerations.RequestStatus.InProgress).ToHoursAndMinutes()
         </div>
     </div>
 
@@ -27,7 +28,7 @@
             <p>Average time spent in the "Ready for Test" Status:</p>
         </div>
         <div class="col-3 d-flex justify-content-center">
-            @CalculateAverageTimeInSpecificStatus(TestRequests, RequestStatus.ReadyForTesting).ToHoursAndMinutes()
+            @CalculateAverageTimeInSpecificStatus(TestRequests, Testeger.Shared.DTOs.Enumerations.RequestStatus.ReadyForTesting).ToHoursAndMinutes()
         </div>
     </div>
 
@@ -36,17 +37,17 @@
             <p>Average time spent in the "Fixing Issues" Status:</p>
         </div>
         <div class="col-3 d-flex justify-content-center">
-            @CalculateAverageTimeInSpecificStatus(TestRequests, RequestStatus.FixingIssues).ToHoursAndMinutes()
+            @CalculateAverageTimeInSpecificStatus(TestRequests, Testeger.Shared.DTOs.Enumerations.RequestStatus.FixingIssues).ToHoursAndMinutes()
         </div>
     </div>
 </RadzenCard>
 
 @code{
     [Parameter]
-    public Dictionary<RequestStatus, List<TestRequest>> TestRequestsByStatus { get; set; }
+    public Dictionary<Testeger.Shared.DTOs.Enumerations.RequestStatus, IEnumerable<TestRequestViewModel>> TestRequestsByStatus { get; set; }
 
     [Parameter]
-    public List<TestRequest> TestRequests { get; set; }
+    public IEnumerable<TestRequestViewModel> TestRequests { get; set; }
 
     private class DataItem
     {
@@ -60,7 +61,7 @@
         int i = 0;
         foreach (var entry in TestRequestsByStatus)
         {
-            if (entry.Key != RequestStatus.Completed)
+            if (entry.Key != Testeger.Shared.DTOs.Enumerations.RequestStatus.Completed)
             {
                 dataArray[i++] = new DataItem
                     {
@@ -73,7 +74,7 @@
         return dataArray;
     }
 
-    public double CalculateAverageTimeInSpecificStatus(List<TestRequest> requests, RequestStatus status)
+    public double CalculateAverageTimeInSpecificStatus(IEnumerable<TestRequestViewModel> requests, Testeger.Shared.DTOs.Enumerations.RequestStatus status)
     {
         List<double> durations = new List<double>();
 
