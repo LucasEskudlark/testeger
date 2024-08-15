@@ -1,5 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 using Testeger.Shared.DTOs.Enumerations;
+using Testeger.Shared.DTOs.Responses.TestCaseResult;
 
 namespace Testeger.Shared.DTOs.Responses.TestCase;
 
@@ -18,4 +19,5 @@ public class GetTestCaseResponse
     public bool NeedCorrection { get; set; }
     public DateTime ScheduledDate { get; set; }
     public required IEnumerable<TestCaseHistoryResponse> History { get; set; }
+    public required IEnumerable<GetTestCaseResultResponse> Results { get; set; }
 }

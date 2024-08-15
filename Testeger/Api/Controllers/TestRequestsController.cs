@@ -47,4 +47,12 @@ public class TestRequestsController : ControllerBase
 
         return NoContent();
     }
+
+    [HttpGet("project/{projectId}")]
+    public async Task<IActionResult> GeTestRequestsByProjectIdAsync([FromRoute] string projectId)
+    {
+        var response = await _testRequestService.GetTestRequestsByProjectIdAsync(projectId);
+
+        return Ok(response);
+    }
 }

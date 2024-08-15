@@ -1,8 +1,11 @@
 ﻿using System.Net.Http.Json;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using Testeger.Client.ViewModels;
 using Testeger.Client.ViewModels.TestRequests;
 using Testeger.Shared.DTOs.Enumerations;
 using Testeger.Shared.DTOs.Responses;
+using Testeger.Shared.DTOs.Responses.TestRequest;
 
 namespace Testeger.Client.Services.TestRequests;
 
@@ -49,14 +52,22 @@ public class TestRequestServiceNV : BaseService, ITestRequestServiceNV
         return response;
     }
 
+    public async Task<IEnumerable<TestRequestViewModel>> GetTestRequestsByProjectIdAsync(string projectId)
+    {
+        var address = BaseAddress + $"/project/{projectId}";
+        var response = await _httpClient.GetFromJsonAsync<IEnumerable<TestRequestViewModel>>(address);
+
+        return response;
+    }
+
     public async Task<Dictionary<RequestStatus, IEnumerable<TestRequestViewModel>>> GetTestRequestsByProjectIdGroupedByStatus(string projectId)
     {
-        var testRequests = await GetAllTestRequestsPagedAsync();
+        var testRequests = await GetTestRequestsByProjectIdAsync(projectId);
 
         return Enum.GetValues(typeof(RequestStatus)).Cast<RequestStatus>()
             .ToDictionary(
                 status => status,
-                status => testRequests.Items.Where(tr => tr.Status == status && tr.ProjectId == projectId));
+                status => testRequests.Where(tr => tr.Status == status));
     }
 
     private void NotifyStateChanged() => OnChange?.Invoke();

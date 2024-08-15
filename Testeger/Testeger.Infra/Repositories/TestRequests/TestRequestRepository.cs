@@ -29,4 +29,9 @@ public class TestRequestRepository : Repository<TestRequest>, ITestRequestReposi
                             .FirstOrDefaultAsync(tr => tr.Id == id);
         return testRequest;
     }
+
+    public async Task<IEnumerable<TestRequest>> GetTestRequestsByProjectIdAsync(string projectId)
+    {
+        return await _dbSet.Where(tr => tr.ProjectId == projectId).ToListAsync();
+    }
 }

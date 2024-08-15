@@ -1,4 +1,6 @@
 ﻿@using System.Linq;
+@using Testeger.Client.ViewModels.TestCases
+@using Testeger.Client.ViewModels.TestRequests
 
 <h6>Test case general numbers</h6>
 <RadzenCard>
@@ -60,14 +62,14 @@
 
 @code {
     [Parameter]
-    public List<TestCase> TestCases { get; set; }
+    public IEnumerable<TestCaseViewModel> TestCases { get; set; }
 
     [Parameter]
-    public List<TestRequest> TestRequests { get; set; }
+    public IEnumerable<TestRequestViewModel> TestRequests { get; set; }
 
-    private double CalculateAverageTestCaseCompletionTimeInHours(List<TestCase> testCases)
+    private double CalculateAverageTestCaseCompletionTimeInHours(IEnumerable<TestCaseViewModel> testCases)
     {
-        var completedTestCases = testCases.Where(r => r.CompletedDate.HasValue);
+        var completedTestCases = testCases.Where(r => r.CompletedDate != default);
 
         if (!completedTestCases.Any())
         {
@@ -75,7 +77,7 @@
         }
 
         double totalHours = completedTestCases
-            .Select(r => (r.CompletedDate.Value - r.CreatedDate).TotalHours)
+            .Select(r => (r.CompletedDate - r.CreatedDate).TotalHours)
             .Sum();
 
         double averageHours = totalHours / completedTestCases.Count();
@@ -83,9 +85,9 @@
         return Math.Round(averageHours, 2);
     }
 
-    private double CalculateAverageTestCaseTestingTimeInHours(List<TestCase> testCases)
+    private double CalculateAverageTestCaseTestingTimeInHours(IEnumerable<TestCaseViewModel> testCases)
     {
-        var testedTestCases = testCases.Where(r => r.Results.Count > 1);
+        var testedTestCases = testCases.Where(r => r.Results.Count() > 1);
 
         if (!testedTestCases.Any())
         {
@@ -94,7 +96,7 @@
 
         var allTimeSpans = testCases
             .SelectMany(tc => tc.Results)
-            .Select(tcr => tcr.AmountOfTimeSpentToTest)
+            .Select(tcr => tcr.ElapsedTime)
             .ToList();
 
         var totalHoursSpent = allTimeSpans.Sum(ts => ts.TotalHours);
@@ -106,24 +108,24 @@
 
     private double CalculateAverageNumberOfTestCasesPerRequest()
     {
-        if (TestRequests.Count == 0)
+        if (!TestRequests.Any())
         {
             return (double)0;
         }
 
-        double averageCount = (double)TestCases.Count / TestRequests.Count;
+        double averageCount = (double)TestCases.Count() / TestRequests.Count();
         return Math.Round(averageCount, 2);
     }
 
-    private static int CountFailedTestCases(List<TestCase> testCases)
+    private static int CountFailedTestCases(IEnumerable<TestCaseViewModel> testCases)
     {
-        int count = testCases.Count(tc => tc.History.Any(h => h.NewStatus == TestCaseStatus.Failed));
+        int count = testCases.Count(tc => tc.History.Any(h => h.NewStatus == Testeger.Shared.DTOs.Enumerations.TestCaseStatus.Failed));
         return count;
     }
 
-    private static int CountNeverFailedTestCases(List<TestCase> testCases)
+    private static int CountNeverFailedTestCases(IEnumerable<TestCaseViewModel> testCases)
     {
-        int count = testCases.Count(tc => !tc.History.Any(h => h.NewStatus == TestCaseStatus.Failed));
+        int count = testCases.Count(tc => !tc.History.Any(h => h.NewStatus == Testeger.Shared.DTOs.Enumerations.TestCaseStatus.Failed));
         return count;
     }
 }

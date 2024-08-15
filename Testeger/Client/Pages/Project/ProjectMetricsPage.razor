@@ -1,15 +1,21 @@
 ﻿@page "/project/{ProjectId}/metrics"
 @using Testeger.Client.Services.Projects
+@using Testeger.Client.Services.TestCases
+@using Testeger.Client.Services.TestRequests
 @using Testeger.Client.ViewModels.Projects
+@using Testeger.Client.ViewModels.TestCases
+@using Testeger.Client.ViewModels.TestRequests
 @using Testeger.Shared.DTOs.Responses.Project
 @layout DefaultLayout
-@inject TestRequestService TestRequestService
-@inject TestCaseService TestCaseService
+@inject ITestRequestServiceNV TestRequestService
+@inject ITestCaseServiceNV TestCaseService
 @inject IProjectServiceNV ProjectService
 
 <PageTitle>@Project?.Name Metrics - Testeger</PageTitle>
 
-<div class="container-fluid">
+@if (isInitialized)
+{
+   <div class="container-fluid">
     <div class="row d-flex justify-content-between mb-4">
         <div class="col-auto">
             <RadzenBreadCrumb>
@@ -24,117 +30,120 @@
                             ValueProperty="Value" />
         </div>
     </div>
-    @if ((TestCases is null && TestRequests is null) || (TestCases.Count == 0 && TestRequests.Count == 0))
-    {
-        <div class="row mt-4 d-flex justify-content-center">
-            <div class="col-12">
-                <RadzenCard class="vh-100 d-flex align-items-center justify-content-center">
+        @if ((TestCases is null && TestRequests is null) || (!TestCases.Any() && !TestRequests.Any()))
+        {
+            <div class="row mt-4 d-flex justify-content-center">
+                <div class="col-12">
+                    <RadzenCard class="vh-100 d-flex align-items-center justify-content-center">
 
-                    <h5 style="color: #A9ABAE;"><i>There are no metrics for this project yet.</i></h5>
-                </RadzenCard>
+                        <h5 style="color: #A9ABAE;"><i>There are no metrics for this project yet.</i></h5>
+                    </RadzenCard>
+                </div>
             </div>
-        </div>
-    } else
-    {
-        <RadzenCard class="my-3 py-2">
-            <ToggleComponent>
-                <Header>
-                    <RadzenText TextStyle="TextStyle.H6" class="mt-2">Test requests metrics:</RadzenText>
-                </Header>
-                <ChildContent>
-                    <div class="row mt-3 d-flex align-items-start">
-                        <div class="col-6">
-                            <TestRequestGeneralMetricsDatagrid TestRequests="TestRequests" />
+        } else
+        {
+            <RadzenCard class="my-3 py-2">
+                <ToggleComponent>
+                    <Header>
+                        <RadzenText TextStyle="TextStyle.H6" class="mt-2">Test requests metrics:</RadzenText>
+                    </Header>
+                    <ChildContent>
+                        <div class="row mt-3 d-flex align-items-start">
+                            <div class="col-6">
+                                <TestRequestGeneralMetricsDatagrid TestRequests="TestRequests" />
+                            </div>
+                            <div class="col-6">
+                                <RequestTimeSpentInEachStatusChart TestRequests="TestRequests" TestRequestsByStatus="TestRequestsByStatus" />
+                            </div>
                         </div>
-                        <div class="col-6">
-                            <RequestTimeSpentInEachStatusChart TestRequests="TestRequests" TestRequestsByStatus="TestRequestsByStatus" />
-                        </div>
-                    </div>
 
-                    <div class="row mt-4 d-flex justify-content-center mb-4">
-                        <div class="col-10">
-                            <TestRequestCountPerStatusChart TestRequestsByStatus="TestRequestsByStatus" />
+                        <div class="row mt-4 d-flex justify-content-center mb-4">
+                            <div class="col-10">
+                                <TestRequestCountPerStatusChart TestRequestsByStatus="TestRequestsByStatus" />
+                            </div>
                         </div>
-                    </div>
-                </ChildContent>
-            </ToggleComponent>  
-        </RadzenCard>
+                    </ChildContent>
+                </ToggleComponent>  
+            </RadzenCard>
 
-        <RadzenCard class="my-3 py-2">
-            <ToggleComponent>
-                <Header>
-                    <RadzenText TextStyle="TextStyle.H6" class="mt-2">Test cases metrics:</RadzenText>
-                </Header>
-                <ChildContent>
-                    <div class="row mt-3">
-                        <div class="col-6">
-                            <TestCaseCountPerStatusChart TestCasesByStatus="TestCasesByStatus" />
+            <RadzenCard class="my-3 py-2">
+                <ToggleComponent>
+                    <Header>
+                        <RadzenText TextStyle="TextStyle.H6" class="mt-2">Test cases metrics:</RadzenText>
+                    </Header>
+                    <ChildContent>
+                        <div class="row mt-3">
+                            <div class="col-6">
+                                <TestCaseCountPerStatusChart TestCasesByStatus="TestCasesByStatus" />
+                            </div>
+                            <div class="col-6">
+                                <TestCaseGeneralMetricsDatagrid TestCases="TestCases" TestRequests="TestRequests" />
+                            </div>
                         </div>
-                        <div class="col-6">
-                            <TestCaseGeneralMetricsDatagrid TestCases="TestCases" TestRequests="TestRequests" />
-                        </div>
-                    </div>
 
-                    <div class="row mt-4 mb-4">
-                        <div class="col-12">
-                            <TestCaseTimeSpentInEachStatusChart TestCasesByStatus="TestCasesByStatus" TestCases="TestCases" />
+                        <div class="row mt-4 mb-4">
+                            <div class="col-12">
+                                <TestCaseTimeSpentInEachStatusChart TestCasesByStatus="TestCasesByStatus" TestCases="TestCases" />
+                            </div>
                         </div>
-                    </div>
-                </ChildContent>
-            </ToggleComponent>
-        </RadzenCard>
+                    </ChildContent>
+                </ToggleComponent>
+            </RadzenCard>
 
-        <RadzenCard class="my-3 py-2">
-            <ToggleComponent>
-                <Header>
-                    <RadzenText TextStyle="TextStyle.H6" class="mt-2">Team metrics:</RadzenText>
-                </Header>
-                <ChildContent>
-                    <div class="row mt-3 mb-4">
-                        <div class="col-6">
-                            <RequestCountPerProjectQAChart />
+            <RadzenCard class="my-3 py-2">
+                <ToggleComponent>
+                    <Header>
+                        <RadzenText TextStyle="TextStyle.H6" class="mt-2">Team metrics:</RadzenText>
+                    </Header>
+                    <ChildContent>
+                        <div class="row mt-3 mb-4">
+                            <div class="col-6">
+                                <RequestCountPerProjectQAChart />
+                            </div>
+                            <div class="col-6 pb-0">
+                                <TestCaseCountPerProjectQAChart />
+                            </div>
                         </div>
-                        <div class="col-6 pb-0">
-                            <TestCaseCountPerProjectQAChart />
-                        </div>
-                    </div>
-                </ChildContent>
-            </ToggleComponent>
-        </RadzenCard>
+                    </ChildContent>
+                </ToggleComponent>
+            </RadzenCard>
 
-        <RadzenCard class="my-3 py-2">
-            <ToggleComponent>
-                <Header>
-                    <RadzenText TextStyle="TextStyle.H6" class="mt-2">Individual metrics:</RadzenText>
-                </Header>
-                <ChildContent>
-                    <div class="row mt-3 mb-4">
-                        <IndividualProjectQAMetrics />
-                    </div>
-                </ChildContent>
-            </ToggleComponent>
-        </RadzenCard>
-    }
-</div>
+            <RadzenCard class="my-3 py-2">
+                <ToggleComponent>
+                    <Header>
+                        <RadzenText TextStyle="TextStyle.H6" class="mt-2">Individual metrics:</RadzenText>
+                    </Header>
+                    <ChildContent>
+                        <div class="row mt-3 mb-4">
+                            <IndividualProjectQAMetrics />
+                        </div>
+                    </ChildContent>
+                </ToggleComponent>
+            </RadzenCard>
+        }
+    </div> 
+}
 
 @code {
     [Parameter]
     public string ProjectId { get; set; }
 
     private ProjectViewModel Project { get; set; }
+    private IEnumerable<TestRequestViewModel> TestRequests { get; set; }
+    private IEnumerable<TestCaseViewModel> TestCases { get; set; }
+    private Dictionary<Testeger.Shared.DTOs.Enumerations.RequestStatus, IEnumerable<TestRequestViewModel>> TestRequestsByStatus { get; set; }
+    private Dictionary<Testeger.Shared.DTOs.Enumerations.TestCaseStatus, IEnumerable<TestCaseViewModel>> TestCasesByStatus { get; set; }
 
-    private List<TestRequest> TestRequests { get; set; }
-    private List<TestCase> TestCases { get; set; }
-    private Dictionary<RequestStatus, List<TestRequest>> TestRequestsByStatus { get; set; }
-    private Dictionary<TestCaseStatus, List<TestCase>> TestCasesByStatus { get; set; }
+    private bool isInitialized;
 
     protected override async Task OnInitializedAsync()
     {
-        TestRequests = await TestRequestService.GetTestRequestsByProjectId(ProjectId);
-        TestRequestsByStatus = await TestRequestService.GetTestRequestsByProjectIdGroupedByStatus(ProjectId);
-        TestCasesByStatus = await TestCaseService.GetTestCasesByProjectIdGroupedByStatus(ProjectId);
-        TestCases = await TestCaseService.GetTestCasesByProjectId(ProjectId);
         Project = await ProjectService.GetProjectByIdAsync(ProjectId);
+        TestRequests = await TestRequestService.GetTestRequestsByProjectIdAsync(ProjectId);
+        TestRequestsByStatus = await TestRequestService.GetTestRequestsByProjectIdGroupedByStatus(ProjectId);
+        TestCases = await TestCaseService.GetTestCasesByProjectIdAsync(ProjectId);
+        TestCasesByStatus = await TestCaseService.GetTestCasesByProjectIdGroupedByStatus(ProjectId);
+        isInitialized = true;
     }
 
     string selectedTimeFrame = "1d";

@@ -55,4 +55,12 @@ public class TestCasesController : ControllerBase
 
         return Ok(response);
     }
+
+    [HttpGet("project/{projectId}")]
+    public async Task<IActionResult> GeTestRequestsByProjectIdAsync(string projectId)
+    {
+        var response = await _testCaseService.GetTestCasesByProjectIdAsync(projectId);
+
+        return Ok(response);
+    }
 }

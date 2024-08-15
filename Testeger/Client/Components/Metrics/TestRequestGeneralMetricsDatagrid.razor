@@ -1,4 +1,5 @@
-﻿<h6>Test Request general numbers</h6>
+﻿@using Testeger.Client.ViewModels.TestRequests
+<h6>Test Request general numbers</h6>
 <RadzenCard>
     <div class="row card d-flex flex-row p-2 my-1">
         <div class="col-9 right-divider">
@@ -77,11 +78,11 @@
 
 @code{
     [Parameter]
-    public List<TestRequest> TestRequests { get; set; }
+    public IEnumerable<TestRequestViewModel> TestRequests { get; set; }
 
-    private double CalculateAverageRequestCompletionTimeInHours(List<TestRequest> requests)
+    private double CalculateAverageRequestCompletionTimeInHours(IEnumerable<TestRequestViewModel> requests)
     {
-        var completedRequests = requests.Where(r => r.CompletedDate.HasValue);
+        var completedRequests = requests.Where(r => r.CompletedDate != default);
 
         if (!completedRequests.Any())
         {
@@ -89,7 +90,7 @@
         }
 
         double totalHours = completedRequests
-            .Select(r => (r.CompletedDate.Value - r.CreatedDate).TotalHours)
+            .Select(r => (r.CompletedDate - r.CreatedDate).TotalHours)
             .Sum();
 
         double averageHours = totalHours / completedRequests.Count();
@@ -97,31 +98,31 @@
         return Math.Round(averageHours, 2);
     }
 
-    private int CountRequestsCompletedBeforeDueDate(List<TestRequest> requests)
+    private int CountRequestsCompletedBeforeDueDate(IEnumerable<TestRequestViewModel> requests)
     {
-        return requests.Count(r => r.CompletedDate.HasValue &&
-                                   r.CompletedDate.Value < r.DueDate);
+        return requests.Count(r => r.CompletedDate != default &&
+                                   r.CompletedDate < r.DueDate);
     }
 
-    private int CountRequestsCompletedAfterDueDate(List<TestRequest> requests)
+    private int CountRequestsCompletedAfterDueDate(IEnumerable<TestRequestViewModel> requests)
     {
-        return requests.Count(r => r.CompletedDate.HasValue &&
-                                   r.CompletedDate.Value > r.DueDate);
+        return requests.Count(r => r.CompletedDate != default &&
+                                   r.CompletedDate > r.DueDate);
     }
 
-    private static int CountRequestsThatNeededToBeFixed(List<TestRequest> requests)
+    private static int CountRequestsThatNeededToBeFixed(IEnumerable<TestRequestViewModel> requests)
     {
-        return requests.Count(tr => tr.History.Any(h => h.NewStatus == RequestStatus.FixingIssues));
+        return requests.Count(tr => tr.History.Any(h => h.NewStatus == Testeger.Shared.DTOs.Enumerations.RequestStatus.FixingIssues));
     }
 
-    private static int CountRequestsThatDidntNeedToBeFixed(List<TestRequest> requests)
+    private static int CountRequestsThatDidntNeedToBeFixed(IEnumerable<TestRequestViewModel> requests)
     {
-        return requests.Count(tr => !tr.History.Any(h => h.NewStatus == RequestStatus.FixingIssues));
+        return requests.Count(tr => !tr.History.Any(h => h.NewStatus == Testeger.Shared.DTOs.Enumerations.RequestStatus.FixingIssues));
     }
 
-    private static double CalculateAverageLeadTime(List<TestRequest> testRequests)
+    private static double CalculateAverageLeadTime(IEnumerable<TestRequestViewModel> testRequests)
     {
-        if (testRequests.Count == 0)
+        if (!testRequests.Any())
         {
             return 0;
         }
@@ -132,12 +133,12 @@
         foreach (var request in testRequests)
         {
             var started = request.History
-                .Where(h => h.NewStatus == RequestStatus.Waiting)
+                .Where(h => h.NewStatus == Testeger.Shared.DTOs.Enumerations.RequestStatus.Waiting)
                 .OrderBy(h => h.ChangedDate)
                 .FirstOrDefault()?.ChangedDate;
 
             var completed = request.History
-                .Where(h => h.NewStatus == RequestStatus.Completed && h.ChangedDate >= started)
+                .Where(h => h.NewStatus == Testeger.Shared.DTOs.Enumerations.RequestStatus.Completed && h.ChangedDate >= started)
                 .OrderBy(h => h.ChangedDate)
                 .FirstOrDefault()?.ChangedDate;
 
@@ -157,9 +158,9 @@
         return 0;
     }
 
-    private static double CalculateCycleTime(List<TestRequest> testRequests)
+    private static double CalculateCycleTime(IEnumerable<TestRequestViewModel> testRequests)
     {
-        if (testRequests.Count == 0)
+        if (!testRequests.Any())
         {
             return 0;
         }
@@ -170,12 +171,12 @@
         foreach (var request in testRequests)
         {
             var started = request.History
-                .Where(h => h.NewStatus == RequestStatus.InProgress)
+                .Where(h => h.NewStatus == Testeger.Shared.DTOs.Enumerations.RequestStatus.InProgress)
                 .OrderBy(h => h.ChangedDate)
                 .FirstOrDefault()?.ChangedDate;
 
             var completed = request.History
-                .Where(h => h.NewStatus == RequestStatus.Completed && h.ChangedDate >= started)
+                .Where(h => h.NewStatus == Testeger.Shared.DTOs.Enumerations.RequestStatus.Completed && h.ChangedDate >= started)
                 .OrderBy(h => h.ChangedDate)
                 .FirstOrDefault()?.ChangedDate;
 

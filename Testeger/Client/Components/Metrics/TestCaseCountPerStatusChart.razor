@@ -1,4 +1,5 @@
-﻿<h6>Test case count per status</h6>
+﻿@using Testeger.Client.ViewModels.TestCases
+<h6>Test case count per status</h6>
 <RadzenCard>
     <RadzenChart>
         <RadzenColumnSeries Fills="@(new [] { "#4768BC", "#B90D41", "#00763E" })" Data="@GetChartData()" CategoryProperty="Status" LineType="LineType.Dashed" ValueProperty="TestCaseCount">
@@ -16,7 +17,7 @@
 
 @code {
     [Parameter]
-    public Dictionary<TestCaseStatus, List<TestCase>> TestCasesByStatus { get; set; }
+    public Dictionary<Testeger.Shared.DTOs.Enumerations.TestCaseStatus, IEnumerable<TestCaseViewModel>> TestCasesByStatus { get; set; }
 
     private class DataItem
     {
@@ -33,7 +34,7 @@
             dataArray[i++] = new DataItem
                 {
                     Status = entry.Key.ToString(),
-                    TestCaseCount = entry.Value.Count,
+                    TestCaseCount = entry.Value.Count(),
                 };
         }
 
