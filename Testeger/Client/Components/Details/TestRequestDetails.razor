@@ -4,12 +4,14 @@
 @inject ITestRequestServiceNV TestRequestService
 
 <EditForm Model="@Request" OnValidSubmit="HandleValidSubmit">
+    <DataAnnotationsValidator />
     <RadzenContent>
         <div class="container-fluid">
             <div class="row">
                 <div class="col-md-8">
                     <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H3">Title</RadzenText>
                     <RadzenTextBox @bind-Value="Request.Title" Style="width:100%;" />
+                    <ValidationMessage For="@(() => Request.Title)" class="view-model-validation-msg"/>
                 </div>
                 <div class="col-md-4">
                     <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H3">Assigned to</RadzenText>
@@ -22,25 +24,29 @@
                 <div class="col-12">
                     <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H3">Description</RadzenText>
                     <RadzenTextArea @bind-Value="Request.Description" Style="width:100%; height:170px; resize: none;" />
+                    <ValidationMessage For="@(() => Request.Description)" class="view-model-validation-msg" />
                 </div>
             </div>
             <div class="row mt-2">
                 <div class="col-12">
                     <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H3">Story Link</RadzenText>
                     <RadzenTextBox @bind-Value="Request.StoryLink" Style="width:100%;" />
+                    <ValidationMessage For="@(() => Request.StoryLink)" class="view-model-validation-msg" />
                 </div>
             </div>
             <div class="row mt-2">
                 <div class="col-md-4">
                     <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H3">Status</RadzenText>
-                    @* <RadzenDropDown Data="@EnumHelper.GetSpacedNames(typeof(RequestStatus))"
+                    <RadzenDropDown Data="@EnumHelper.GetSpacedNames(typeof(RequestStatus))"
                                     @bind-Value="StatusAsString"
-                                    Style="width:100%;" /> *@
+                                    Style="width:100%;" /> 
+                    <ValidationMessage For="@(() => Request.Status)" class="view-model-validation-msg"/>
                 </div>
                 <div class="col-md-4">
                     <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H3">Priority Level</RadzenText>
                     <RadzenDropDown Data="@EnumHelper.GetSpacedNames(typeof(PriorityLevel))"
                                     @bind-Value="PriorityAsString" Style="width:100%;" />
+                    <ValidationMessage For="@(() => Request.PriorityLevel)" class="view-model-validation-msg" />
                 </div>
                 <div class="col-md-4">
                     <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H3">Created By</RadzenText>
@@ -53,6 +59,7 @@
                     <RadzenDatePicker @bind-Value="Request.DueDate"
                                       Style="width:100%;" Min="@(DateTime.Today)"
                                       DateFormat="dd/MM/yyyy" />
+                    <ValidationMessage For="@(() => Request.DueDate)" class="view-model-validation-msg" />
                 </div>
                 <div class="col-md-4">
                     <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H3">Created Date</RadzenText>
@@ -117,3 +124,11 @@
     private void ShowScheduledDateTooltip(ElementReference elementReference, TooltipOptions options = null)
                     => TooltipService.Open(elementReference, "You can only set this date when the request is ready for testing. ", options);
 }
+
+<style>
+    .view-model-validation-msg {
+        font-size: 10px !important;
+        margin-top: 0.3rem;
+        color: red;
+    }
+</style>
