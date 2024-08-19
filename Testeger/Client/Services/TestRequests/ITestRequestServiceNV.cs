@@ -16,4 +16,5 @@ public interface ITestRequestServiceNV
     Task<TestRequestViewModel> GetTestRequestByIdAsync(string id);
     Task DeleteTestRequestAsync(string id);
     Task<IEnumerable<TestRequestViewModel>> GetTestRequestsByProjectIdAsync(string projectId);
+    Task UpdateTestRequestAsync(TestRequestViewModel request);
 }

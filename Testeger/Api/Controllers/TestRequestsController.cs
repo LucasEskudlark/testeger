@@ -2,6 +2,7 @@
 using Testeger.Application.Services.TestRequest;
 using Testeger.Shared.DTOs.Requests.Common;
 using Testeger.Shared.DTOs.Requests.CreateTestRequest;
+using Testeger.Shared.DTOs.Requests.UpdateTestRequest;
 
 namespace Testeger.Api.Controllers;
 
@@ -54,5 +55,13 @@ public class TestRequestsController : ControllerBase
         var response = await _testRequestService.GetTestRequestsByProjectIdAsync(projectId);
 
         return Ok(response);
+    }
+
+    [HttpPost("update")]
+    public async Task<IActionResult> UpdateTestRequestAsync([FromBody] UpdateTestRequestRequest request)
+    {
+        await _testRequestService.UpdateTestRequestAsync(request);
+
+        return NoContent();
     }
 }

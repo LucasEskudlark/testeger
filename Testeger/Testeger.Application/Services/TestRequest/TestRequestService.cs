@@ -5,6 +5,7 @@ using Testeger.Domain.Models.ValueObjects;
 using Testeger.Infra.UnitOfWork;
 using Testeger.Shared.DTOs.Requests.Common;
 using Testeger.Shared.DTOs.Requests.CreateTestRequest;
+using Testeger.Shared.DTOs.Requests.UpdateTestRequest;
 using Testeger.Shared.DTOs.Responses;
 using Testeger.Shared.DTOs.Responses.TestRequest;
 using DomainTestRequest = Testeger.Domain.Models.Entities.TestRequest;
@@ -13,6 +14,8 @@ namespace Testeger.Application.Services.TestRequest;
 
 public class TestRequestService : BaseService, ITestRequestService
 {
+    private static readonly HashSet<string> IgnoredProperties = ["Id"];
+
     public TestRequestService(IUnitOfWork unitOfWork, IMapper mapper) : base(unitOfWork, mapper)
     {
     }
@@ -42,8 +45,7 @@ public class TestRequestService : BaseService, ITestRequestService
 
     public async Task<GetTestRequestResponse> GetTestRequestByIdAsync(string id)
     {
-        var testRequest = await _unitOfWork.TestRequestRepository.GetTestRequestByIdAsync(id) ??
-            throw new NotFoundException($"TestRequest with id {id} not found");
+        var testRequest = await FindTestRequestByIdAsync(id);
 
         var response = _mapper.Map<GetTestRequestResponse>(testRequest);
 
@@ -61,8 +63,7 @@ public class TestRequestService : BaseService, ITestRequestService
 
     public async Task DeleteTestRequestAsync(string id)
     {
-        var testRequest = await _unitOfWork.TestRequestRepository.GetByIdAsync(id) ??
-            throw new NotFoundException($"TestRequest with id {id} not found");
+        var testRequest = await FindTestRequestByIdAsync(id);
 
         await _unitOfWork.TestRequestRepository.Delete(testRequest);
         await _unitOfWork.CompleteAsync();
@@ -76,6 +77,68 @@ public class TestRequestService : BaseService, ITestRequestService
 
         var response = _mapper.Map<IEnumerable<GetTestRequestResponse>>(testRequests);
         return response;
+    }
+
+    public async Task UpdateTestRequestAsync(UpdateTestRequestRequest request)
+    {
+        var existingEntity = await FindTestRequestByIdAsync(request.Id);
+
+        var updatedProperties = UpdateEntityProperties(existingEntity, request);
+
+        if (updatedProperties.Count != 0)
+        {
+
+            await _unitOfWork.CompleteAsync();
+            return;
+        }
+
+        return;
+    }
+
+    private static List<string> UpdateEntityProperties(DomainTestRequest entity, UpdateTestRequestRequest request)
+    {
+        var updatedProperties = new List<string>();
+        var dtoProperties = typeof(UpdateTestRequestRequest).GetProperties();
+        var entityType = typeof(DomainTestRequest);
+
+        foreach (var dtoProp in dtoProperties)
+        {
+            if (IgnoredProperties.Contains(dtoProp.Name))
+                continue;
+
+            var entityProp = entityType.GetProperty(dtoProp.Name);
+            if (entityProp != null && entityProp.CanWrite)
+            {
+                var dtoValue = dtoProp.GetValue(request);
+                var entityValue = entityProp.GetValue(entity);
+
+                if (dtoProp.PropertyType.IsEnum && entityProp.PropertyType.IsEnum && dtoValue is not null)
+                {
+                    dtoValue = Enum.ToObject(entityProp.PropertyType, (int)dtoValue);
+                }
+
+                if (!object.Equals(dtoValue, entityValue))
+                {
+                    entityProp.SetValue(entity, dtoValue);
+                    updatedProperties.Add(dtoProp.Name);
+                }
+            }
+        }
+
+        return updatedProperties;
+    }
+
+    private static object MapEnumValue(Type entityEnumType, object dtoValue)
+    {
+        return Enum.ToObject(entityEnumType, (int)dtoValue);
+    }
+
+    private async Task<DomainTestRequest> FindTestRequestByIdAsync(string id)
+    {
+        var testRequest = await _unitOfWork.TestRequestRepository.GetByIdAsync(id) ??
+             throw new NotFoundException($"TestRequest with id {id} not found");
+
+        return testRequest;
     }
 
     private async Task ValidateProjectExistence(string projectId)

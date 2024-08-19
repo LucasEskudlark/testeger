@@ -67,5 +67,11 @@ public class TestRequestServiceNV : BaseService, ITestRequestServiceNV
                 status => testRequests.Where(tr => tr.Status == status));
     }
 
+    public async Task UpdateTestRequestAsync(TestRequestViewModel request)
+    {
+        var address = BaseAddress + $"/update";
+        var response = await _httpClient.PostAsJsonAsync(address, request);
+    }
+
     private void NotifyStateChanged() => OnChange?.Invoke();
 }
