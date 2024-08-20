@@ -1,15 +1,14 @@
 ﻿using AutoMapper;
 using System.Reflection;
-using Testeger.Application.Exceptions;
 using Testeger.Infra.UnitOfWork;
 
 namespace Testeger.Application.Services;
 
 public abstract class BaseUpdateService<TEntity, TUpdateRequest> : BaseService
     where TEntity : class
-    where TUpdateRequest : class 
+    where TUpdateRequest : class
 {
-    protected static readonly HashSet<string> IgnoredProperties = [];
+    protected static readonly HashSet<string> IgnoredProperties = ["Id"];
 
     public BaseUpdateService(IUnitOfWork unitOfWork, IMapper mapper) : base(unitOfWork, mapper)
     {
@@ -19,14 +18,14 @@ public abstract class BaseUpdateService<TEntity, TUpdateRequest> : BaseService
     {
         var existingEntity = await FindEntityByIdAsync(id);
 
-        var updatedProperties = await UpdateEntityPropertiesAsync(existingEntity, request);
+        var updatedProperties = UpdateEntityPropertiesAsync(existingEntity, request);
         if (updatedProperties.Count > 0)
         {
             await _unitOfWork.CompleteAsync();
         }
     }
 
-    protected virtual async Task<List<string>> UpdateEntityPropertiesAsync(TEntity entity, TUpdateRequest request)
+    protected virtual List<string> UpdateEntityPropertiesAsync(TEntity entity, TUpdateRequest request)
     {
         var updatedProperties = new List<string>();
         var dtoProperties = typeof(TUpdateRequest).GetProperties();
@@ -36,10 +35,12 @@ public abstract class BaseUpdateService<TEntity, TUpdateRequest> : BaseService
         {
             if (ShouldUpdateProperty(dtoProp, entityType, out var entityProp))
             {
+                var oldValue = entityProp.GetValue(entity);
                 if (TryUpdateProperty(entity, request, dtoProp, entityProp))
                 {
                     updatedProperties.Add(dtoProp.Name);
-                    await OnPropertyUpdatedAsync(entity, dtoProp.Name);
+                    var newValue = entityProp.GetValue(entity);
+                    OnPropertyUpdated(entity, dtoProp.Name, oldValue, newValue);
                 }
             }
         }
@@ -47,10 +48,7 @@ public abstract class BaseUpdateService<TEntity, TUpdateRequest> : BaseService
         return updatedProperties;
     }
 
-    protected virtual Task OnPropertyUpdatedAsync(TEntity entity, string propertyName)
-    {
-        return Task.CompletedTask;
-    }
+    protected virtual void OnPropertyUpdated(TEntity entity, string propertyName, object oldValue, object newValue) { }
 
     protected static bool ShouldUpdateProperty(PropertyInfo dtoProp, Type entityType, out PropertyInfo entityProp)
     {

@@ -15,7 +15,7 @@
                 </div>
                 <div class="col-md-4">
                     <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H3">Assigned to</RadzenText>
-                    @* <RadzenDropDown Data="names"
+                    @*<RadzenDropDown Data="names"
                                     @bind-Value="Request.AssignedTo.Name"
                                     Style="width:100%;" /> *@
                 </div>
@@ -37,15 +37,20 @@
             <div class="row mt-2">
                 <div class="col-md-4">
                     <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H3">Status</RadzenText>
-                    <RadzenDropDown Data="@EnumHelper.GetSpacedNames(typeof(RequestStatus))"
-                                    @bind-Value="StatusAsString"
+                    <RadzenDropDown Data="@GetRequestStatusValues()"
+                                    TextProperty="Name"
+                                    ValueProperty="Value"
+                                    @bind-Value="Request.Status"
                                     Style="width:100%;" /> 
                     <ValidationMessage For="@(() => Request.Status)" class="view-model-validation-msg"/>
                 </div>
                 <div class="col-md-4">
-                    <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H3">Priority Level</RadzenText>
-                    <RadzenDropDown Data="@EnumHelper.GetSpacedNames(typeof(PriorityLevel))"
-                                    @bind-Value="PriorityAsString" Style="width:100%;" />
+                    <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H3">Priority</RadzenText>
+                    <RadzenDropDown Data="@GetPriorityLevelValues()"
+                                    TextProperty="Name"
+                                    ValueProperty="Value"
+                                    @bind-Value="Request.PriorityLevel"
+                                    Style="width:100%;" />
                     <ValidationMessage For="@(() => Request.PriorityLevel)" class="view-model-validation-msg" />
                 </div>
                 <div class="col-md-4">
@@ -94,6 +99,21 @@
         "Fernando"
     };
 
+    private List<EnumItem<PriorityLevel>> GetPriorityLevelValues()
+    {
+        return Enum.GetValues(typeof(PriorityLevel))
+            .Cast<PriorityLevel>()
+            .Select(e => new EnumItem<PriorityLevel> { Value = e, Name = e.ToString() })
+            .ToList();
+    }
+
+    private List<EnumItem<RequestStatus>> GetRequestStatusValues()
+    {
+        return Enum.GetValues(typeof(RequestStatus))
+            .Cast<RequestStatus>()
+            .Select(e => new EnumItem<RequestStatus> { Value = e, Name = e.ToString() })
+            .ToList();
+    }
 
     public async Task SubmitForm()
     {
@@ -106,16 +126,10 @@
         await OnFormSubmitted.InvokeAsync();
     }
 
-    public string PriorityAsString
-    {
-        get => Request.PriorityLevel.ToString().Replace("_", " ");
-        set => Request.PriorityLevel = Enum.Parse<PriorityLevel>(value.Replace(" ", "_"));
-    }
-
     public string StatusAsString
     {
         get => Request.Status.ToString().Replace("_", " ");
-        set => Request.Status = Enum.Parse<RequestStatus>(value.Replace(" ", "_"));
+        set => Request.Status = Enum.Parse<RequestStatus>(value.Replace(" ", ""));
     }
 
     private void ShowCompletedDateTooltip(ElementReference elementReference, TooltipOptions options = null)
@@ -127,7 +141,7 @@
 
 <style>
     .view-model-validation-msg {
-        font-size: 10px !important;
+        font-size: 1px !important;
         margin-top: 0.3rem;
         color: red;
     }

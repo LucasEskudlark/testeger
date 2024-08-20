@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using System.Reflection;
 using Testeger.Application.Exceptions;
 using Testeger.Domain.Enumerations;
 using Testeger.Domain.Models.ValueObjects;
@@ -14,8 +15,6 @@ namespace Testeger.Application.Services.TestRequest;
 
 public class TestRequestService : BaseUpdateService<DomainTestRequest, UpdateTestRequestRequest>, ITestRequestService
 {
-    private static readonly HashSet<string> IgnoredProperties = ["Id"];
-
     public TestRequestService(IUnitOfWork unitOfWork, IMapper mapper) : base(unitOfWork, mapper)
     {
     }
@@ -83,7 +82,7 @@ public class TestRequestService : BaseUpdateService<DomainTestRequest, UpdateTes
     {
         var existingEntity = await FindEntityByIdAsync(request.Id);
 
-        var updatedProperties = await UpdateEntityPropertiesAsync(existingEntity, request);
+        var updatedProperties = UpdateEntityPropertiesAsync(existingEntity, request);
 
         if (updatedProperties.Count > 0)
         {
@@ -91,17 +90,13 @@ public class TestRequestService : BaseUpdateService<DomainTestRequest, UpdateTes
         }
     }
 
-    protected override async Task OnPropertyUpdatedAsync(DomainTestRequest entity, string propertyName)
+    protected override void OnPropertyUpdated(DomainTestRequest entity, string propertyName, object oldValue, object newValue)
     {
         if (propertyName == "Status")
         {
-            await HandleRequestStatusChangeAsync(entity);
+            var history = GetRequestHistory(entity.CreatedByUserId, (RequestStatus)oldValue, (RequestStatus)newValue);
+            entity.History.Add(history);
         }
-    }
-
-    private async Task HandleRequestStatusChangeAsync(DomainTestRequest entity)
-    {
-        throw new NotImplementedException();
     }
 
     private async Task ValidateProjectExistence(string projectId)
