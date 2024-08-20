@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using System.Reflection;
 using Testeger.Application.Exceptions;
 using Testeger.Domain.Enumerations;
 using Testeger.Domain.Models.ValueObjects;
