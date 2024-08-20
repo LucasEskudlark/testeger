@@ -23,7 +23,7 @@
                               Text="Save"
                               ButtonStyle="ButtonStyle.Primary"
                               Size="ButtonSize.Small"
-                              Click="HandleTestRequestUpdate"
+                              Click="Save"
                               MouseEnter="@(args => ShowSaveRequestButtonTooltip(args) )"
                               class="me-2" />
                 <RadzenButton Icon="delete"
@@ -41,7 +41,7 @@
     <div class="container">
         <div class="row d-flex justify-content-between">
             <div class="col-6 pb-2 right-divider">
-                <TestRequestDetails Request="Request"/> 
+                <TestRequestDetails Request="Request" @ref="TestRequestDetailsComponent" OnFormSubmitted="HandleTestRequestUpdate" /> 
             </div>
 
             <div class="col-6 pb-2">
@@ -67,6 +67,7 @@
 
 @code {
     private TestRequestViewModel? Request;
+    private TestRequestDetails TestRequestDetailsComponent;
 
     [Parameter]
     public EventCallback OnRequestDeleted { get; set; }
@@ -110,14 +111,23 @@
         }
     }
 
+    private async Task Save()
+    {
+        if (TestRequestDetailsComponent != null)
+        {
+            await TestRequestDetailsComponent.SubmitForm();
+        }
+    }
+
     private async Task HandleTestRequestUpdate()
     {
-        if (Request != null)
-        {
-            //await TestRequestService.UpdateTestRequest(Request);
-            await OnRequestUpdated.InvokeAsync();
-            await InvokeAsync(StateHasChanged); 
-        }
+        Console.WriteLine("Form submitted successfully!");
+        // if (Request != null)
+        // {
+        //     //await TestRequestService.UpdateTestRequest(Request);
+        //     await OnRequestUpdated.InvokeAsync();
+        //     await InvokeAsync(StateHasChanged); 
+        // }
     }
 
     public async Task OpenTestCaseCreationDialog()

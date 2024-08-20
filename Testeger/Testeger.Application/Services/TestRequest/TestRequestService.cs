@@ -5,13 +5,14 @@ using Testeger.Domain.Models.ValueObjects;
 using Testeger.Infra.UnitOfWork;
 using Testeger.Shared.DTOs.Requests.Common;
 using Testeger.Shared.DTOs.Requests.CreateTestRequest;
+using Testeger.Shared.DTOs.Requests.UpdateTestRequest;
 using Testeger.Shared.DTOs.Responses;
 using Testeger.Shared.DTOs.Responses.TestRequest;
 using DomainTestRequest = Testeger.Domain.Models.Entities.TestRequest;
 
 namespace Testeger.Application.Services.TestRequest;
 
-public class TestRequestService : BaseService, ITestRequestService
+public class TestRequestService : BaseUpdateService<DomainTestRequest, UpdateTestRequestRequest>, ITestRequestService
 {
     public TestRequestService(IUnitOfWork unitOfWork, IMapper mapper) : base(unitOfWork, mapper)
     {
@@ -42,8 +43,7 @@ public class TestRequestService : BaseService, ITestRequestService
 
     public async Task<GetTestRequestResponse> GetTestRequestByIdAsync(string id)
     {
-        var testRequest = await _unitOfWork.TestRequestRepository.GetTestRequestByIdAsync(id) ??
-            throw new NotFoundException($"TestRequest with id {id} not found");
+        var testRequest = await FindEntityByIdAsync(id);
 
         var response = _mapper.Map<GetTestRequestResponse>(testRequest);
 
@@ -61,8 +61,7 @@ public class TestRequestService : BaseService, ITestRequestService
 
     public async Task DeleteTestRequestAsync(string id)
     {
-        var testRequest = await _unitOfWork.TestRequestRepository.GetByIdAsync(id) ??
-            throw new NotFoundException($"TestRequest with id {id} not found");
+        var testRequest = await FindEntityByIdAsync(id);
 
         await _unitOfWork.TestRequestRepository.Delete(testRequest);
         await _unitOfWork.CompleteAsync();
@@ -76,6 +75,27 @@ public class TestRequestService : BaseService, ITestRequestService
 
         var response = _mapper.Map<IEnumerable<GetTestRequestResponse>>(testRequests);
         return response;
+    }
+
+    public async Task UpdateTestRequestAsync(UpdateTestRequestRequest request)
+    {
+        var existingEntity = await FindEntityByIdAsync(request.Id);
+
+        var updatedProperties = UpdateEntityPropertiesAsync(existingEntity, request);
+
+        if (updatedProperties.Count > 0)
+        {
+            await _unitOfWork.CompleteAsync();
+        }
+    }
+
+    protected override void OnPropertyUpdated(DomainTestRequest entity, string propertyName, object oldValue, object newValue)
+    {
+        if (propertyName == "Status")
+        {
+            var history = GetRequestHistory(entity.CreatedByUserId, (RequestStatus)oldValue, (RequestStatus)newValue);
+            entity.History.Add(history);
+        }
     }
 
     private async Task ValidateProjectExistence(string projectId)
@@ -101,5 +121,13 @@ public class TestRequestService : BaseService, ITestRequestService
             NewStatus = newStatus,
             ChangedDate = DateTime.Now
         };
+    }
+
+    protected override async Task<DomainTestRequest> FindEntityByIdAsync(string id)
+    {
+        var testRequest = await _unitOfWork.TestRequestRepository.GetByIdAsync(id) ??
+             throw new NotFoundException($"TestRequest with id {id} not found");
+
+        return testRequest;
     }
 }

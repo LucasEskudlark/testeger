@@ -1,78 +1,96 @@
 ﻿@using Testeger.Client.ViewModels.TestRequests
 @inject TooltipService TooltipService
 @inject DialogService DialogService
+@inject ITestRequestServiceNV TestRequestService
 
-<RadzenContent>
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-md-8">
-                <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H3">Title</RadzenText>
-                <RadzenTextBox @bind-Value="Request.Title" Style="width:100%;" />
+<EditForm Model="@Request" OnValidSubmit="HandleValidSubmit">
+    <DataAnnotationsValidator />
+    <RadzenContent>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-8">
+                    <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H3">Title</RadzenText>
+                    <RadzenTextBox @bind-Value="Request.Title" Style="width:100%;" />
+                    <ValidationMessage For="@(() => Request.Title)" class="view-model-validation-msg"/>
+                </div>
+                <div class="col-md-4">
+                    <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H3">Assigned to</RadzenText>
+                    @*<RadzenDropDown Data="names"
+                                    @bind-Value="Request.AssignedTo.Name"
+                                    Style="width:100%;" /> *@
+                </div>
             </div>
-            <div class="col-md-4">
-                <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H3">Assigned to</RadzenText>
-                @* <RadzenDropDown Data="names"
-                                @bind-Value="Request.AssignedTo.Name"
-                                Style="width:100%;" /> *@
+            <div class="row mt-2">
+                <div class="col-12">
+                    <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H3">Description</RadzenText>
+                    <RadzenTextArea @bind-Value="Request.Description" Style="width:100%; height:170px; resize: none;" />
+                    <ValidationMessage For="@(() => Request.Description)" class="view-model-validation-msg" />
+                </div>
+            </div>
+            <div class="row mt-2">
+                <div class="col-12">
+                    <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H3">Story Link</RadzenText>
+                    <RadzenTextBox @bind-Value="Request.StoryLink" Style="width:100%;" />
+                    <ValidationMessage For="@(() => Request.StoryLink)" class="view-model-validation-msg" />
+                </div>
+            </div>
+            <div class="row mt-2">
+                <div class="col-md-4">
+                    <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H3">Status</RadzenText>
+                    <RadzenDropDown Data="@GetRequestStatusValues()"
+                                    TextProperty="Name"
+                                    ValueProperty="Value"
+                                    @bind-Value="Request.Status"
+                                    Style="width:100%;" /> 
+                    <ValidationMessage For="@(() => Request.Status)" class="view-model-validation-msg"/>
+                </div>
+                <div class="col-md-4">
+                    <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H3">Priority</RadzenText>
+                    <RadzenDropDown Data="@GetPriorityLevelValues()"
+                                    TextProperty="Name"
+                                    ValueProperty="Value"
+                                    @bind-Value="Request.PriorityLevel"
+                                    Style="width:100%;" />
+                    <ValidationMessage For="@(() => Request.PriorityLevel)" class="view-model-validation-msg" />
+                </div>
+                <div class="col-md-4">
+                    <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H3">Created By</RadzenText>
+                    <RadzenTextBox Disabled="true" @bind-Value="Request.CreatedByUserId" Style="width:100%;" />
+                </div>
+            </div>
+            <div class="row mt-2">
+                <div class="col-md-4">
+                    <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H3">Due Date</RadzenText>
+                    <RadzenDatePicker @bind-Value="Request.DueDate"
+                                      Style="width:100%;" Min="@(DateTime.Today)"
+                                      DateFormat="dd/MM/yyyy" />
+                    <ValidationMessage For="@(() => Request.DueDate)" class="view-model-validation-msg" />
+                </div>
+                <div class="col-md-4">
+                    <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H3">Created Date</RadzenText>
+                    <RadzenDatePicker Disabled="true"
+                                      @bind-Value="Request.CreatedDate"
+                                      Style="width:100%;" Min="@(DateTime.Today)"
+                                      DateFormat="dd/MM/yyyy" />
+                </div>
+                <div class="col-md-4">
+                    <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H3">Completed Date</RadzenText>
+                    <RadzenDatePicker Disabled="true"
+                                      @bind-Value="Request.CompletedDate"
+                                      Style="width:100%;" Min="@(DateTime.Today)"
+                                      DateFormat="dd/MM/yyyy" MouseEnter="@(args => ShowCompletedDateTooltip(args) )" />
+                </div>
             </div>
         </div>
-        <div class="row mt-2">
-            <div class="col-12">
-                <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H3">Description</RadzenText>
-                <RadzenTextArea @bind-Value="Request.Description" Style="width:100%; height:170px; resize: none;" />
-            </div>
-        </div>
-        <div class="row mt-2">
-            <div class="col-12">
-                <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H3">Story Link</RadzenText>
-                <RadzenTextBox @bind-Value="Request.StoryLink" Style="width:100%;" />
-            </div>
-        </div>
-        <div class="row mt-2">
-            <div class="col-md-4">
-                <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H3">Status</RadzenText>
-                @* <RadzenDropDown Data="@EnumHelper.GetSpacedNames(typeof(RequestStatus))"
-                                @bind-Value="StatusAsString"
-                                Style="width:100%;" /> *@
-            </div>
-            <div class="col-md-4">
-                <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H3">Priority Level</RadzenText>
-                <RadzenDropDown Data="@EnumHelper.GetSpacedNames(typeof(PriorityLevel))"
-                                @bind-Value="PriorityAsString" Style="width:100%;" />
-            </div>
-            <div class="col-md-4">
-                <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H3">Created By</RadzenText>
-                <RadzenTextBox Disabled="true" @bind-Value="Request.CreatedByUserId" Style="width:100%;" />
-            </div>
-        </div>
-        <div class="row mt-2">
-            <div class="col-md-4">
-                <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H3">Due Date</RadzenText>
-                <RadzenDatePicker @bind-Value="Request.DueDate"
-                                  Style="width:100%;" Min="@(DateTime.Today)"
-                                  DateFormat="dd/MM/yyyy" />
-            </div>
-            <div class="col-md-4">
-                <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H3">Created Date</RadzenText>
-                <RadzenDatePicker Disabled="true"
-                                  @bind-Value="Request.CreatedDate"
-                                  Style="width:100%;" Min="@(DateTime.Today)"
-                                  DateFormat="dd/MM/yyyy" />
-            </div>
-            <div class="col-md-4">
-                <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H3">Completed Date</RadzenText>
-                <RadzenDatePicker Disabled="true"
-                                  @bind-Value="Request.CompletedDate"
-                                  Style="width:100%;" Min="@(DateTime.Today)"
-                                  DateFormat="dd/MM/yyyy" MouseEnter="@(args => ShowCompletedDateTooltip(args) )" />
-            </div>
-        </div>
-    </div>
-</RadzenContent>
+    </RadzenContent>
+</EditForm>
 
 @code {
     [Parameter]
     public TestRequestViewModel Request { get; set; }
+
+    [Parameter]
+    public EventCallback OnFormSubmitted { get; set; }
 
     // Temporary
     private List<string> names = new()
@@ -81,40 +99,38 @@
         "Fernando"
     };
 
-    public string PriorityAsString
+    private List<EnumItem<PriorityLevel>> GetPriorityLevelValues()
     {
-        get => Request.PriorityLevel.ToString().Replace("_", " ");
-        set => Request.PriorityLevel = Enum.Parse<PriorityLevel>(value.Replace(" ", "_"));
+        return Enum.GetValues(typeof(PriorityLevel))
+            .Cast<PriorityLevel>()
+            .Select(e => new EnumItem<PriorityLevel> { Value = e, Name = e.ToString() })
+            .ToList();
     }
 
-    // public string StatusAsString
-    // {
-    //     get => EnumHelper.AddSpacesToEnumName(Request.Status.ToString());
-    //     set
-    //     {
-    //         var newStatus = Enum.Parse<RequestStatus>(value.Replace(" ", ""), true);
-    //         if (Request.Status != newStatus)
-    //         {
-    //             var history = new TestRequestHistory
-    //                 {
-    //                     TestRequestId = Request.Id,
-    //                     ChangedByUserId = "CurrentUserId", // Temporary
-    //                     OldStatus = Request.Status,
-    //                     NewStatus = newStatus,
-    //                     ChangedDate = DateTime.Now
-    //                 };
+    private List<EnumItem<RequestStatus>> GetRequestStatusValues()
+    {
+        return Enum.GetValues(typeof(RequestStatus))
+            .Cast<RequestStatus>()
+            .Select(e => new EnumItem<RequestStatus> { Value = e, Name = e.ToString() })
+            .ToList();
+    }
 
-    //             Request.History.Add(history);
+    public async Task SubmitForm()
+    {
+        await HandleValidSubmit();
+    }
 
-    //             Request.Status = newStatus;
+    private async Task HandleValidSubmit()
+    {
+        await TestRequestService.UpdateTestRequestAsync(Request);
+        await OnFormSubmitted.InvokeAsync();
+    }
 
-    //             if (Request.Status == RequestStatus.Completed)
-    //             {
-    //                 Request.CompletedDate = DateTime.Now;
-    //             }
-    //         }
-    //     }
-    // }
+    public string StatusAsString
+    {
+        get => Request.Status.ToString().Replace("_", " ");
+        set => Request.Status = Enum.Parse<RequestStatus>(value.Replace(" ", ""));
+    }
 
     private void ShowCompletedDateTooltip(ElementReference elementReference, TooltipOptions options = null)
                     => TooltipService.Open(elementReference, "This date will be set when the request is marked as completed.", options);
@@ -122,3 +138,11 @@
     private void ShowScheduledDateTooltip(ElementReference elementReference, TooltipOptions options = null)
                     => TooltipService.Open(elementReference, "You can only set this date when the request is ready for testing. ", options);
 }
+
+<style>
+    .view-model-validation-msg {
+        font-size: 1px !important;
+        margin-top: 0.3rem;
+        color: red;
+    }
+</style>
