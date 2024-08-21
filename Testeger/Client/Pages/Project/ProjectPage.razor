@@ -29,8 +29,6 @@
     </IndividualRow>
 }
 
-@* <RadzenButton Click="Clear" Style="margin-right: 10px;" /> *@
-
 @code {
     [Parameter]
     public string? Id { get; set; }
@@ -38,8 +36,6 @@
     protected DialogService DialogService { get; set; }
 
     private ProjectViewModel? project;
-
-
 
     private Dictionary<RequestStatus, IEnumerable<TestRequestViewModel>> testRequestsByStatus = new();
 

@@ -18,9 +18,8 @@
         <div class="row my-3">
             <div class="col-3">
                 <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H3">Status</RadzenText>
-                <RadzenDropDown Disabled="true" Data="@Enum.GetValues(typeof(TestCaseStatus))"
+                <RadzenDropDown Data="@Enum.GetValues(typeof(TestCaseStatus))"
                                 @bind-Value="TestCase.Status" Style="width:100%;"
-                                MouseEnter="@(args => ShowStatusTooltip(args))" />
                 <ValidationMessage For="@(() => TestCase.Status)" class="view-model-validation-msg" />
             </div>
             <div class="col-4">
@@ -116,9 +115,6 @@
     }
 
     private void ShowCompletedDateTooltip(ElementReference elementReference, TooltipOptions options = null) => TooltipService.Open(elementReference, "This date will be set when the test case is marked as Completed.", options);
-
-    private void ShowStatusTooltip(ElementReference elementReference, TooltipOptions options = null) => TooltipService.Open(elementReference,
-        "Automatically set", options);
 
     private void ShowScheduledDateTooltip(ElementReference elementReference, TooltipOptions options = null)
                     => TooltipService.Open(elementReference, "You can only set this date when the request is ready for testing. ", options);
