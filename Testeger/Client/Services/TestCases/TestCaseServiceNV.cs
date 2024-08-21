@@ -63,4 +63,10 @@ public class TestCaseServiceNV : BaseService, ITestCaseServiceNV
                 status => status,
                 status => testCases.Where(tr => tr.Status == status));
     }
+
+    public async Task UpdateTestCaseAsync(TestCaseViewModel testCaseViewModel)
+    {
+        var address = BaseAddress + "/update";
+        await _httpClient.PostAsJsonAsync(address, testCaseViewModel);
+    }
 }
