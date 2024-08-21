@@ -3,7 +3,7 @@
 @inject DialogService DialogService
 @inject ITestRequestServiceNV TestRequestService
 
-<EditForm Model="@Request" OnValidSubmit="HandleValidSubmit">
+<EditForm Model="@Request" OnValidSubmit="HandleValidSubmit" @ref="_editForm">
     <DataAnnotationsValidator />
     <RadzenContent>
         <div class="container-fluid">
@@ -92,6 +92,8 @@
     [Parameter]
     public EventCallback OnFormSubmitted { get; set; }
 
+    private EditForm _editForm;
+
     // Temporary
     private List<string> names = new()
     {
@@ -115,9 +117,15 @@
             .ToList();
     }
 
-    public async Task SubmitForm()
+    public async Task<bool> SubmitForm()
     {
-        await HandleValidSubmit();
+        // Trigger validation
+        var isValid = _editForm.EditContext.Validate();
+        if (isValid)
+        {
+            await HandleValidSubmit();
+        }
+        return isValid;
     }
 
     private async Task HandleValidSubmit()
@@ -141,7 +149,7 @@
 
 <style>
     .view-model-validation-msg {
-        font-size: 1px !important;
+        font-size: 11px !important;
         margin-top: 0.3rem;
         color: red;
     }
