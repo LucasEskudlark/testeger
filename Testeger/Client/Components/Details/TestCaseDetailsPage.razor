@@ -19,7 +19,7 @@
             <div class="col-3">
                 <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H3">Status</RadzenText>
                 <RadzenDropDown Data="@Enum.GetValues(typeof(TestCaseStatus))"
-                                @bind-Value="TestCase.Status" Style="width:100%;"
+                                @bind-Value="TestCase.Status" Style="width:100%;" />
                 <ValidationMessage For="@(() => TestCase.Status)" class="view-model-validation-msg" />
             </div>
             <div class="col-4">
