@@ -134,15 +134,18 @@
 
     public async Task OpenTestCaseCreationDialog()
     {
-        await DialogService.OpenAsync<TestCaseCreationDialog>("Create Test Case",
+        if (RequestId is not null && Request is not null)
+        {
+            await DialogService.OpenAsync<TestCaseCreationDialog>("Create Test Case",
                new Dictionary<string, object>() { { "RequestId", RequestId }, { "ProjectId", Request.ProjectId } },
                new DialogOptions() { Width = "1024px", Height = "480px", Resizable = false, Draggable = true });
+        }
     }
 
-    private void ShowSaveRequestButtonTooltip(ElementReference elementReference, TooltipOptions options = null)
+    private void ShowSaveRequestButtonTooltip(ElementReference elementReference, TooltipOptions? options = null)
                     => TooltipService.Open(elementReference, "Save the changes made in this request", options);
 
-    private void ShowDeleteRequestButtonTooltip(ElementReference elementReference, TooltipOptions options = null)
+    private void ShowDeleteRequestButtonTooltip(ElementReference elementReference, TooltipOptions? options = null)
                     => TooltipService.Open(elementReference, "Delete this entire request", options);
 }
 

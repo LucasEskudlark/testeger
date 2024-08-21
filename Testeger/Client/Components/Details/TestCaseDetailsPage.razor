@@ -82,13 +82,13 @@
 
 @code {
     [Parameter]
-    public TestCaseViewModel TestCase { get; set; }
+    public TestCaseViewModel? TestCase { get; set; }
     [Parameter]
-    public TestRequestViewModel Request { get; set; }
+    public TestRequestViewModel? Request { get; set; }
     [Parameter]
     public EventCallback OnFormSubmitted { get; set; }
 
-    private EditForm _editForm;
+    private EditForm? _editForm;
 
     private string NeedCorrectionString
     {
