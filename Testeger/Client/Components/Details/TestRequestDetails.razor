@@ -119,7 +119,6 @@
 
     public async Task<bool> SubmitForm()
     {
-        // Trigger validation
         var isValid = _editForm.EditContext.Validate();
         if (isValid)
         {

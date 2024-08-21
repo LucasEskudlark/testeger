@@ -95,6 +95,11 @@ public class TestRequestService : BaseUpdateService<DomainTestRequest, UpdateTes
         {
             var history = GetRequestHistory(entity.CreatedByUserId, (RequestStatus)oldValue, (RequestStatus)newValue);
             entity.History.Add(history);
+
+            if ((RequestStatus)newValue is RequestStatus.Completed)
+            {
+                entity.CompletedDate = DateTime.Now;
+            }
         }
     }
 
