@@ -2,82 +2,93 @@
 @using Testeger.Client.ViewModels.TestRequests
 @inject TooltipService TooltipService
 @inject DialogService DialogService
+@inject ITestCaseServiceNV TestCaseService
 
+<EditForm Model="TestCase" OnValidSubmit="HandleValidSubmit" @ref="_editForm">
+    <DataAnnotationsValidator />
+    <div class="container-fluid py-2 px-0">
+        <div class="row my-2">
+            <div class="col-8">
+                <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H3">Title</RadzenText>
+                <RadzenTextBox @bind-Value="TestCase.Title" Style="width:100%;" />
+                <ValidationMessage For="@(() => TestCase.Title)" class="view-model-validation-msg" />
+            </div>
+        </div>
 
-<div class="container-fluid py-2 px-0">
-    <div class="row my-2">
-        <div class="col-8">
-            <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H3">Title</RadzenText>
-            <RadzenTextBox @bind-Value="TestCase.Title" Style="width:100%;" />
+        <div class="row my-3">
+            <div class="col-3">
+                <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H3">Status</RadzenText>
+                <RadzenDropDown Data="@Enum.GetValues(typeof(TestCaseStatus))"
+                                @bind-Value="TestCase.Status" Style="width:100%;" />
+                <ValidationMessage For="@(() => TestCase.Status)" class="view-model-validation-msg" />
+            </div>
+            <div class="col-4">
+                <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H3">Need correction?</RadzenText>
+                <RadzenTextBox Disabled="true" @bind-Value="NeedCorrectionString" Style="width:100%;" />
+            </div>
+
+            <div class="col-3">
+                <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H3">Created by</RadzenText>
+                <RadzenTextBox Disabled="true" @bind-Value="TestCase.CreatedByUserId" Style="width:100%;" />
+            </div>
+        </div>
+
+        <div class="row my-2">
+            <div class="col-4">
+                <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H3">Description</RadzenText>
+                <RadzenTextArea @bind-Value="TestCase.Details.Description" Style="width:100%; height: 200px; resize: none;" />
+                <ValidationMessage For="@(() => TestCase.Details.Description)" class="view-model-validation-msg" />
+            </div>
+            <div class="col-4">
+                <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H3">Pre Conditions</RadzenText>
+                <RadzenTextArea @bind-Value="TestCase.Details.PreConditions" Style="width: 100%; height: 200px; resize: none;" />
+                <ValidationMessage For="@(() => TestCase.Details.PreConditions)" class="view-model-validation-msg" />
+            </div>
+            <div class="col-4">
+                <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H3">Steps</RadzenText>
+                <RadzenTextArea @bind-Value="TestCase.Details.Steps" Style="width: 100%; height: 200px; resize: none;" />
+                <ValidationMessage For="@(() => TestCase.Details.Steps)" class="view-model-validation-msg" />
+            </div>
+        </div>
+
+        <div class="row d-flex justify-content-start mt-3 me-1 ps-0">
+            <div class="col-3 pb-2 mt-1 ms-2">
+                <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H3">Created date</RadzenText>
+                <RadzenDatePicker Disabled="true"
+                                  @bind-Value="TestCase.CreatedDate"
+                                  Style="width:100%;" Min="@(DateTime.Today)"
+                                  DateFormat="dd/MM/yyyy" />
+            </div>
+            <div class="col-4 pb-2 mt-1 ms-2">
+                <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H3">Completed date</RadzenText>
+                <RadzenDatePicker Disabled="true"
+                                  @bind-Value="TestCase.CompletedDate"
+                                  Style="width:100%;" Min="@(DateTime.Today)"
+                                  DateFormat="dd/MM/yyyy" MouseEnter="@(args => ShowCompletedDateTooltip(args) )" />
+            </div>
+            <div class="col-4 pb-2 test-schedule pt-1 ms-2">
+                <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H3">Scheduled date</RadzenText>
+                <RadzenDatePicker @bind-Value="TestCase.ScheduledDate"
+                                  Disabled="@(Request.Status != RequestStatus.ReadyForTesting)"
+                                  Style="width:100%;" Min="@(DateTime.Today)"
+                                  DateFormat="dd/MM/yyyy"
+                                  MouseEnter="@(args => ShowScheduledDateTooltip(args) )" />
+                <ValidationMessage For="@(() => TestCase.ScheduledDate)" class="view-model-validation-msg" />
+
+            </div>
         </div>
     </div>
-
-    <div class="row my-3">
-        <div class="col-3">
-            <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H3">Status</RadzenText>
-            <RadzenDropDown Disabled="true" Data="@Enum.GetValues(typeof(TestCaseStatus))"
-                            @bind-Value="TestCase.Status" Style="width:100%;"
-                            MouseEnter="@(args => ShowStatusTooltip(args))" />
-        </div>
-        <div class="col-4">
-            <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H3">Need correction?</RadzenText>
-            <RadzenTextBox Disabled="true" @bind-Value="NeedCorrectionString" Style="width:100%;" />
-        </div>
-
-        <div class="col-3">
-            <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H3">Created by</RadzenText>
-            <RadzenTextBox Disabled="true" @bind-Value="TestCase.CreatedByUserId" Style="width:100%;" />
-        </div>
-    </div>
-
-    <div class="row my-2">
-        <div class="col-4">
-            <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H3">Description</RadzenText>
-            <RadzenTextArea @bind-Value="TestCase.Details.Description" Style="width:100%; height: 200px; resize: none;" />
-        </div>
-        <div class="col-4">
-            <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H3">Pre Conditions</RadzenText>
-            <RadzenTextArea @bind-Value="TestCase.Details.PreConditions" Style="width: 100%; height: 200px; resize: none;" />
-        </div>
-        <div class="col-4">
-            <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H3">Steps</RadzenText>
-            <RadzenTextArea @bind-Value="TestCase.Details.Steps" Style="width: 100%; height: 200px; resize: none;" />
-        </div>
-    </div>
-
-    <div class="row d-flex justify-content-start mt-3 me-1 ps-0">
-        <div class="col-3 pb-2 mt-1 ms-2">
-            <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H3">Created date</RadzenText>
-            <RadzenDatePicker Disabled="true"
-                              @bind-Value="TestCase.CreatedDate"
-                              Style="width:100%;" Min="@(DateTime.Today)"
-                              DateFormat="dd/MM/yyyy" />
-        </div>
-        <div class="col-4 pb-2 mt-1 ms-2">
-            <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H3">Completed date</RadzenText>
-            <RadzenDatePicker Disabled="true"
-                              @bind-Value="TestCase.CompletedDate"
-                              Style="width:100%;" Min="@(DateTime.Today)"
-                              DateFormat="dd/MM/yyyy" MouseEnter="@(args => ShowCompletedDateTooltip(args) )" />
-        </div>
-        <div class="col-4 pb-2 test-schedule pt-1 ms-2">
-            <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H3">Scheduled date</RadzenText>
-            <RadzenDatePicker @bind-Value="TestCase.ScheduledDate"
-                                Disabled="@(Request.Status != RequestStatus.ReadyForTesting)"
-                                Style="width:100%;" Min="@(DateTime.Today)"
-                                DateFormat="dd/MM/yyyy"
-                                MouseEnter="@(args => ShowScheduledDateTooltip(args) )" />
-            
-        </div>
-    </div>
-</div>
+</EditForm>
 
 @code {
     [Parameter]
-    public TestCaseViewModel TestCase { get; set; }
-
+    public TestCaseViewModel? TestCase { get; set; }
     [Parameter]
-    public TestRequestViewModel Request { get; set; }
+    public TestRequestViewModel? Request { get; set; }
+    [Parameter]
+    public EventCallback OnFormSubmitted { get; set; }
+
+    private EditForm? _editForm;
 
     private string NeedCorrectionString
     {
@@ -85,10 +96,25 @@
         set => TestCase.NeedCorrection = value.Equals("True", StringComparison.OrdinalIgnoreCase);
     }
 
-    private void ShowCompletedDateTooltip(ElementReference elementReference, TooltipOptions options = null) => TooltipService.Open(elementReference, "This date will be set when the test case is marked as Completed.", options);
+    public async Task<bool> SubmitForm()
+    {
+        var isValid = _editForm.EditContext.Validate();
+        if (isValid)
+        {
+            await HandleValidSubmit();
+        }
+        return isValid;
+    }
 
-    private void ShowStatusTooltip(ElementReference elementReference, TooltipOptions options = null) => TooltipService.Open(elementReference,
-        "Automatically set", options);
+    private async Task HandleValidSubmit()
+    {
+        if (TestCase != null)
+        {
+            await TestCaseService.UpdateTestCaseAsync(TestCase);
+        }
+    }
+
+    private void ShowCompletedDateTooltip(ElementReference elementReference, TooltipOptions options = null) => TooltipService.Open(elementReference, "This date will be set when the test case is marked as Completed.", options);
 
     private void ShowScheduledDateTooltip(ElementReference elementReference, TooltipOptions options = null)
                     => TooltipService.Open(elementReference, "You can only set this date when the request is ready for testing. ", options);
@@ -99,5 +125,11 @@
     {
         border-radius: 0.5rem;
         background-color: var(--rz-warning-lighter)
+    }
+
+    .view-model-validation-msg {
+        font-size: 11px !important;
+        margin-top: 0.3rem;
+        color: red;
     }
 </style>

@@ -1,59 +1,62 @@
 ﻿@using Testeger.Client.ViewModels.TestRequests
 @inject NavigationManager NavigationManager
 
-<RadzenDataList AllowVirtualization="false" AllowPaging="true"
-                Data="@Requests.OrderBy(x => x.Number)" TItem="TestRequestViewModel" PageSize="5" PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true">
-    <Template Context="Request">
-        <RadzenCard Style="width: 100%; max-height: 50px !important; margin: 0 !important; padding: 0 !important;">
-            <RadzenRow Gap="0" Style="padding: 0;">
-                <RadzenColumn Size="1" SizeLG="1" Class="d-flex flex-column justify-content-center align-items-center" Style="@GetNumberBackgroundColor(Status)">
-                    <RadzenText TextStyle="TextStyle.H6" TagName="TagName.H6" class="@GetNumberTextColor(Status)">#@(Request.Number)</RadzenText>
-                </RadzenColumn>
-                <RadzenColumn Size="3" SizeLG="3" class="@GetTitleBackgroundColor(Status)" Style="max-height: 50px;">
-                    <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H5" class="@GetTitleTextColor(Status)">@(Request.Title)</RadzenText>
-                </RadzenColumn>
-                <RadzenColumn Size="7" SizeLG="7" Class="rz-p-2" Style="max-height: 50px;">
-                    <RadzenRow Gap="5">
-                        <RadzenColumn Size="3" SizeMD="3" SizeLG="3" Class="d-flex flex-column justify-content-center">
-                            <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H5" Class="rz-mb-0">Priority</RadzenText>
-                            <RadzenText TextStyle="TextStyle.Caption">@(Request.PriorityLevel)</RadzenText>
-                        </RadzenColumn>
-                        <RadzenColumn Size="3" SizeMD="3" SizeLG="3" Class="d-flex flex-column justify-content-center">
-                            <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H5" Class="rz-mb-0">Status</RadzenText>
-                            <RadzenText TextStyle="TextStyle.Caption">@(Request.Status)</RadzenText>
-                        </RadzenColumn>
-                        <RadzenColumn Size="3" SizeMD="3" SizeLG="3" Class="d-flex flex-column justify-content-center">
-                            <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H5" Class="rz-mb-0">Due Date</RadzenText>
-                            <RadzenText TextStyle="TextStyle.Caption">@(Request.DueDate.ToString("dd/MM/yyyy"))</RadzenText>
-                            
-                            
-                        </RadzenColumn>
-                        <RadzenColumn Size="3" SizeMD="3" SizeLG="3" Class="d-flex flex-column justify-content-center">
-                            <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H5" Class="rz-mb-0">Assigned To</RadzenText>
-                            @if (Request.UserAssignedId is null)
-                            {
-                                <RadzenText TextStyle="TextStyle.Caption">Not assigned yet</RadzenText>
-                            }
-                            else
-                            {
-                                <RadzenText TextStyle="TextStyle.Caption">A IMPLEMENTAR</RadzenText>
-                            }
-                        </RadzenColumn>
-                    </RadzenRow>
-                </RadzenColumn>
-                <RadzenColumn Size="1" SizeLG="1" Class="rz-p-2 d-flex flex-column justify-content-center" Style="max-height: 50px;">
-                    <RadzenButton Click="@(() => OpenTestRequest(Request))" Text="More" Size="ButtonSize.Small" Style="width: 100%; height: 50%; font-size: 12px !important;" />
-                </RadzenColumn>
-            </RadzenRow>
-        </RadzenCard>
-    </Template>
-</RadzenDataList>
+@if (Requests is not null)
+{
+    <RadzenDataList AllowVirtualization="false" AllowPaging="true"
+                    Data="@Requests.OrderBy(x => x.Number)" TItem="TestRequestViewModel" PageSize="5" PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true">
+        <Template Context="Request">
+            <RadzenCard Style="width: 100%; max-height: 50px !important; margin: 0 !important; padding: 0 !important;">
+                <RadzenRow Gap="0" Style="padding: 0;">
+                    <RadzenColumn Size="1" SizeLG="1" Class="d-flex flex-column justify-content-center align-items-center" Style="@GetNumberBackgroundColor(Status)">
+                        <RadzenText TextStyle="TextStyle.H6" TagName="TagName.H6" class="@GetNumberTextColor(Status)">#@(Request.Number)</RadzenText>
+                    </RadzenColumn>
+                    <RadzenColumn Size="3" SizeLG="3" class="@GetTitleBackgroundColor(Status)" Style="max-height: 50px;">
+                        <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H5" class="@GetTitleTextColor(Status)">@(Request.Title)</RadzenText>
+                    </RadzenColumn>
+                    <RadzenColumn Size="7" SizeLG="7" Class="rz-p-2" Style="max-height: 50px;">
+                        <RadzenRow Gap="5">
+                            <RadzenColumn Size="3" SizeMD="3" SizeLG="3" Class="d-flex flex-column justify-content-center">
+                                <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H5" Class="rz-mb-0">Priority</RadzenText>
+                                <RadzenText TextStyle="TextStyle.Caption">@(Request.PriorityLevel)</RadzenText>
+                            </RadzenColumn>
+                            <RadzenColumn Size="3" SizeMD="3" SizeLG="3" Class="d-flex flex-column justify-content-center">
+                                <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H5" Class="rz-mb-0">Status</RadzenText>
+                                <RadzenText TextStyle="TextStyle.Caption">@(Request.Status)</RadzenText>
+                            </RadzenColumn>
+                            <RadzenColumn Size="3" SizeMD="3" SizeLG="3" Class="d-flex flex-column justify-content-center">
+                                <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H5" Class="rz-mb-0">Due Date</RadzenText>
+                                <RadzenText TextStyle="TextStyle.Caption">@(Request.DueDate.ToString("dd/MM/yyyy"))</RadzenText>
+
+
+                            </RadzenColumn>
+                            <RadzenColumn Size="3" SizeMD="3" SizeLG="3" Class="d-flex flex-column justify-content-center">
+                                <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H5" Class="rz-mb-0">Assigned To</RadzenText>
+                                @if (Request.UserAssignedId is null)
+                                {
+                                    <RadzenText TextStyle="TextStyle.Caption">Not assigned yet</RadzenText>
+                                }
+                                else
+                                {
+                                    <RadzenText TextStyle="TextStyle.Caption">A IMPLEMENTAR</RadzenText>
+                                }
+                            </RadzenColumn>
+                        </RadzenRow>
+                    </RadzenColumn>
+                    <RadzenColumn Size="1" SizeLG="1" Class="rz-p-2 d-flex flex-column justify-content-center" Style="max-height: 50px;">
+                        <RadzenButton Click="@(() => OpenTestRequest(Request))" Text="More" Size="ButtonSize.Small" Style="width: 100%; height: 50%; font-size: 12px !important;" />
+                    </RadzenColumn>
+                </RadzenRow>
+            </RadzenCard>
+        </Template>
+    </RadzenDataList>
+}
 
 @code {
     [Parameter]
     public IEnumerable<TestRequestViewModel>? Requests { get; set; }
 
-    public TestRequestViewModel Request { get; set; }
+    public TestRequestViewModel? Request { get; set; }
 
     [Parameter]
     public RequestStatus Status { get; set; }

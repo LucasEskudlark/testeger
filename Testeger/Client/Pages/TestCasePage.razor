@@ -10,7 +10,7 @@
 
 @if (isInitialized)
 {
-    <PageTitle>@TestCase.Title - Testeger</PageTitle>
+    <PageTitle>@TestCaseTitle - Testeger</PageTitle>
 
     <div class="container-fluid mb-5 mt-2">
         <div class="row justify-content-between">
@@ -34,7 +34,7 @@
                               Text="Save"
                               ButtonStyle="ButtonStyle.Primary"
                               Size="ButtonSize.Small"
-                              Click="@HandleTestCaseUpdate"
+                              Click="@Save"
                               MouseEnter="@(args => ShowTooltip(args, "Save the changes made in this request"))"
                               class="me-2" />
 
@@ -52,7 +52,7 @@
     <div class="container">
         <div class="row d-flex justify-content-between">
             <div class="col-6 pb-2 right-divider">
-                <TestCaseDetailsPage Request="Request" TestCase="TestCase" />
+                <TestCaseDetailsPage Request="Request" TestCase="TestCase" @ref="TestCaseDetailsComponent" OnFormSubmitted="HandleTestCaseUpdate" />
             </div>
 
             <div class="col-6 pb-2">
@@ -73,6 +73,8 @@
     private TestCaseViewModel TestCase { get; set; }
     private TestRequestViewModel Request { get; set; }
     private TestCaseResultViewModel LatestTestCaseResult { get; set; }
+    private TestCaseDetailsPage TestCaseDetailsComponent;
+    private string? TestCaseTitle;
 
     private bool isInitialized;
     private bool isNotScheduled;
@@ -89,13 +91,14 @@
         Request = await TestRequestService.GetTestRequestByIdAsync(TestCase.TestRequestId);
         LatestTestCaseResult = await TestCaseResultService.GetLastResultOrDefaultForTestCaseAsync(TestCase.Id);
         TestCaseService.OnChange += StateHasChanged;
-        isNotScheduled = TestCase.ScheduledDate != default;
-        
+        isNotScheduled = TestCase.ScheduledDate == default;
+
         if (LatestTestCaseResult.Id is not null)
         {
             isTestRunning = true;
         }
 
+        TestCaseTitle = TestCase.Title;
         isInitialized = true;
     }
 
@@ -121,13 +124,25 @@
         }
     }
 
+    private async Task Save()
+    {
+        if (TestCaseDetailsComponent != null)
+        {
+            bool isFormValid = await TestCaseDetailsComponent.SubmitForm();
+
+            if (isFormValid)
+            {
+                await HandleTestCaseUpdate();
+            }
+        }
+    }
+
     private async Task HandleTestCaseUpdate()
     {
         if (TestCase != null)
         {
-            // await TestCaseService.UpdateTestCase(TestCase);
-            // await OnTestCaseUpdated.InvokeAsync();
-            // isNotScheduled = !TestCase.ScheduledDate.HasValue;
+            await OnTestCaseUpdated.InvokeAsync();
+            isNotScheduled = TestCase.ScheduledDate == default;
         }
     }
 

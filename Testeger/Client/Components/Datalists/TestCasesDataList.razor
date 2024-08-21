@@ -37,9 +37,9 @@
 </RadzenDataList>
 @code {
     [Parameter]
-    public IEnumerable<TestCaseViewModel> TestCases { get; set; }
+    public IEnumerable<TestCaseViewModel>? TestCases { get; set; }
 
-    private TestCaseViewModel TestCase { get; set; }
+    private TestCaseViewModel? TestCase { get; set; }
 
     public void OpenTestCaseDetails(string testCaseId)
     {

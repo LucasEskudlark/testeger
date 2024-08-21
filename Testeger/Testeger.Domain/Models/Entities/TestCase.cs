@@ -16,7 +16,7 @@ public class TestCase
     public string? Id { get; set; }
     public string? TestRequestId { get; set; }
     public string? ProjectId { get; set; }
-    public string? CreatedByUserId { get; set; }
+    public required string CreatedByUserId { get; set; }
     public string? Title { get; set; }
     public TestCaseDetails Details { get; set; }
     public DateTime CreatedDate { get; set; }

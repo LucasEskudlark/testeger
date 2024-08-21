@@ -1,5 +1,5 @@
-﻿using AutoMapper;
-using System.Reflection;
+﻿using System.Reflection;
+using AutoMapper;
 using Testeger.Infra.UnitOfWork;
 
 namespace Testeger.Application.Services;
@@ -17,8 +17,8 @@ public abstract class BaseUpdateService<TEntity, TUpdateRequest> : BaseService
     public virtual async Task UpdateEntityAsync(TUpdateRequest request, string id)
     {
         var existingEntity = await FindEntityByIdAsync(id);
-
         var updatedProperties = UpdateEntityPropertiesAsync(existingEntity, request);
+
         if (updatedProperties.Count > 0)
         {
             await _unitOfWork.CompleteAsync();
@@ -44,7 +44,6 @@ public abstract class BaseUpdateService<TEntity, TUpdateRequest> : BaseService
                 }
             }
         }
-
         return updatedProperties;
     }
 
@@ -56,7 +55,7 @@ public abstract class BaseUpdateService<TEntity, TUpdateRequest> : BaseService
         return !IgnoredProperties.Contains(dtoProp.Name) && entityProp != null && entityProp.CanWrite;
     }
 
-    protected static bool TryUpdateProperty(TEntity entity, TUpdateRequest request, PropertyInfo dtoProp, PropertyInfo entityProp)
+    protected bool TryUpdateProperty(TEntity entity, TUpdateRequest request, PropertyInfo dtoProp, PropertyInfo entityProp)
     {
         var dtoValue = dtoProp.GetValue(request);
         var entityValue = entityProp.GetValue(entity);
@@ -66,7 +65,16 @@ public abstract class BaseUpdateService<TEntity, TUpdateRequest> : BaseService
             dtoValue = Enum.ToObject(entityProp.PropertyType, (int)dtoValue);
         }
 
-        if (!object.Equals(dtoValue, entityValue))
+        if (dtoProp.PropertyType.IsClass && dtoProp.PropertyType != typeof(string))
+        {
+            var mappedValue = _mapper.Map(dtoValue, dtoProp.PropertyType, entityProp.PropertyType);
+            if (!object.Equals(mappedValue, entityValue))
+            {
+                entityProp.SetValue(entity, mappedValue);
+                return true;
+            }
+        }
+        else if (!object.Equals(dtoValue, entityValue))
         {
             entityProp.SetValue(entity, dtoValue);
             return true;

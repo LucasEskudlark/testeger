@@ -59,8 +59,15 @@ public class TestCaseServiceNV : BaseService, ITestCaseServiceNV
         var testCases = await GetTestCasesByProjectIdAsync(projectId);
 
         return Enum.GetValues(typeof(TestCaseStatus)).Cast<TestCaseStatus>()
+            .Where(status => status != TestCaseStatus.None)
             .ToDictionary(
                 status => status,
                 status => testCases.Where(tr => tr.Status == status));
+    }
+
+    public async Task UpdateTestCaseAsync(TestCaseViewModel testCaseViewModel)
+    {
+        var address = BaseAddress + "/update";
+        await _httpClient.PostAsJsonAsync(address, testCaseViewModel);
     }
 }

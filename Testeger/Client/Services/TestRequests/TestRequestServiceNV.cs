@@ -62,6 +62,7 @@ public class TestRequestServiceNV : BaseService, ITestRequestServiceNV
         var testRequests = await GetTestRequestsByProjectIdAsync(projectId);
 
         return Enum.GetValues(typeof(RequestStatus)).Cast<RequestStatus>()
+            .Where(status => status != RequestStatus.None)
             .ToDictionary(
                 status => status,
                 status => testRequests.Where(tr => tr.Status == status));

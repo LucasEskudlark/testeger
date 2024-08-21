@@ -8,7 +8,7 @@
 
 @if(Request is not null)
 {
-    <PageTitle>@Request.Title - Testeger</PageTitle>
+    <PageTitle>@RequestTitle - Testeger</PageTitle>
 
     <div class="container-fluid mb-5 mt-2">
         <div class="row justify-content-between">
@@ -68,6 +68,7 @@
 @code {
     private TestRequestViewModel? Request;
     private TestRequestDetails TestRequestDetailsComponent;
+    private string? RequestTitle;
 
     [Parameter]
     public EventCallback OnRequestDeleted { get; set; }
@@ -92,6 +93,7 @@
         TestCaseService.OnTestCaseUpdated += UpdateTestCases;
 
         TestCases = await TestCaseService.GetTestCasesByTestRequestIdPagedAsync(Request.Id);
+        RequestTitle = Request.Title;
     }
 
     private async void UpdateTestCases()
@@ -115,32 +117,35 @@
     {
         if (TestRequestDetailsComponent != null)
         {
-            await TestRequestDetailsComponent.SubmitForm();
+            bool isFormValid = await TestRequestDetailsComponent.SubmitForm();
+
+            if (isFormValid)
+            {
+                await HandleTestRequestUpdate();
+            }
         }
     }
 
     private async Task HandleTestRequestUpdate()
     {
-        Console.WriteLine("Form submitted successfully!");
-        // if (Request != null)
-        // {
-        //     //await TestRequestService.UpdateTestRequest(Request);
-        //     await OnRequestUpdated.InvokeAsync();
-        //     await InvokeAsync(StateHasChanged); 
-        // }
+        await OnRequestUpdated.InvokeAsync();
+        await InvokeAsync(StateHasChanged); 
     }
 
     public async Task OpenTestCaseCreationDialog()
     {
-        await DialogService.OpenAsync<TestCaseCreationDialog>("Create Test Case",
+        if (RequestId is not null && Request is not null)
+        {
+            await DialogService.OpenAsync<TestCaseCreationDialog>("Create Test Case",
                new Dictionary<string, object>() { { "RequestId", RequestId }, { "ProjectId", Request.ProjectId } },
                new DialogOptions() { Width = "1024px", Height = "480px", Resizable = false, Draggable = true });
+        }
     }
 
-    private void ShowSaveRequestButtonTooltip(ElementReference elementReference, TooltipOptions options = null)
+    private void ShowSaveRequestButtonTooltip(ElementReference elementReference, TooltipOptions? options = null)
                     => TooltipService.Open(elementReference, "Save the changes made in this request", options);
 
-    private void ShowDeleteRequestButtonTooltip(ElementReference elementReference, TooltipOptions options = null)
+    private void ShowDeleteRequestButtonTooltip(ElementReference elementReference, TooltipOptions? options = null)
                     => TooltipService.Open(elementReference, "Delete this entire request", options);
 }
 

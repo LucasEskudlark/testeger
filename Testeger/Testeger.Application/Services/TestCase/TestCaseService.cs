@@ -5,13 +5,14 @@ using Testeger.Domain.Models.ValueObjects;
 using Testeger.Infra.UnitOfWork;
 using Testeger.Shared.DTOs.Requests.Common;
 using Testeger.Shared.DTOs.Requests.CreateTestCase;
+using Testeger.Shared.DTOs.Requests.UpdateTestCase;
 using Testeger.Shared.DTOs.Responses;
 using Testeger.Shared.DTOs.Responses.TestCase;
 using DomainTestCase = Testeger.Domain.Models.Entities.TestCase;
 
 namespace Testeger.Application.Services.TestCase;
 
-public class TestCaseService : BaseService, ITestCaseService
+public class TestCaseService : BaseUpdateService<DomainTestCase, UpdateTestCaseRequest>, ITestCaseService
 {
     public TestCaseService(IUnitOfWork unitOfWork, IMapper mapper) : base(unitOfWork, mapper)
     {
@@ -43,8 +44,7 @@ public class TestCaseService : BaseService, ITestCaseService
 
     public async Task<GetTestCaseResponse> GetTestCaseByIdAsync(string id)
     {
-        var testCase = await _unitOfWork.TestCaseRepository.GetTestCaseByIdAsync(id) ??
-            throw new NotFoundException($"TestCase with id {id} not found");
+        var testCase = await FindEntityByIdAsync(id);
 
         var response = _mapper.Map<GetTestCaseResponse>(testCase);
 
@@ -62,8 +62,7 @@ public class TestCaseService : BaseService, ITestCaseService
 
     public async Task DeleteTestCaseAsync(string id)
     {
-        var testCase = await _unitOfWork.TestCaseRepository.GetByIdAsync(id) ??
-            throw new NotFoundException($"TestCase with id {id} not found");
+        var testCase = await FindEntityByIdAsync(id);
 
         await _unitOfWork.TestCaseRepository.Delete(testCase);
         await _unitOfWork.CompleteAsync();
@@ -88,6 +87,40 @@ public class TestCaseService : BaseService, ITestCaseService
 
         var response = _mapper.Map<IEnumerable<GetTestCaseResponse>>(testCases);
         return response;
+    }
+
+    public async Task UpdateTestCaseAsync(UpdateTestCaseRequest request)
+    {
+        var existingEntity = await FindEntityByIdAsync(request.Id);
+
+        var updatedProperties = UpdateEntityPropertiesAsync(existingEntity, request);
+
+        if (updatedProperties.Count > 0)
+        {
+            await _unitOfWork.CompleteAsync();
+        }
+    }
+
+    protected override void OnPropertyUpdated(DomainTestCase entity, string propertyName, object oldValue, object newValue)
+    {
+        if (propertyName == "Status")
+        {
+            var history = GetTestCaseHistory(entity.CreatedByUserId, (TestCaseStatus)oldValue, (TestCaseStatus)newValue);
+            entity.History.Add(history);
+
+            if ((TestCaseStatus)newValue is TestCaseStatus.Completed)
+            {
+                entity.CompletedDate = DateTime.Now;
+            }
+        }
+    }
+
+    protected override async Task<DomainTestCase> FindEntityByIdAsync(string id)
+    {
+        var testCase = await _unitOfWork.TestCaseRepository.GetByIdAsync(id) ??
+            throw new NotFoundException($"TestCase with id {id} not found");
+
+        return testCase;
     }
 
     private async Task ValidateTestRequestExistenceAsync(string testRequestId)

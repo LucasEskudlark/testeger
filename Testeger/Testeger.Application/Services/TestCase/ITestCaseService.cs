@@ -1,5 +1,6 @@
 ﻿using Testeger.Shared.DTOs.Requests.Common;
 using Testeger.Shared.DTOs.Requests.CreateTestCase;
+using Testeger.Shared.DTOs.Requests.UpdateTestCase;
 using Testeger.Shared.DTOs.Responses;
 using Testeger.Shared.DTOs.Responses.TestCase;
 
@@ -13,4 +14,5 @@ public interface ITestCaseService
     Task DeleteTestCaseAsync(string id);
     Task<IEnumerable<GetTestCaseResponse>> GetTestCasesByTestRequestIdAsync(string testRequestId);
     Task<IEnumerable<GetTestCaseResponse>> GetTestCasesByProjectIdAsync(string projectId);
+    Task UpdateTestCaseAsync(UpdateTestCaseRequest request);
 }

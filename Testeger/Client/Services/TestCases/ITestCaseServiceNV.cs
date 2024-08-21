@@ -11,7 +11,8 @@ public interface ITestCaseServiceNV
     Task DeleteTestCaseByIdAsync(string id);
     Task CreateTestCaseAsync(TestCaseCreationViewModel request);
     Task<IEnumerable<TestCaseViewModel>> GetTestCasesByProjectIdAsync(string projectId);
-    Task<Dictionary<TestCaseStatus, IEnumerable<TestCaseViewModel>>> GetTestCasesByProjectIdGroupedByStatus(string projectId);
+    Task<Dictionary<TestCaseStatus, IEnumerable<TestCaseViewModel>>> GetTestCasesByProjectIdGroupedByStatus(string projectId); 
+    Task UpdateTestCaseAsync(TestCaseViewModel testCaseViewModel);
 
     public event Action? OnChange;
     public event Action? OnTestCaseAdded;
