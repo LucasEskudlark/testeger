@@ -1,4 +1,5 @@
 ﻿@using Testeger.Client.ViewModels.TestCases
+
 <div class="accordion" id="accordionExample">
     <div class="accordion-item">
         <h5 class="accordion-header row-titlebar" style="height: 40px;">
@@ -22,7 +23,9 @@
                     </div>
 
                     <div class="row mt-1 pt-2 mx-1 teste" style="height: 250px;">
-                        <DisplayTestCaseResults TestCaseId="@TestCase.Id" />
+                        <div>
+                            <DisplayTestCaseResults TestCaseId="@TestCase.Id" />
+                        </div>
                     </div>
                 </div>
             </div>
@@ -36,7 +39,6 @@
 }
 
 <style>
-
     .toggle-header {
         cursor: pointer;
         font-size: 1.1rem;

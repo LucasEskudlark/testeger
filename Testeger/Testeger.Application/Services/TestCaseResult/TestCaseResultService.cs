@@ -88,7 +88,7 @@ public class TestCaseResultService : BaseService, ITestCaseResultService
 
     private async Task ValidateTestCaseExistence(string testCaseId)
     {
-        _ = await FindTestCaseResultByIdAsync(testCaseId);
+        _ = await _unitOfWork.TestCaseRepository.GetTestCaseByIdAsync(testCaseId);
     }
 
     private async Task<int> GetTestCaseResultNumberAsync(string testCaseId)

@@ -89,7 +89,6 @@
         await GetTestCase();
         await GetLatestTestCaseResult();
         Request = await TestRequestService.GetTestRequestByIdAsync(TestCase.TestRequestId);
-        LatestTestCaseResult = await TestCaseResultService.GetLastResultOrDefaultForTestCaseAsync(TestCase.Id);
         TestCaseService.OnChange += StateHasChanged;
         isNotScheduled = TestCase.ScheduledDate == default;
 
@@ -110,7 +109,7 @@
 
     private async Task GetLatestTestCaseResult()
     {
-        TestCase = await TestCaseService.GetTestCaseByIdAsync(TestCaseId);
+        LatestTestCaseResult = await TestCaseResultService.GetLastResultOrDefaultForTestCaseAsync(TestCase.Id);
         StateHasChanged();
     }
 
@@ -175,6 +174,7 @@
         await GetLatestTestCaseResult();
         isTestRunning = false;
         await InvokeAsync(StateHasChanged);
+        StateHasChanged();
     });
 
     private EventCallback HandleTestSaved => new(this, async () =>
