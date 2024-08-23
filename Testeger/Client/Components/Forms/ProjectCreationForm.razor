@@ -83,15 +83,6 @@
         newProject = new();
     }
 
-    private CreateProjectRequest GetCreateProjectRequest()
-    {
-        return new CreateProjectRequest
-            {
-                Name = newProject.Name ?? string.Empty,
-                UserId = Guid.NewGuid().ToString()
-            };
-    }
-
     // NEED TO BE FIXED WHEN USERS ARE IMPLEMENTED
     // private List<User> GetMembers()
     // {

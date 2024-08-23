@@ -1,6 +1,7 @@
 ﻿@page "/home"
 @layout DefaultLayout
 @inject DialogService DialogService
+@inject NotificationService NotificationService
 
 <PageTitle>Home - Testeger</PageTitle>
 
@@ -54,13 +55,33 @@
 </div>
 
 @code {
+    [CascadingParameter(Name = "ProjectCount")]
+    private int ProjectCount { get; set; }
+
     private async Task OpenProjectCreationDialog()
     {
+        if (ProjectCount >= 2)
+        {
+            ShowNotification(new NotificationMessage 
+                { 
+                    Severity = NotificationSeverity.Error,
+                    Summary = "Not able to create a project",
+                    Detail = "You can't create more than 2 projects",
+                    Duration = 4000 
+                });
+            return;
+        }
+
         await DialogService.OpenAsync<ProjectCreationDialog>(
             "Create Project",
             null,
             new DialogOptions() { Width = "700px", Height = "540px", Resizable = false, Draggable = true }
         );
+    }
+
+    private void ShowNotification(NotificationMessage message)
+    {
+        NotificationService.Notify(message);
     }
 }
 
