@@ -14,5 +14,5 @@ public interface ITestCaseResultService
     Task<GetTestCaseResultResponse> GetTestCaseResultByIdAsync(string id);
     Task<IEnumerable<GetTestCaseResultResponse>> GetResultsByTestCaseIdAsync(string testCaseId);
     Task UpdateTestCaseResultAsync(UpdateTestCaseResultRequest request);
-    Task FinishTestCaseResultAsync(FinishTestCaseResultRequest request);
+    Task<CreateTestCaseResultResponse> FinishTestCaseResultAsync(FinishTestCaseResultRequest request);
 }
