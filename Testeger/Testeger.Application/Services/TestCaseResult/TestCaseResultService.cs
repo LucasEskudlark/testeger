@@ -71,19 +71,20 @@ public class TestCaseResultService : BaseService, ITestCaseResultService
         await _unitOfWork.CompleteAsync();
     }
 
-    public async Task FinishTestCaseResultAsync(FinishTestCaseResultRequest request)
+    public async Task<CreateTestCaseResultResponse> FinishTestCaseResultAsync(FinishTestCaseResultRequest request)
     {
         var testCaseResult = _mapper.Map<DomainTestCaseResult>(request);
 
         if (testCaseResult.Id is null)
         {
             var creationRequest = _mapper.Map<CreateTestCaseResultRequest>(testCaseResult);
-            await CreateTestCaseResultAsync(creationRequest);
-            return;
+            var response = await CreateTestCaseResultAsync(creationRequest);
+            return response;
         }
 
         var updateRequest = _mapper.Map<UpdateTestCaseResultRequest>(testCaseResult);
         await UpdateTestCaseResultAsync(updateRequest);
+        return new CreateTestCaseResultResponse() { Id = updateRequest.Id};
     }
 
     private async Task ValidateTestCaseExistence(string testCaseId)

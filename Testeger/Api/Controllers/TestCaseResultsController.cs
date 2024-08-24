@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿
+using Microsoft.AspNetCore.Mvc;
 using Testeger.Application.Services.TestCaseResult;
 using Testeger.Shared.DTOs.Requests.Common;
 using Testeger.Shared.DTOs.Requests.CreateTestCaseResult;
@@ -61,8 +62,8 @@ public class TestCaseResultsController : ControllerBase
     [HttpPost("finish")]
     public async Task<IActionResult> FinishTestCaseResultAsync([FromBody] FinishTestCaseResultRequest request)
     {
-        await _testCaseResultService.FinishTestCaseResultAsync(request);
+        var response = await _testCaseResultService.FinishTestCaseResultAsync(request);
 
-        return NoContent();
+        return Ok(response);
     }
 }

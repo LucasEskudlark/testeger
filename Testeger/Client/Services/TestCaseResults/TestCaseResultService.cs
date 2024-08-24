@@ -1,5 +1,6 @@
 ﻿using System.Net.Http.Json;
 using Testeger.Client.ViewModels.TestCaseResults;
+using Testeger.Shared.DTOs.Responses.TestCaseResult;
 
 namespace Testeger.Client.Services.TestCaseResults;
 
@@ -35,9 +36,16 @@ public class TestCaseResultService : BaseService, ITestCaseResultService
         return lastTestCaseResult;
     }
 
-    public async Task HandleTestFinished(TestCaseResultViewModel viewModel)
+    public async Task<CreateTestCaseResultResponse> HandleTestFinished(TestCaseResultViewModel viewModel)
     {
         var address = BaseAddress + $"/finish";
         var response = await _httpClient.PostAsJsonAsync(address, viewModel);
+
+        if (!response.IsSuccessStatusCode)
+        {
+            return null;
+        }
+        var creationResponse = await response.Content.ReadFromJsonAsync<CreateTestCaseResultResponse>();
+        return creationResponse;
     }
 }

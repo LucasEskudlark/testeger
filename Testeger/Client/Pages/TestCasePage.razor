@@ -153,7 +153,7 @@
 
     public async Task OpenTestCaseTestingDialog()
     {
-        var options = new DialogOptions { Width = "700px", Height = "630px", Resizable = false, Draggable = true };
+        var options = new DialogOptions { Width = "900px", Height = "630px", Resizable = false, Draggable = true };
         await DialogService.OpenAsync<TestCaseTestingDialog>("Testing",
             new Dictionary<string, object> { 
                 { "TestCase", TestCase },

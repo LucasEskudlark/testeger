@@ -2,6 +2,7 @@
 @inject DialogService DialogService
 @inject ITestCaseServiceNV TestCaseService
 @inject ITestCaseResultService TestCaseResultService
+@inject IImageService ImageService
 
 @if (isInitialized)
 {
@@ -12,11 +13,11 @@
             </div>
         </div>
         <div class="row py-2">
-            <div class="col-6 p2">
+            <div class="col-8 p2">
                 <div class="row">
                     <div class="col-7">
                         <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H3">ExpectedResult</RadzenText>
-                        <RadzenTextArea Disabled="true" @bind-Value="TestCase.Details.ExpectedResult" Style="width:100%; height: 100px; resize: none;" />
+                        <RadzenTextArea Disabled="true" @bind-Value="TestCase.Details.ExpectedResult" Style="width:100%; height: 130px; resize: none;" />
                     </div>
                     <div class="col-5">
                         <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H3">Environment</RadzenText>
@@ -25,7 +26,7 @@
                 </div>
             </div>
 
-            <div class="col-6 p2">
+            <div class="col-4 p2">
                 <StopWatch TestCaseResult="LatestTestCaseResult" OnStopwatchStopped="HandleStopwatchStopped" />
             </div>
         </div>
@@ -45,11 +46,15 @@
             </div>
 
             <div class="col-5 p2 d-flex flex-column align-items-center justify-content-center">
-                <RadzenButton Icon="upload_file"
-                              Text="Add evidence"
-                              ButtonStyle="ButtonStyle.Primary"
-                              Size="ButtonSize.Small" />
-                <small class="mt-2 text-center description-text">Add the necessary evidence in the form of images to prove the test result.</small>
+                <small class="mt-2 description-text">Add the necessary evidence in the form of images to prove the test result.</small>
+                <div class="file-upload-wrapper mt-2">
+                    <label for="fileInput" class="file-upload-label">
+                        <RadzenIcon Icon="upload_file" Style="height: 0.8rem !important;" />
+                        Add evidence
+                    </label>
+                    <InputFile id="fileInput" class="file-upload-input" hidden OnChange="@OnInputFileChange" multiple accept=".png,.jpg,.jpeg" />
+                </div>
+                <small class="mt-1 text-center description-text" style="font-size: 0.7rem !important;">@FileSelectionMessage</small>
             </div>
         </div>
 
@@ -105,6 +110,8 @@
 
     private List<String> TestResultOptions = new List<string> { "Yes", "No" };
     private string TestResult { get; set; }
+    IEnumerable<IBrowserFile> selectedFiles = new List<IBrowserFile>();
+    private string FileSelectionMessage = "Nenhum arquivo selecionado";
 
     private bool isInitialized;
 
@@ -116,6 +123,13 @@
         isInitialized = true;
     }
 
+    void OnInputFileChange(InputFileChangeEventArgs e)
+    {
+        selectedFiles = e.GetMultipleFiles();
+        StateHasChanged();
+        FileSelectionMessage = $"{selectedFiles.Count()} arquivo(s) selecionado(s)";
+    }
+
     private void HandleStopwatchStopped()
     {
         StateHasChanged(); 
@@ -125,7 +139,15 @@
     {
         LatestTestCaseResult.IsSuccess = SetTestResult();
         LatestTestCaseResult.IsFinished = true;
-        await TestCaseResultService.HandleTestFinished(LatestTestCaseResult);
+        var creationResult = await TestCaseResultService.HandleTestFinished(LatestTestCaseResult);
+
+        var uploadResult = selectedFiles.Any() ? await ImageService.UploadImageAsync(selectedFiles, creationResult.Id) : false;
+
+        if (!uploadResult)
+        {
+            return;
+        }
+
         await OnTestFinished.InvokeAsync();
         DialogService.Close();
     }
@@ -151,5 +173,35 @@
 <style>
     .rz-dialog{
         padding-bottom: 0px;
+    }
+</style>
+
+<style>
+    .file-upload-wrapper {
+        display: inline-block;
+        position: relative;
+    }
+
+    .file-upload-label {
+        background-color: var(--rz-primary); /* Radzen primary color */
+        color: white;
+        padding: 6px 12px;
+        border-radius: 5px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 8px; /* Space between icon and text */
+        font-size: 13px;
+        font-weight: bold;
+    }
+
+    .file-upload-input {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        cursor: pointer;
     }
 </style>
