@@ -31,9 +31,17 @@
             <div class="row my-2 ms-1 me-2">
                 <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H3" class="ps-2 pt-0 result-h">Evidence:</RadzenText>
                 <div class="d-flex">
-                    <RadzenIcon Icon="image" class="me-1 ms-0"></RadzenIcon>
+                    @if (Result.Images is not null && Result.Images.Any())
+                    {
+                        @foreach (var image in Result.Images)
+                        {
+                            <img src="https://localhost:5000/api/images/@image.FilePath" alt="Test Case Image" />
+                        }
+                    }
+                    
+                    @* <RadzenIcon Icon="image" class="me-1 ms-0"></RadzenIcon>
                     <RadzenIcon Icon="image" class="mx-1"></RadzenIcon>
-                    <RadzenIcon Icon="image" class="mx-1"></RadzenIcon>
+                    <RadzenIcon Icon="image" class="mx-1"></RadzenIcon> *@
                 </div>
             </div>
         </ChildContent>

@@ -54,6 +54,34 @@ public class ImageService : BaseService, IImageService
         return filePaths;
     }
 
+    public async Task<(Stream ImageStream, string ContentType)> GetImageAsync(string imagePath)
+    {
+        var fullPath = Path.Combine("../", imagePath);
+        fullPath = Path.GetFullPath(fullPath);
+
+        if (!File.Exists(fullPath))
+        {
+            throw new NotFoundException($"No images related with the path informed were found");
+        }
+
+        var imageFileStream = await Task.Run(() => File.OpenRead(fullPath));
+        var contentType = GetContentType(fullPath);
+
+        return (imageFileStream, contentType);
+    }
+
+    private static string GetContentType(string path)
+    {
+        var extension = Path.GetExtension(path).ToLowerInvariant();
+        return extension switch
+        {
+            ".jpg" or ".jpeg" => "image/jpeg",
+            ".png" => "image/png",
+            ".gif" => "image/gif",
+            _ => "application/octet-stream",
+        };
+    }
+
     private async Task<string> GetTestCaseId(string testCaseResultId)
     {
         var testCaseResult = await _unitOfWork.TestCaseResultRepository.GetByIdAsync(testCaseResultId)

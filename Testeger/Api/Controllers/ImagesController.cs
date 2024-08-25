@@ -29,5 +29,18 @@ public class ImagesController : ControllerBase
 
         return Ok(response);
     }
+
+    [HttpGet("{*imagePath}")]
+    public async Task<IActionResult> GetImageAsync(string imagePath)
+    {
+        var (imageStream, contentType) = await _imageService.GetImageAsync(imagePath);
+
+        if (imageStream == null)
+        {
+            return NotFound();
+        }
+
+        return File(imageStream, contentType);
+    }
 }
 
