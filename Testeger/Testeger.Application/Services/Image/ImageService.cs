@@ -9,12 +9,14 @@ namespace Testeger.Application.Services.Image;
 public class ImageService : BaseService, IImageService
 {
     private readonly string _targetFilePath;
+    private const string BaseDirectory = "UploadedImages";
+
     public ImageService(IUnitOfWork unitOfWork, IMapper mapper) : base(unitOfWork, mapper)
     {
         var currentDirectory = Directory.GetCurrentDirectory();
         var parentDirectory = Directory.GetParent(currentDirectory)?.FullName ?? currentDirectory;
 
-        _targetFilePath = Path.Combine(parentDirectory, "UploadedImages");
+        _targetFilePath = Path.Combine(parentDirectory, BaseDirectory);
     }
 
     public async Task UploadTestCaseResultImagesAsync(IEnumerable<IFormFile> files, string testCaseResultId)
@@ -34,7 +36,9 @@ public class ImageService : BaseService, IImageService
             using var stream = new FileStream(filePath, FileMode.Create);
             await file.CopyToAsync(stream);
 
-            await SaveImageInDatabase(testCaseResultId, fileName, filePath);
+            var relativeFilePath = Path.Combine(BaseDirectory, testCaseId, fileName);
+
+            await SaveImageInDatabase(testCaseResultId, fileName, relativeFilePath);
         }
     }
 
