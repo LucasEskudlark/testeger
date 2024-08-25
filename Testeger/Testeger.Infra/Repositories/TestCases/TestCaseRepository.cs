@@ -18,6 +18,7 @@ public class TestCaseRepository : Repository<TestCase>, ITestCaseRepository
         var testCase = await _dbSet
             .Include(tc => tc.Details)
             .Include(tc => tc.History)
+            .Include(tc => tc.Results)
             .FirstOrDefaultAsync(tc => tc.Id == id);
 
         return testCase;
