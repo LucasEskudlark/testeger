@@ -17,7 +17,7 @@ public class ImageService : BaseService, IImageService
 
         foreach (var file in files)
         {
-            var fileContent = new StreamContent(file.OpenReadStream(maxAllowedSize: 10_000_000));
+            var fileContent = new StreamContent(file.OpenReadStream(maxAllowedSize: 5_000_000));
             content.Add(content: fileContent, name: "files", fileName: file.Name);
         }
 

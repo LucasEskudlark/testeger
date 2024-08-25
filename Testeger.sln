@@ -9,11 +9,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Testeger.Client", "Testeger
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Testeger.Shared", "Testeger\Shared\Testeger.Shared.csproj", "{63D434AB-DCB5-4D8F-B327-7A4E365DCCF6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Testeger.Domain", "Testeger\Testeger.Domain\Testeger.Domain.csproj", "{F110BAD3-D64F-4ABC-B3BB-32775ACA2470}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Testeger.Domain", "Testeger\Testeger.Domain\Testeger.Domain.csproj", "{F110BAD3-D64F-4ABC-B3BB-32775ACA2470}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Testeger.Application", "Testeger\Testeger.Application\Testeger.Application.csproj", "{E0438694-EEAE-454A-8A23-82694EA17C12}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Testeger.Application", "Testeger\Testeger.Application\Testeger.Application.csproj", "{E0438694-EEAE-454A-8A23-82694EA17C12}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Testeger.Infra", "Testeger\Testeger.Infra\Testeger.Infra.csproj", "{87AAC2CA-5EF8-4219-B05D-D2A489DF18A6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Testeger.Infra", "Testeger\Testeger.Infra\Testeger.Infra.csproj", "{87AAC2CA-5EF8-4219-B05D-D2A489DF18A6}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{9A343A55-1A82-4E8D-8C3D-4BFE0B63DE3A}"
 EndProject
