@@ -117,7 +117,7 @@ public class TestCaseService : BaseUpdateService<DomainTestCase, UpdateTestCaseR
 
     protected override async Task<DomainTestCase> FindEntityByIdAsync(string id)
     {
-        var testCase = await _unitOfWork.TestCaseRepository.GetByIdAsync(id) ??
+        var testCase = await _unitOfWork.TestCaseRepository.GetTestCaseByIdAsync(id) ??
             throw new NotFoundException($"TestCase with id {id} not found");
 
         return testCase;

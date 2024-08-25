@@ -1,4 +1,6 @@
-﻿namespace Testeger.Client.ViewModels.TestCaseResults;
+﻿using Testeger.Client.ViewModels.Images;
+
+namespace Testeger.Client.ViewModels.TestCaseResults;
 
 public class TestCaseResultViewModel
 {
@@ -14,4 +16,5 @@ public class TestCaseResultViewModel
     public TimeSpan ElapsedTime { get; set; }
     public bool IsSuccess { get; set; }
     public bool IsFinished { get; set; }
+    public IEnumerable<ImageViewModel>? Images { get; set; }
 }

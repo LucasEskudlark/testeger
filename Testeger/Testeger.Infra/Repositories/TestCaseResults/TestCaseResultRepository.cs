@@ -24,7 +24,11 @@ public class TestCaseResultRepository : Repository<TestCaseResult>, ITestCaseRes
 
     public async Task<IEnumerable<TestCaseResult>> GetResultsByTestCaseId(string testCaseId)
     {
-        var testCases = await _dbSet.Where(tr => tr.TestCaseId == testCaseId).ToListAsync();
+        var testCases = await _dbSet
+            .Where(tr => tr.TestCaseId == testCaseId)
+            .Include(tr => tr.Images)
+            .OrderBy(tr => tr.Number)
+            .ToListAsync();
 
         return testCases;
     }
