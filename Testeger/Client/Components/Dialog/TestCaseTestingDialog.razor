@@ -3,7 +3,7 @@
 @inject ITestCaseServiceNV TestCaseService
 @inject ITestCaseResultService TestCaseResultService
 @inject IImageService ImageService
-@inject NotificationService NotificationService
+@inject INotificationService NotificationService
 
 @if (isInitialized)
 {
@@ -142,23 +142,12 @@
             }
             else
             {
-                ShowNotification(new NotificationMessage
-                    {
-                        Severity = NotificationSeverity.Error,
-                        Summary = "Not able to upload files",
-                        Detail = "File size must be less than 5mb",
-                        Duration = 4000
-                    });
+                NotificationService.ShowFailNotification("Not able to upload files", "File size must be less than 5mb");
             }
         }
 
         selectedFiles = validFiles;
         UpdateFileSelectionMessage();
-    }
-
-    private void ShowNotification(NotificationMessage message)
-    {
-        NotificationService.Notify(message);
     }
 
     private void UpdateFileSelectionMessage()

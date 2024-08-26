@@ -1,7 +1,7 @@
 ﻿@page "/home"
 @layout DefaultLayout
 @inject DialogService DialogService
-@inject NotificationService NotificationService
+@inject INotificationService NotificationService
 
 <PageTitle>Home - Testeger</PageTitle>
 
@@ -62,13 +62,7 @@
     {
         if (ProjectCount >= 2)
         {
-            ShowNotification(new NotificationMessage 
-                { 
-                    Severity = NotificationSeverity.Error,
-                    Summary = "Not able to create a project",
-                    Detail = "You can't create more than 2 projects",
-                    Duration = 4000 
-                });
+            NotificationService.ShowFailNotification("Not able to create a project", "You can't create more than 2 projects");
             return;
         }
 
@@ -77,11 +71,6 @@
             null,
             new DialogOptions() { Width = "700px", Height = "540px", Resizable = false, Draggable = true }
         );
-    }
-
-    private void ShowNotification(NotificationMessage message)
-    {
-        NotificationService.Notify(message);
     }
 }
 
