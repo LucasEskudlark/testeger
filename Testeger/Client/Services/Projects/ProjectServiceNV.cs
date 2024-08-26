@@ -24,7 +24,13 @@ public class ProjectServiceNV : BaseService, IProjectServiceNV
     {
         var response = await _httpClient.PostAsJsonAsync(BaseAddress, request);
 
+        if (!response.IsSuccessStatusCode)
+        {
+            _notificationService.ShowFailNotification("Error", "Could not create project.");
+        }
+
         var creationResponse = await response.Content.ReadFromJsonAsync<CreateProjectResponse>();
+        _notificationService.ShowSuccessNotification("Success", "Project successfully created.");
         OnProjectAdded?.Invoke();
         NotifyStateChanged();
 

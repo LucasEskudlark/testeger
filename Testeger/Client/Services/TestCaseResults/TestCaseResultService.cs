@@ -44,8 +44,12 @@ public class TestCaseResultService : BaseService, ITestCaseResultService
 
         if (!response.IsSuccessStatusCode)
         {
+            _notificationService.ShowFailNotification("Error", "Could not finish the test.");
             return null;
         }
+
+        _notificationService.ShowSuccessNotification("Success", "Test successfully finished.");
+
         var creationResponse = await response.Content.ReadFromJsonAsync<CreateTestCaseResultResponse>();
         return creationResponse;
     }
