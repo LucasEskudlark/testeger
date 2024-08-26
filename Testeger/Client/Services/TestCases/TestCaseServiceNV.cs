@@ -1,4 +1,5 @@
 ﻿using System.Net.Http.Json;
+using Testeger.Client.Services.Notifications;
 using Testeger.Client.ViewModels;
 using Testeger.Client.ViewModels.TestCases;
 using Testeger.Shared.DTOs.Enumerations;
@@ -8,7 +9,7 @@ namespace Testeger.Client.Services.TestCases;
 public class TestCaseServiceNV : BaseService, ITestCaseServiceNV
 {
     private const string BaseAddress = "api/testcases";
-    public TestCaseServiceNV(HttpClient httpClient) : base(httpClient)
+    public TestCaseServiceNV(HttpClient httpClient, INotificationService notificationService) : base(httpClient, notificationService)
     {
     }
 
@@ -36,13 +37,29 @@ public class TestCaseServiceNV : BaseService, ITestCaseServiceNV
     public async Task DeleteTestCaseByIdAsync(string id)
     {
         var address = BaseAddress + $"/delete/{id}";
-        await _httpClient.PostAsJsonAsync(address, id);
+        var response = await _httpClient.PostAsJsonAsync(address, id);
+
+        if (!response.IsSuccessStatusCode)
+        {
+            _notificationService.ShowFailNotification("Error", "Could not delete test case.");
+            return;
+        }
+
+        _notificationService.ShowSuccessNotification("Success", "Test case successfully deleted.");
         OnTestCaseDeleted?.Invoke();
     }
 
     public async Task CreateTestCaseAsync(TestCaseCreationViewModel request)
     {
-        await _httpClient.PostAsJsonAsync(BaseAddress, request);
+        var response = await _httpClient.PostAsJsonAsync(BaseAddress, request);
+
+        if (!response.IsSuccessStatusCode)
+        {
+            _notificationService.ShowFailNotification("Error", "Could not create test case.");
+            return;
+        }
+
+        _notificationService.ShowSuccessNotification("Success", "Test case successfully created.");
         OnTestCaseAdded?.Invoke();
     }
 
@@ -68,6 +85,15 @@ public class TestCaseServiceNV : BaseService, ITestCaseServiceNV
     public async Task UpdateTestCaseAsync(TestCaseViewModel testCaseViewModel)
     {
         var address = BaseAddress + "/update";
-        await _httpClient.PostAsJsonAsync(address, testCaseViewModel);
+        var response = await _httpClient.PostAsJsonAsync(address, testCaseViewModel);
+
+        if (!response.IsSuccessStatusCode)
+        {
+            _notificationService.ShowFailNotification("Error", "Could not update test case.");
+            return;
+        }
+
+        _notificationService.ShowSuccessNotification("Success", "Test case successfully updated.");
+        OnTestCaseUpdated?.Invoke();
     }
 }

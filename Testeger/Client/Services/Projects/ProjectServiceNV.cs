@@ -1,4 +1,5 @@
 ﻿using System.Net.Http.Json;
+using Testeger.Client.Services.Notifications;
 using Testeger.Client.ViewModels;
 using Testeger.Client.ViewModels.Projects;
 using Testeger.Shared.DTOs.Responses;
@@ -10,7 +11,7 @@ public class ProjectServiceNV : BaseService, IProjectServiceNV
 {
     private const string BaseAddress = "api/projects";
 
-    public ProjectServiceNV(HttpClient httpClient) : base(httpClient)
+    public ProjectServiceNV(HttpClient httpClient, INotificationService notificationService) : base(httpClient, notificationService)
     {
     }
 
@@ -23,7 +24,13 @@ public class ProjectServiceNV : BaseService, IProjectServiceNV
     {
         var response = await _httpClient.PostAsJsonAsync(BaseAddress, request);
 
+        if (!response.IsSuccessStatusCode)
+        {
+            _notificationService.ShowFailNotification("Error", "Could not create project.");
+        }
+
         var creationResponse = await response.Content.ReadFromJsonAsync<CreateProjectResponse>();
+        _notificationService.ShowSuccessNotification("Success", "Project successfully created.");
         OnProjectAdded?.Invoke();
         NotifyStateChanged();
 

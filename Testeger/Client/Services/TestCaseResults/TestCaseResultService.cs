@@ -1,4 +1,5 @@
 ﻿using System.Net.Http.Json;
+using Testeger.Client.Services.Notifications;
 using Testeger.Client.ViewModels.TestCaseResults;
 using Testeger.Shared.DTOs.Responses.TestCaseResult;
 
@@ -8,7 +9,7 @@ public class TestCaseResultService : BaseService, ITestCaseResultService
 {
     private const string BaseAddress = "api/testcaseresults";
 
-    public TestCaseResultService(HttpClient httpClient) : base(httpClient)
+    public TestCaseResultService(HttpClient httpClient, INotificationService notificationService) : base(httpClient, notificationService)
     {
     }
 
@@ -43,8 +44,12 @@ public class TestCaseResultService : BaseService, ITestCaseResultService
 
         if (!response.IsSuccessStatusCode)
         {
+            _notificationService.ShowFailNotification("Error", "Could not finish the test.");
             return null;
         }
+
+        _notificationService.ShowSuccessNotification("Success", "Test successfully finished.");
+
         var creationResponse = await response.Content.ReadFromJsonAsync<CreateTestCaseResultResponse>();
         return creationResponse;
     }

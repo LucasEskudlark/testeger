@@ -1,4 +1,5 @@
 ﻿using System.Net.Http.Json;
+using Testeger.Client.Services.Notifications;
 using Testeger.Client.ViewModels;
 using Testeger.Client.ViewModels.TestRequests;
 using Testeger.Shared.DTOs.Enumerations;
@@ -10,7 +11,7 @@ public class TestRequestServiceNV : BaseService, ITestRequestServiceNV
 {
     private const string BaseAddress = "api/testrequests";
 
-    public TestRequestServiceNV(HttpClient httpClient) : base(httpClient)
+    public TestRequestServiceNV(HttpClient httpClient, INotificationService notificationService) : base(httpClient, notificationService)
     {
     }
 
@@ -21,7 +22,15 @@ public class TestRequestServiceNV : BaseService, ITestRequestServiceNV
 
     public async Task CreateTestRequestAsync(TestRequestCreationViewModel request)
     {
-        await _httpClient.PostAsJsonAsync(BaseAddress, request);
+        var response = await _httpClient.PostAsJsonAsync(BaseAddress, request);
+
+        if (!response.IsSuccessStatusCode)
+        {
+            _notificationService.ShowFailNotification("Error", "Could not create test request.");
+            return;
+        }
+
+        _notificationService.ShowSuccessNotification("Success", "Test request successfully created.");
         OnTestRequestAdded?.Invoke();
         NotifyStateChanged();
     }
@@ -29,7 +38,15 @@ public class TestRequestServiceNV : BaseService, ITestRequestServiceNV
     public async Task DeleteTestRequestAsync(string id)
     {
         var address = BaseAddress + $"/delete/{id}";
-        await _httpClient.PostAsJsonAsync(address, id);
+        var response = await _httpClient.PostAsJsonAsync(address, id);
+
+        if (!response.IsSuccessStatusCode)
+        {
+            _notificationService.ShowFailNotification("Error", "Could not delete test request.");
+            return;
+        }
+
+        _notificationService.ShowSuccessNotification("Success", "Test request successfully deleted.");
         OnTestRequestDeleted?.Invoke();
         NotifyStateChanged();
     }
@@ -37,7 +54,7 @@ public class TestRequestServiceNV : BaseService, ITestRequestServiceNV
     public async Task<PagedResponse<TestRequestViewModel>> GetAllTestRequestsPagedAsync()
     {
         var response = await _httpClient.GetFromJsonAsync<PagedResponse<TestRequestViewModel>>(BaseAddress);
-
+        
         return response;
     }
 
