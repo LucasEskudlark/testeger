@@ -12,7 +12,9 @@ var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 
-builder.Services.AddTransient(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
+builder.Configuration.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
+builder.Configuration.AddJsonFile($"appsettings.{builder.HostEnvironment.Environment}.json", optional: true, reloadOnChange: true);
+
 builder.Services.AddRadzenComponents();
 
 builder.Services.AddScoped<IProjectServiceNV, ProjectServiceNV>();
@@ -21,12 +23,14 @@ builder.Services.AddScoped<ITestCaseServiceNV, TestCaseServiceNV>();
 builder.Services.AddScoped<ITestCaseResultService, TestCaseResultService>();
 builder.Services.AddScoped<IImageService, ImageService>();
 
+var baseAddress = builder.Configuration["ApiSettings:BaseAddress"]
+    ?? throw new InvalidOperationException("BaseAddress is not configured");
+
 builder.Services.AddScoped(sp =>
     new HttpClient
     {
-        BaseAddress = new Uri("https://localhost:5000")
+        BaseAddress = new Uri(baseAddress)
     });
 builder.Services.AddHttpClient();
-
 
 await builder.Build().RunAsync();

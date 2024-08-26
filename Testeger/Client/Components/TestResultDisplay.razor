@@ -1,6 +1,7 @@
 ﻿@using Testeger.Client.ViewModels.TestCaseResults
 @inject DialogService DialogService
 @inject NotificationService NotificationService
+@inject IConfiguration Configuration
 
 <div class="col-12 shadow-sm my-2 p-0">
     <ToggleComponent>
@@ -37,7 +38,7 @@
                     {
                         @foreach (var image in Result.Images)
                         {
-                            <img id="small-img" src="https://localhost:5000/api/images/@image.FilePath"
+                            <img id="small-img" src="@BaseAddress/api/images/@image.FilePath"
                             alt="Test Case Image"
                             class="shadow-sm mx-1"
                             @onclick="(() => OpenDialog(image.FilePath, image.TestCaseResultId, image.Id))" />
@@ -52,6 +53,12 @@
 @code {
     [Parameter]
     public TestCaseResultViewModel Result { get; set; }
+    private string? BaseAddress;
+
+    protected override void OnInitialized()
+    {
+        BaseAddress = Configuration["ApiSettings:BaseAddress"];
+    }
 
     private async Task OpenDialog(string imageUrl, string testCaseResultId, string imageId)
     {
