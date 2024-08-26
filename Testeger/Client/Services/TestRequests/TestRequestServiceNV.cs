@@ -1,4 +1,5 @@
 ﻿using System.Net.Http.Json;
+using Testeger.Client.Services.Notifications;
 using Testeger.Client.ViewModels;
 using Testeger.Client.ViewModels.TestRequests;
 using Testeger.Shared.DTOs.Enumerations;
@@ -10,7 +11,7 @@ public class TestRequestServiceNV : BaseService, ITestRequestServiceNV
 {
     private const string BaseAddress = "api/testrequests";
 
-    public TestRequestServiceNV(HttpClient httpClient) : base(httpClient)
+    public TestRequestServiceNV(HttpClient httpClient, INotificationService notificationService) : base(httpClient, notificationService)
     {
     }
 
@@ -21,7 +22,12 @@ public class TestRequestServiceNV : BaseService, ITestRequestServiceNV
 
     public async Task CreateTestRequestAsync(TestRequestCreationViewModel request)
     {
-        await _httpClient.PostAsJsonAsync(BaseAddress, request);
+        var response = await _httpClient.PostAsJsonAsync(BaseAddress, request);
+
+        if (!response.IsSuccessStatusCode)
+        {
+
+        }
         OnTestRequestAdded?.Invoke();
         NotifyStateChanged();
     }

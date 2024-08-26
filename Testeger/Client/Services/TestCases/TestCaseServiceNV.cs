@@ -1,4 +1,5 @@
 ﻿using System.Net.Http.Json;
+using Testeger.Client.Services.Notifications;
 using Testeger.Client.ViewModels;
 using Testeger.Client.ViewModels.TestCases;
 using Testeger.Shared.DTOs.Enumerations;
@@ -8,7 +9,7 @@ namespace Testeger.Client.Services.TestCases;
 public class TestCaseServiceNV : BaseService, ITestCaseServiceNV
 {
     private const string BaseAddress = "api/testcases";
-    public TestCaseServiceNV(HttpClient httpClient) : base(httpClient)
+    public TestCaseServiceNV(HttpClient httpClient, INotificationService notificationService) : base(httpClient, notificationService)
     {
     }
 

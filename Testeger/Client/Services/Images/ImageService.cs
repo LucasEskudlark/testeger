@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components.Forms;
 using System.Net.Http;
+using Testeger.Client.Services.Notifications;
 
 namespace Testeger.Client.Services.Images;
 
@@ -7,7 +8,7 @@ public class ImageService : BaseService, IImageService
 {
     private readonly string BaseAddress = "api/images";
 
-    public ImageService(HttpClient httpClient) : base(httpClient)
+    public ImageService(HttpClient httpClient, INotificationService notificationService) : base(httpClient, notificationService)
     {
     }
 
