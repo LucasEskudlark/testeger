@@ -3,6 +3,7 @@
 @inject ITestCaseServiceNV TestCaseService
 @inject ITestCaseResultService TestCaseResultService
 @inject IImageService ImageService
+@inject NotificationService NotificationService
 
 @if (isInitialized)
 {
@@ -46,13 +47,15 @@
             </div>
 
             <div class="col-5 p2 d-flex flex-column align-items-center justify-content-center">
-                <small class="mt-2 description-text">Add the necessary evidence in the form of images to prove the test result.</small>
+                <small class="mt-2 description-text">Add the necessary evidence in the form of images to prove the test result. 
+                    Maximum @MaxFileCount files, @(MaxFileSizeInBytes / 1024 / 1024)MB each.</small>
                 <div class="file-upload-wrapper mt-2">
                     <label for="fileInput" class="file-upload-label">
                         <RadzenIcon Icon="upload_file" Style="height: 0.8rem !important;" />
                         Add evidence
                     </label>
-                    <InputFile id="fileInput" class="file-upload-input" hidden OnChange="@OnInputFileChange" multiple accept=".png,.jpg,.jpeg" />
+                    <InputFile id="fileInput" class="file-upload-input" hidden OnChange="@OnInputFileChange"
+                               multiple accept=".png,.jpg,.jpeg" maxFiles="@MaxFileCount" />
                 </div>
                 <small class="mt-1 text-center description-text" style="font-size: 0.7rem !important;">@FileSelectionMessage</small>
             </div>
@@ -108,6 +111,9 @@
     [Parameter]
     public TestCaseResultViewModel LatestTestCaseResult { get; set; }
 
+    private int MaxFileCount { get; set; } = 10;
+    private long MaxFileSizeInBytes { get; set; } = 5 * 1024 * 1024;
+
     private List<String> TestResultOptions = new List<string> { "Yes", "No" };
     private string TestResult { get; set; }
     IEnumerable<IBrowserFile> selectedFiles = new List<IBrowserFile>();
@@ -125,9 +131,46 @@
 
     void OnInputFileChange(InputFileChangeEventArgs e)
     {
-        selectedFiles = e.GetMultipleFiles();
-        StateHasChanged();
-        FileSelectionMessage = $"{selectedFiles.Count()} arquivo(s) selecionado(s)";
+        var newFiles = e.GetMultipleFiles(MaxFileCount);
+        var validFiles = new List<IBrowserFile>();
+
+        foreach (var file in newFiles)
+        {
+            if (file.Size <= MaxFileSizeInBytes)
+            {
+                validFiles.Add(file);
+            }
+            else
+            {
+                ShowNotification(new NotificationMessage
+                    {
+                        Severity = NotificationSeverity.Error,
+                        Summary = "Not able to upload files",
+                        Detail = "File size must be less than 5mb",
+                        Duration = 4000
+                    });
+            }
+        }
+
+        selectedFiles = validFiles;
+        UpdateFileSelectionMessage();
+    }
+
+    private void ShowNotification(NotificationMessage message)
+    {
+        NotificationService.Notify(message);
+    }
+
+    private void UpdateFileSelectionMessage()
+    {
+        if (selectedFiles.Any())
+        {
+            FileSelectionMessage = $"{selectedFiles.Count()} arquivo(s) selecionado(s)";
+        }
+        else
+        {
+            FileSelectionMessage = "Nenhum arquivo selecionado";
+        }
     }
 
     private void HandleStopwatchStopped()
@@ -174,23 +217,21 @@
     .rz-dialog{
         padding-bottom: 0px;
     }
-</style>
 
-<style>
     .file-upload-wrapper {
         display: inline-block;
         position: relative;
     }
 
     .file-upload-label {
-        background-color: var(--rz-primary); /* Radzen primary color */
+        background-color: var(--rz-primary);
         color: white;
         padding: 6px 12px;
         border-radius: 5px;
         cursor: pointer;
         display: flex;
         align-items: center;
-        gap: 8px; /* Space between icon and text */
+        gap: 8px;
         font-size: 13px;
         font-weight: bold;
     }

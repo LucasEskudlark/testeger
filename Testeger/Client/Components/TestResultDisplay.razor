@@ -1,11 +1,14 @@
 ﻿@using Testeger.Client.ViewModels.TestCaseResults
+@inject DialogService DialogService
+@inject NotificationService NotificationService
+@inject IConfiguration Configuration
 
 <div class="col-12 shadow-sm my-2 p-0">
     <ToggleComponent>
         <Header>
             <div class="row d-flex justify-content-between" style="width: 100%;">
                 <div class="col-xl-8 col-6">
-                    <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H3" class="ps-0 pt-2">Result</RadzenText>
+                    <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H3" class="ps-0 pt-2">Result n°@Result.Number</RadzenText>
                 </div>
                 <div class="col-xl-4 col-6 d-flex align-items-center">
                     @if (!Result.IsSuccess)
@@ -30,10 +33,17 @@
             </div>
             <div class="row my-2 ms-1 me-2">
                 <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H3" class="ps-2 pt-0 result-h">Evidence:</RadzenText>
-                <div class="d-flex">
-                    <RadzenIcon Icon="image" class="me-1 ms-0"></RadzenIcon>
-                    <RadzenIcon Icon="image" class="mx-1"></RadzenIcon>
-                    <RadzenIcon Icon="image" class="mx-1"></RadzenIcon>
+                <div class="d-flex mb-3">
+                    @if (Result.Images is not null && Result.Images.Any())
+                    {
+                        @foreach (var image in Result.Images)
+                        {
+                            <img id="small-img" src="@BaseAddress/api/images/@image.FilePath"
+                            alt="Test Case Image"
+                            class="shadow-sm mx-1"
+                            @onclick="(() => OpenDialog(image.FilePath, image.TestCaseResultId, image.Id))" />
+                        }
+                    }
                 </div>
             </div>
         </ChildContent>
@@ -43,6 +53,23 @@
 @code {
     [Parameter]
     public TestCaseResultViewModel Result { get; set; }
+    private string? BaseAddress;
+
+    protected override void OnInitialized()
+    {
+        BaseAddress = Configuration["ApiSettings:BaseAddress"];
+    }
+
+    private async Task OpenDialog(string imageUrl, string testCaseResultId, string imageId)
+    {
+        var options = new DialogOptions { Width = "900px", Height = "680px", Resizable = false, Draggable = true };
+        await DialogService.OpenAsync<ImageDialog>(string.Empty,
+            new Dictionary<string, object> {
+                { "ImageUrl", imageUrl },
+                { "TestCaseResultId", testCaseResultId },
+                { "ImageId", imageId },},
+            options);
+    }
 }
 
 <style>
@@ -52,5 +79,24 @@
 
     .result-h {
         font-size: 0.9rem;
+    }
+
+    #small-img {
+        display: block;
+        max-width: 80px;
+        max-height: 50px;
+        width: auto;
+        height: auto;
+    }
+
+        #small-img:hover {
+            cursor: pointer;
+        }
+
+    .z-dialog-titlebar {
+        padding-top: 0px !important;
+        padding-bottom: 0px !important;
+        padding-right: 0px !important;
+        padding-left: 0px !important;
     }
 </style>
