@@ -1,4 +1,5 @@
 ﻿@page "/project/{ProjectId}/metrics"
+@using Testeger.Client.Models
 @layout DefaultLayout
 @inject ITestRequestServiceNV TestRequestService
 @inject ITestCaseServiceNV TestCaseService
@@ -17,11 +18,13 @@
             </RadzenBreadCrumb>
         </div>
         <div class="col-3 d-flex justify-content-end">
-            <RadzenDropDown @bind-Value="selectedTimeFrame"
-                            Data=@timeOptions
-                            TextProperty="Text"
-                            ValueProperty="Value" />
-        </div>
+                <RadzenDropDown TValue="DateTime?"
+                                Data="FilterOptions"
+                                TextProperty="Text"
+                                ValueProperty="Value"
+                                @bind-Value="@FilterDate"
+                                Change="@(args => StateHasChanged())" />
+            </div>
     </div>
         @if ((TestCases is null && TestRequests is null) || (!TestCases.Any() && !TestRequests.Any()))
         {
@@ -43,16 +46,16 @@
                     <ChildContent>
                         <div class="row mt-3 d-flex align-items-start">
                             <div class="col-6">
-                                <TestRequestGeneralMetricsDatagrid TestRequests="TestRequests" />
+                                <TestRequestGeneralMetricsDatagrid TestRequests="TestRequests" FilterDate="FilterDate" />
                             </div>
                             <div class="col-6">
-                                <RequestTimeSpentInEachStatusChart TestRequests="TestRequests" TestRequestsByStatus="TestRequestsByStatus" />
+                                <RequestTimeSpentInEachStatusChart TestRequests="TestRequests" TestRequestsByStatus="TestRequestsByStatus"/>
                             </div>
                         </div>
 
                         <div class="row mt-4 d-flex justify-content-center mb-4">
                             <div class="col-10">
-                                <TestRequestCountPerStatusChart TestRequestsByStatus="TestRequestsByStatus" />
+                                <TestRequestCountPerStatusChart TestRequestsByStatus="TestRequestsByStatus" FilterDate="FilterDate" />
                             </div>
                         </div>
                     </ChildContent>
@@ -67,16 +70,16 @@
                     <ChildContent>
                         <div class="row mt-3">
                             <div class="col-6">
-                                <TestCaseCountPerStatusChart TestCasesByStatus="TestCasesByStatus" />
+                                <TestCaseCountPerStatusChart TestCasesByStatus="TestCasesByStatus" FilterDate="FilterDate" />
                             </div>
                             <div class="col-6">
-                                <TestCaseGeneralMetricsDatagrid TestCases="TestCases" TestRequests="TestRequests" />
+                                <TestCaseGeneralMetricsDatagrid TestCases="TestCases" TestRequests="TestRequests" FilterDate="FilterDate" />
                             </div>
                         </div>
 
                         <div class="row mt-4 mb-4">
                             <div class="col-12">
-                                <TestCaseTimeSpentInEachStatusChart TestCasesByStatus="TestCasesByStatus" TestCases="TestCases" />
+                                <TestCaseTimeSpentInEachStatusChart TestCasesByStatus="TestCasesByStatus" TestCases="TestCases" FilterDate="FilterDate" />
                             </div>
                         </div>
                     </ChildContent>
@@ -121,6 +124,9 @@
     [Parameter]
     public string ProjectId { get; set; }
 
+    public DateTime? FilterDate { get; set; }
+    private List<DateFilterOption> FilterOptions { get; set; }
+
     private ProjectViewModel Project { get; set; }
     private IEnumerable<TestRequestViewModel> TestRequests { get; set; }
     private IEnumerable<TestCaseViewModel> TestCases { get; set; }
@@ -136,24 +142,21 @@
         TestRequestsByStatus = await TestRequestService.GetTestRequestsByProjectIdGroupedByStatus(ProjectId);
         TestCases = await TestCaseService.GetTestCasesByProjectIdAsync(ProjectId);
         TestCasesByStatus = await TestCaseService.GetTestCasesByProjectIdGroupedByStatus(ProjectId);
+
+        FilterOptions = new List<DateFilterOption>
+        {
+            new DateFilterOption { Text = "All Time", Value = null },
+            new DateFilterOption { Text = "Past Week", Value = DateTime.Now.AddDays(-7) },
+            new DateFilterOption { Text = "Past Month", Value = DateTime.Now.AddMonths(-1) },
+            new DateFilterOption { Text = "Past 3 Months", Value = DateTime.Now.AddMonths(-3) },
+            new DateFilterOption { Text = "Past Year", Value = DateTime.Now.AddYears(-1) }
+        };
+
+        if (FilterDate is null)
+        {
+            FilterDate = FilterOptions.FirstOrDefault(o => o.Text == "Past Month")?.Value;
+        }
+
         isInitialized = true;
-    }
-
-    string selectedTimeFrame = "1d";
-
-    List<TimeOption> timeOptions = new List<TimeOption>
-    {
-        new TimeOption { Text = "Past 4 hours", Value = "1h" },
-        new TimeOption { Text = "Past 12 hours", Value = "4h" },
-        new TimeOption { Text = "Past 1 day", Value = "1d" },
-        new TimeOption { Text = "Past 2 days", Value = "2d" },
-        new TimeOption { Text = "Past 1 week", Value = "1w" },
-        new TimeOption { Text = "Past 1 month", Value = "1M" }
-    };
-
-    public class TimeOption
-    {
-        public string? Text { get; set; }
-        public string? Value { get; set; }
     }
 }

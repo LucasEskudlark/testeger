@@ -1,17 +1,18 @@
-﻿
-@using Testeger.Client.ViewModels.TestRequests
-<h6>Average time a request spend in each status:</h6>
+﻿@using Testeger.Client.ViewModels.TestRequests
+
+<h6>Average time a request spends in each status:</h6>
 <RadzenCard>
     <RadzenChart>
         <RadzenPieSeries Data="@GetPieChartData()" Title="HoursSpent" CategoryProperty="Status" ValueProperty="HoursSpent">
         </RadzenPieSeries>
     </RadzenChart>
+
     <div class="row card d-flex flex-row p-2 my-1">
         <div class="col-9 right-divider">
             <p>Average time spent in the "Waiting" Status:</p>
         </div>
         <div class="col-3 d-flex justify-content-center">
-            @CalculateAverageTimeInSpecificStatus(TestRequests, RequestStatus.Waiting).ToHoursAndMinutes()
+            @CalculateAverageTimeInSpecificStatus(FilteredRequests, RequestStatus.Waiting).ToHoursAndMinutes()
         </div>
     </div>
 
@@ -20,7 +21,7 @@
             <p>Average time spent in the "In Progress" Status:</p>
         </div>
         <div class="col-3 d-flex justify-content-center">
-            @CalculateAverageTimeInSpecificStatus(TestRequests, RequestStatus.InProgress).ToHoursAndMinutes()
+            @CalculateAverageTimeInSpecificStatus(FilteredRequests, RequestStatus.InProgress).ToHoursAndMinutes()
         </div>
     </div>
 
@@ -29,7 +30,7 @@
             <p>Average time spent in the "Ready for Test" Status:</p>
         </div>
         <div class="col-3 d-flex justify-content-center">
-            @CalculateAverageTimeInSpecificStatus(TestRequests, RequestStatus.ReadyForTesting).ToHoursAndMinutes()
+            @CalculateAverageTimeInSpecificStatus(FilteredRequests, RequestStatus.ReadyForTesting).ToHoursAndMinutes()
         </div>
     </div>
 
@@ -38,17 +39,46 @@
             <p>Average time spent in the "Fixing Issues" Status:</p>
         </div>
         <div class="col-3 d-flex justify-content-center">
-            @CalculateAverageTimeInSpecificStatus(TestRequests, RequestStatus.FixingIssues).ToHoursAndMinutes()
+            @CalculateAverageTimeInSpecificStatus(FilteredRequests, RequestStatus.FixingIssues).ToHoursAndMinutes()
         </div>
     </div>
 </RadzenCard>
 
-@code{
+@code {
     [Parameter]
     public Dictionary<RequestStatus, IEnumerable<TestRequestViewModel>> TestRequestsByStatus { get; set; }
 
     [Parameter]
     public IEnumerable<TestRequestViewModel> TestRequests { get; set; }
+
+    [Parameter]
+    public DateTime? FilterDate { get; set; }
+
+    private IEnumerable<TestRequestViewModel> FilteredRequests { get; set; } = Enumerable.Empty<TestRequestViewModel>();
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+        FilteredRequests = FilterTestRequestsByDate(TestRequests, FilterDate);
+    }
+
+    private IEnumerable<TestRequestViewModel> FilterTestRequestsByDate(
+        IEnumerable<TestRequestViewModel> requests, DateTime? filterDate)
+    {
+        if (filterDate == null)
+        {
+            return requests;
+        }
+
+        return requests.Where(request =>
+        {
+            var mostRecentChangeDate = request.History
+                .OrderByDescending(history => history.ChangedDate)
+                .FirstOrDefault()?.ChangedDate;
+
+            return mostRecentChangeDate.HasValue && mostRecentChangeDate.Value >= filterDate.Value;
+        });
+    }
 
     private class DataItem
     {
@@ -67,7 +97,7 @@
                 dataArray[i++] = new DataItem
                     {
                         Status = entry.Key.ToString(),
-                        HoursSpent = CalculateAverageTimeInSpecificStatus(TestRequests, entry.Key),
+                        HoursSpent = CalculateAverageTimeInSpecificStatus(FilteredRequests, entry.Key),
                     };
             }
         }
@@ -98,7 +128,6 @@
                 }
                 else
                 {
-                    // Considera a data atual se o status não mudou novamente
                     endDate = DateTime.Now;
                 }
 
@@ -108,9 +137,9 @@
 
         if (durations.Count == 0)
         {
-            return 0.0; // Retorna 0 se não houver entradas correspondentes
+            return 0.0;
         }
 
-        return Math.Round(durations.Average(), 2); // Retorna a média arredondada para duas casas decimais
+        return Math.Round(durations.Average(), 2);
     }
 }

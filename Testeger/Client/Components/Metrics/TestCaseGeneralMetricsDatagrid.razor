@@ -1,6 +1,6 @@
 ﻿@using System.Linq;
-@using Testeger.Client.ViewModels.TestCases
-@using Testeger.Client.ViewModels.TestRequests
+@using Testeger.Client.ViewModels.TestCases;
+@using Testeger.Client.ViewModels.TestRequests;
 
 <h6>Test case general numbers</h6>
 <RadzenCard>
@@ -9,7 +9,7 @@
             <p>Total amount of test cases:</p>
         </div>
         <div class="col-3 d-flex justify-content-center">
-            @TestCases.Count()
+            @FilteredTestCases.Count()
         </div>
     </div>
 
@@ -27,7 +27,7 @@
             <p>N° of test cases that failed at least once:</p>
         </div>
         <div class="col-3 d-flex justify-content-center">
-            @CountFailedTestCases(TestCases)
+            @CountFailedTestCases(FilteredTestCases)
         </div>
     </div>
 
@@ -36,7 +36,7 @@
             <p>N° of test cases that did not fail:</p>
         </div>
         <div class="col-3 d-flex justify-content-center">
-            @CountNeverFailedTestCases(TestCases)
+            @CountNeverFailedTestCases(FilteredTestCases)
         </div>
     </div>
 
@@ -45,7 +45,7 @@
             <p>Average time to complete a test case:</p>
         </div>
         <div class="col-3 d-flex justify-content-center">
-            @CalculateAverageTestCaseCompletionTimeInHours(TestCases).ToHoursAndMinutes()
+            @CalculateAverageTestCaseCompletionTimeInHours(FilteredTestCases).ToHoursAndMinutes()
         </div>
     </div>
 
@@ -54,10 +54,10 @@
             <p>Average time to test a test case:</p>
         </div>
         <div class="col-3 d-flex justify-content-center">
-            @CalculateAverageTestCaseTestingTimeInHours(TestCases).ToHoursAndMinutes()
+            @CalculateAverageTestCaseTestingTimeInHours(FilteredTestCases).ToHoursAndMinutes()
         </div>
     </div>
-    
+
 </RadzenCard>
 
 @code {
@@ -66,6 +66,34 @@
 
     [Parameter]
     public IEnumerable<TestRequestViewModel> TestRequests { get; set; }
+
+    [Parameter]
+    public DateTime? FilterDate { get; set; }
+
+    private IEnumerable<TestCaseViewModel> FilteredTestCases { get; set; } = Enumerable.Empty<TestCaseViewModel>();
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+        FilteredTestCases = FilterTestCasesByDate(TestCases, FilterDate);
+    }
+
+    private IEnumerable<TestCaseViewModel> FilterTestCasesByDate(IEnumerable<TestCaseViewModel> testCases, DateTime? filterDate)
+    {
+        if (filterDate == null)
+        {
+            return testCases;
+        }
+
+        return testCases.Where(testCase =>
+        {
+            var mostRecentChangeDate = testCase.History
+                .OrderByDescending(history => history.ChangedDate)
+                .FirstOrDefault()?.ChangedDate;
+
+            return mostRecentChangeDate.HasValue && mostRecentChangeDate.Value >= filterDate.Value;
+        });
+    }
 
     private double CalculateAverageTestCaseCompletionTimeInHours(IEnumerable<TestCaseViewModel> testCases)
     {
@@ -110,10 +138,10 @@
     {
         if (!TestRequests.Any())
         {
-            return (double)0;
+            return 0.0;
         }
 
-        double averageCount = (double)TestCases.Count() / TestRequests.Count();
+        double averageCount = (double)FilteredTestCases.Count() / TestRequests.Count();
         return Math.Round(averageCount, 2);
     }
 

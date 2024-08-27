@@ -1,5 +1,6 @@
 ﻿@using Testeger.Client.ViewModels.TestCases
-<h6>Average time a test case spend in each status:</h6>
+
+<h6>Average time a test case spends in each status:</h6>
 <RadzenCard>
     <div class="row">
         <div class="col-6">
@@ -16,7 +17,7 @@
                         <p>Average time spent in the "Pending" Status:</p>
                     </div>
                     <div class="col-3 d-flex justify-content-center">
-                        @CalculateAverageTimeInSpecificStatus(TestCases, TestCaseStatus.Pending).ToHoursAndMinutes()
+                        @CalculateAverageTimeInSpecificStatus(FilteredTestCases, TestCaseStatus.Pending).ToHoursAndMinutes()
                     </div>
                 </div>
 
@@ -25,10 +26,10 @@
                         <p>Average time spent in the "Failed" Status:</p>
                     </div>
                     <div class="col-3 d-flex justify-content-center">
-                        @CalculateAverageTimeInSpecificStatus(TestCases, TestCaseStatus.Failed).ToHoursAndMinutes()
+                        @CalculateAverageTimeInSpecificStatus(FilteredTestCases, TestCaseStatus.Failed).ToHoursAndMinutes()
                     </div>
                 </div>
-            </div>        
+            </div>
         </div>
     </div>
 </RadzenCard>
@@ -39,6 +40,34 @@
 
     [Parameter]
     public IEnumerable<TestCaseViewModel> TestCases { get; set; }
+
+    [Parameter]
+    public DateTime? FilterDate { get; set; }
+
+    private IEnumerable<TestCaseViewModel> FilteredTestCases { get; set; } = Enumerable.Empty<TestCaseViewModel>();
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+        FilteredTestCases = FilterTestCasesByDate(TestCases, FilterDate);
+    }
+
+    private IEnumerable<TestCaseViewModel> FilterTestCasesByDate(IEnumerable<TestCaseViewModel> testCases, DateTime? filterDate)
+    {
+        if (filterDate == null)
+        {
+            return testCases;
+        }
+
+        return testCases.Where(testCase =>
+        {
+            var mostRecentChangeDate = testCase.History
+                .OrderByDescending(history => history.ChangedDate)
+                .FirstOrDefault()?.ChangedDate;
+
+            return mostRecentChangeDate.HasValue && mostRecentChangeDate.Value >= filterDate.Value;
+        });
+    }
 
     private class DataItem
     {
@@ -57,7 +86,7 @@
                 dataArray[i++] = new DataItem
                     {
                         Status = entry.Key.ToString(),
-                        HoursSpent = CalculateAverageTimeInSpecificStatus(TestCases, entry.Key),
+                        HoursSpent = CalculateAverageTimeInSpecificStatus(FilteredTestCases, entry.Key),
                     };
             }
         }
@@ -69,9 +98,9 @@
     {
         List<double> durations = new List<double>();
 
-        foreach (var request in testCases)
+        foreach (var testCase in testCases)
         {
-            var historyEntries = request.History
+            var historyEntries = testCase.History
                 .Where(h => h.NewStatus == status)
                 .OrderBy(h => h.ChangedDate)
                 .ToList();

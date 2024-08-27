@@ -1,4 +1,5 @@
 ﻿@using Testeger.Client.ViewModels.TestRequests
+
 <h6>Test request count per status</h6>
 <RadzenCard>
     <RadzenChart>
@@ -19,17 +20,28 @@
     [Parameter]
     public Dictionary<RequestStatus, IEnumerable<TestRequestViewModel>> TestRequestsByStatus { get; set; }
 
+    [Parameter]
+    public DateTime? FilterDate { get; set; }
+
+    private Dictionary<RequestStatus, IEnumerable<TestRequestViewModel>> FilteredRequestsByStatus { get; set; }
+
     private class DataItem
     {
         public string? Status { get; set; }
         public int RequestCount { get; set; }
     }
 
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+        FilteredRequestsByStatus = FilterTestRequestsByDate(TestRequestsByStatus, FilterDate);
+    }
+
     private DataItem[] GetChartData()
     {
-        DataItem[] dataArray = new DataItem[TestRequestsByStatus.Count];
+        DataItem[] dataArray = new DataItem[FilteredRequestsByStatus.Count];
         int i = 0;
-        foreach (var entry in TestRequestsByStatus)
+        foreach (var entry in FilteredRequestsByStatus)
         {
             dataArray[i++] = new DataItem
                 {
@@ -39,5 +51,35 @@
         }
 
         return dataArray;
+    }
+
+    public Dictionary<RequestStatus, IEnumerable<TestRequestViewModel>> FilterTestRequestsByDate(
+    Dictionary<RequestStatus, IEnumerable<TestRequestViewModel>> testRequestsByStatus, DateTime? filterDate)
+    {
+        if (filterDate == null)
+        {
+            return testRequestsByStatus;
+        }
+
+        var filteredRequestsByStatus = new Dictionary<RequestStatus, IEnumerable<TestRequestViewModel>>();
+
+        foreach (var kvp in testRequestsByStatus)
+        {
+            var status = kvp.Key;
+            var requests = kvp.Value;
+
+            var filteredRequests = requests.Where(request =>
+            {
+                var mostRecentChangeDate = request.History
+                    .OrderByDescending(history => history.ChangedDate)
+                    .FirstOrDefault()?.ChangedDate;
+
+                return mostRecentChangeDate.HasValue && mostRecentChangeDate.Value >= filterDate.Value;
+            });
+
+            filteredRequestsByStatus[status] = filteredRequests;
+        }
+
+        return filteredRequestsByStatus;
     }
 }
