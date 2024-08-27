@@ -18,8 +18,11 @@
         <div class="row my-3">
             <div class="col-3">
                 <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H3">Status</RadzenText>
-                <RadzenDropDown Data="@Enum.GetValues(typeof(TestCaseStatus))"
-                                @bind-Value="TestCase.Status" Style="width:100%;" />
+                <RadzenDropDown Data="@GetTestCaseStatusValues()"
+                                TextProperty="Name"
+                                ValueProperty="Value"
+                                @bind-Value="TestCase.Status"
+                                Style="width:100%;" />
                 <ValidationMessage For="@(() => TestCase.Status)" class="view-model-validation-msg" />
             </div>
             <div class="col-4">
@@ -118,6 +121,15 @@
 
     private void ShowScheduledDateTooltip(ElementReference elementReference, TooltipOptions options = null)
                     => TooltipService.Open(elementReference, "You can only set this date when the request is ready for testing. ", options);
+
+    private List<EnumItem<TestCaseStatus>> GetTestCaseStatusValues()
+    {
+        return Enum.GetValues(typeof(TestCaseStatus))
+            .Cast<TestCaseStatus>()
+            .Where(status => status != TestCaseStatus.None)
+            .Select(e => new EnumItem<TestCaseStatus> { Value = e, Name = e.ToString() })
+            .ToList();
+    }
 }
 
 <style>
