@@ -34,7 +34,7 @@ public class TestRequestMapping : IEntityTypeConfiguration<TestRequest>
 
         builder.Property(t => t.Description)
             .HasColumnName("Description")
-            .HasMaxLength(300)
+            .HasMaxLength(1500)
             .IsRequired();
 
         builder.Property(t => t.StoryLink)
