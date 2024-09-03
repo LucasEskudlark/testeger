@@ -3,8 +3,8 @@
 
 @if (ImageUrl is not null)
 {
-    <div id="dialog-img" class="d-flex justify-content-center align-items-center">
-        <img src="https://localhost:5000/api/images/@ImageUrl" class="full-image" />
+    <div id="img-div" class="d-flex justify-content-center align-items-center">
+        <img id="dialog-img" src="https://localhost:5000/api/images/@ImageUrl" class="full-image" />
     </div>
 }
 
@@ -23,8 +23,15 @@
     #dialog-img {
         display: block;
         max-width: 900px;
-        max-height: 680px;
+        max-height: 620px;
+        min-width: 450px;
+        min-height: 340px;
         width: auto;
         height: auto;
+    }
+
+    #img-div {
+        idth: 900px;
+        height: 620px;
     }
 </style>
