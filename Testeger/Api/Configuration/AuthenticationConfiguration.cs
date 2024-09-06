@@ -1,6 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Testeger.Domain.Models.Entities;
+using Testeger.Infra.Context;
 
 namespace Testeger.Api.Configuration;
 
@@ -8,6 +11,10 @@ public static class AuthenticationConfiguration
 {
     public static void ConfigureAuthentication(this IServiceCollection services, IConfiguration configuration)
     {
+        services.AddIdentity<ApplicationUser, IdentityRole>()
+            .AddEntityFrameworkStores<AppDbContext>()
+            .AddDefaultTokenProviders();
+
         var secretKey = GetSecretKey(configuration);
 
         services.AddAuthentication(options =>

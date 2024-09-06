@@ -12,14 +12,14 @@ using Testeger.Shared.DTOs.Requests.Authentication.Register;
 
 namespace Testeger.Application.Services.Authentication;
 
-public class AuthenticationService : IAuthenticationService
+public class CustomAuthenticationService : ICustomAuthenticationService
 {
     private readonly ITokenService _tokenService;
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly RoleManager<IdentityRole> _roleManager;
     private readonly JwtSettings _jwtSettings;
 
-    public AuthenticationService(
+    public CustomAuthenticationService(
         ITokenService tokenService,
         UserManager<ApplicationUser> userManager,
         RoleManager<IdentityRole> roleManager,
@@ -31,7 +31,7 @@ public class AuthenticationService : IAuthenticationService
         _jwtSettings = jwtSettings.Value;
     }
 
-    public async Task AddRoleToUserAsync(string email, string roleName)
+    public async Task AddUserToRoleAsync(string email, string roleName)
     {
         var user = await _userManager.FindByEmailAsync(email)
             ?? throw new NotFoundException("User not found");
@@ -47,7 +47,7 @@ public class AuthenticationService : IAuthenticationService
 
         if (user == null || !await _userManager.CheckPasswordAsync(user, request.Password))
         {
-            return new TokenDto();
+            throw new InvalidOperationException("Login failed");
         }
 
         var authClaims = await GetUserClaims(user);
@@ -126,7 +126,7 @@ public class AuthenticationService : IAuthenticationService
             SecurityStamp = Guid.NewGuid().ToString(),
         };
 
-        var userCreationResult = await _userManager.CreateAsync(user);
+        var userCreationResult = await _userManager.CreateAsync(user, request.Password);
 
         if (!userCreationResult.Succeeded)
         {

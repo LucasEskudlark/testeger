@@ -13,7 +13,7 @@ public class TokenService : ITokenService
 {
     private readonly JwtSettings _jwtSettings;
 
-    public TokenService(IOptionsSnapshot<JwtSettings> jwtSettings)
+    public TokenService(IOptions<JwtSettings> jwtSettings)
     {
         _jwtSettings = jwtSettings.Value;
     }
@@ -45,10 +45,11 @@ public class TokenService : ITokenService
     {
         var secureRandomBytes = new byte[128];
 
-        using var randoNumberGenerator = RandomNumberGenerator.Create();
+        using var randomNumberGenerator = RandomNumberGenerator.Create();
+
+        randomNumberGenerator.GetBytes(secureRandomBytes);
 
         var refreshToken = Convert.ToBase64String(secureRandomBytes);
-
         return refreshToken;
     }
 

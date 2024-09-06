@@ -1,6 +1,7 @@
 using SharpGrip.FluentValidation.AutoValidation.Mvc.Extensions;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Testeger.Api.Configuration;
 using Testeger.Api.Middlewares;
 using Testeger.Application.Configuration;
 using Testeger.Application.MappingProfiles;
@@ -32,20 +33,10 @@ builder.Services.AddUnitOfWork();
 builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddRequestValidators();
 builder.Services.AddAutoMapper(typeof(ProjectMappingProfile));
-builder.Services.AddAuthentication();
 
 var BlazorClientPolicy = "BlazorClientPolicy";
-
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy(name: BlazorClientPolicy,
-        policy =>
-    {
-        policy.WithOrigins("https://localhost:49851")
-               .AllowAnyHeader()
-               .AllowAnyMethod();
-    });
-});
+builder.Services.ConfigureCors(BlazorClientPolicy);
+builder.Services.ConfigureAuthentication(builder.Configuration);
 
 builder.Services.AddApplicationServices();
 
