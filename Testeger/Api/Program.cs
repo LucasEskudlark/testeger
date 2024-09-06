@@ -4,6 +4,7 @@ using System.Text.Json.Serialization;
 using Testeger.Api.Middlewares;
 using Testeger.Application.Configuration;
 using Testeger.Application.MappingProfiles;
+using Testeger.Application.Settings;
 using Testeger.Infra.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -24,13 +25,14 @@ builder.Services.AddControllersWithViews()
     });
 builder.Services.AddRazorPages();
 
-
+builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection(nameof(JwtSettings)));
 builder.Services.AddDatabase(builder.Configuration);
 builder.Services.AddRepositories();
 builder.Services.AddUnitOfWork();
 builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddRequestValidators();
 builder.Services.AddAutoMapper(typeof(ProjectMappingProfile));
+builder.Services.AddAuthentication();
 
 var BlazorClientPolicy = "BlazorClientPolicy";
 
