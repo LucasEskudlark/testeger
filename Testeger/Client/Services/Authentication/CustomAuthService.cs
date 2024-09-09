@@ -47,6 +47,21 @@ public class CustomAuthService : BaseService, ICustomAuthService
 
         return new AuthResult { Success = true };
     }
+
+    public async Task<AuthResult> RegisterAsync(RegisterViewModel registerViewModel)
+    {
+        var address = BaseAddress + "/register";
+
+        var response = await _httpClient.PostAsJsonAsync(address, registerViewModel);
+
+        if (!response.IsSuccessStatusCode)
+        {
+            _notificationService.ShowFailNotification("Error", "Could not register.");
+            return new AuthResult { Success = false };
+        }
+
+        return new AuthResult { Success = true };
+    }
 }
 
 public class AuthResult

@@ -1,5 +1,7 @@
 ﻿@page "/home"
 @layout DefaultLayout
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize(Roles = "teste")]
 @inject DialogService DialogService
 @inject INotificationService NotificationService
 
