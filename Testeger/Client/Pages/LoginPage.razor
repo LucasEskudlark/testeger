@@ -1,4 +1,7 @@
 ﻿@page "/login"
+@inject AuthenticationStateProvider AuthStateProvider
+@inject ILocalStorageService LocalStorage
+@inject ICustomAuthService AuthService
 @inject NavigationManager NavigationManager
 
 <PageTitle>Login - Testeger</PageTitle>
@@ -14,16 +17,19 @@
                 </div>
 
                 <EditForm Model="loginModel" OnValidSubmit="HandleLogin">
+                    <DataAnnotationsValidator />
                     <h4 class="mb-3">Please sign in</h4>
 
                     <div class="form-group">
-                        <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">E-mail</RadzenText>
-                        <InputText id="email" class="form-control" placeholder="testeger@email.com" @bind-Value="loginModel.Email" />
+                        <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Username</RadzenText>
+                        <InputText id="username" class="form-control" placeholder="Your username" @bind-Value="loginModel.Username" />
+                        <ValidationMessage For="@(() => loginModel.Username)"/>
                     </div>
 
                     <div class="form-group">
                         <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Password</RadzenText>
                         <InputText id="password" type="password" class="form-control" placeholder="******" @bind-Value="loginModel.Password" />
+                        <ValidationMessage For="@(() => loginModel.Password)" />
                     </div>
 
                     <div class="mb-5 d-flex flex-row align-items-center">
@@ -53,18 +59,19 @@
 </div>
 
 @code {
-    private LoginModel loginModel = new LoginModel();
+    private LoginViewModel loginModel = new LoginViewModel();
     bool value;
 
-    private void HandleLogin()
+    private async Task HandleLogin()
     {
-        NavigationManager.NavigateTo("/home");
-    }
+        var result = await AuthService.LoginAsync(loginModel);
 
-    public class LoginModel
-    {
-        public string Email { get; set; }
-        public string Password { get; set; }
+        await AuthStateProvider.GetAuthenticationStateAsync();
+
+        if (result.Success)
+        {
+            NavigationManager.NavigateTo("/home");
+        }
     }
 }
 
