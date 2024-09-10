@@ -1,5 +1,7 @@
 ﻿using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
+using Testeger.Shared.DTOs.Requests.Authentication.Login;
+using Testeger.Shared.DTOs.Requests.Authentication.Register;
 using Testeger.Shared.DTOs.Requests.CreateProject;
 using Testeger.Shared.DTOs.Requests.CreateTestCase;
 using Testeger.Shared.DTOs.Requests.CreateTestCaseResult;
@@ -15,5 +17,7 @@ public static class RequestValidatorsConfiguration
         services.AddScoped<IValidator<CreateTestRequestRequest>, CreateTestRequestRequestValidator>();
         services.AddScoped<IValidator<CreateTestCaseRequest>, CreateTestCaseRequestValidator>();
         services.AddScoped<IValidator<CreateTestCaseResultRequest>, CreateTestCaseResultRequestValidator>();
+        services.AddScoped<IValidator<UserRegisterRequest>, UserRegisterRequestValidator>();
+        services.AddScoped<IValidator<UserLoginRequest>, UserLoginRequestValidator>();
     }
 }
