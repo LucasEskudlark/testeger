@@ -5,6 +5,7 @@
 @inject ITestCaseServiceNV TestCaseService
 @inject NavigationManager NavigationManager
 @inject TooltipService TooltipService
+@attribute [Authorize]
 
 @if(Request is not null)
 {

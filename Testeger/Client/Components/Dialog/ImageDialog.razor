@@ -1,5 +1,6 @@
 ﻿@page "/{TestCaseResultId}/image/{ImageId}"
 @inject DialogService DialogService
+@attribute [Authorize]
 
 @if (ImageUrl is not null)
 {
