@@ -1,6 +1,7 @@
 ﻿@page "/create-project"
 @inject DialogService DialogService 
 @inject NavigationManager NavigationManager
+@attribute [Authorize]
 
 <div class="container-fluid">
     <ProjectCreationForm OnFormSubmitted="HandleSubmission"/>

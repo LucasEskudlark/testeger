@@ -15,5 +15,8 @@ public class UserRegisterRequestValidator : AbstractValidator<UserRegisterReques
         RuleFor(x => x.Email)
             .EmailAddress()
             .NotEmpty();
+
+        RuleFor(x => x.PhoneNumber)
+            .NotEmpty();    
     }
 }

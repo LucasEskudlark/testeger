@@ -1,4 +1,5 @@
-﻿using Testeger.Client.Services.Images;
+﻿using Testeger.Client.Services.Authentication;
+using Testeger.Client.Services.Images;
 using Testeger.Client.Services.Notifications;
 using Testeger.Client.Services.Projects;
 using Testeger.Client.Services.TestCaseResults;
@@ -17,5 +18,6 @@ public static class ClientServicesConfiguration
         services.AddScoped<ITestCaseResultService, TestCaseResultService>();
         services.AddScoped<IImageService, ImageService>();
         services.AddScoped<INotificationService, NotificationService>();
+        services.AddScoped<ICustomAuthService, CustomAuthService>();
     }
 }

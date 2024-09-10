@@ -4,6 +4,7 @@
 @inject ITestCaseResultService TestCaseResultService
 @inject IImageService ImageService
 @inject INotificationService NotificationService
+@attribute [Authorize]
 
 @if (isInitialized)
 {

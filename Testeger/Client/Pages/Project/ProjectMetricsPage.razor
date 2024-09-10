@@ -4,6 +4,7 @@
 @inject ITestRequestServiceNV TestRequestService
 @inject ITestCaseServiceNV TestCaseService
 @inject IProjectServiceNV ProjectService
+@attribute [Authorize]
 
 <PageTitle>@Project?.Name Metrics - Testeger</PageTitle>
 

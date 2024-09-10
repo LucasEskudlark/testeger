@@ -1,5 +1,8 @@
 ﻿@page "/register"
+@using System.Text.RegularExpressions
 @inject NavigationManager NavigationManager
+@inject ICustomAuthService AuthService
+@attribute [Authorize]
 
 <PageTitle>Register - Testeger</PageTitle>
 
@@ -13,37 +16,40 @@
                 </div>
                 
                 <EditForm Model="registerModel" OnValidSubmit="HandleRegistration">
+                    <DataAnnotationsValidator />
                     <div class="register-container">
                         <div class="row mb-2 d-flex justify-content-between">
-                            <div class="col-6">
+                            <div class="col-8">
                                 <div class="form-group">
-                                    <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">First Name</RadzenText>
-                                    <InputText id="firstName" class="form-control" placeholder="Firste" @bind-Value="registerModel.FirstName" />
+                                    <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Username</RadzenText>
+                                    <InputText id="userName" class="form-control" placeholder="Username" @bind-Value="registerModel.Username" />
+                                    <ValidationMessage For="@(() => registerModel.Username)" />
                                 </div>
                             </div>
-                            <div class="col-6">
+                            @* <div class="col-6">
                                 <div class="form-group">
                                     <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Last Name</RadzenText>
                                     <InputText id="lastName" class="form-control" placeholder="Last" @bind-Value="registerModel.LastName" />
                                 </div>
-                            </div>
+                            </div> *@
                         </div>
 
                         <div class="row mb-2 d-flex justify-content-between">
                             <div class="col-6">
-                                <div class="form-group">
+                                @* <div class="form-group">
                                     <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Birth date</RadzenText>
                                     <RadzenDatePicker @bind-Value="registerModel.BirthDate"
                                                       Style="width:100%;" Max="@(DateTime.Today)"
                                                       DateFormat="dd/MM/yyyy"
                                                       Placeholder="01/01/0001" />
-                                </div>
+                                </div> *@
                             </div>
                             <div class="col-6">
                                 <div class="form-group">
                                     <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Phone number</RadzenText>
                                     <RadzenMask Mask="(**) *****-****" CharacterPattern="[0-9]" Placeholder="(00) 00000-0000" Name="Phone" @bind-Value=@registerModel.PhoneNumber
                                                 Style="width: 100%;" aria-label="Phone" />
+                                    <ValidationMessage For="@(() => registerModel.PhoneNumber)" class="view-model-validation-msg" />
                                 </div>
                             </div>
                         </div>
@@ -53,9 +59,27 @@
                                 <div class="form-group">
                                     <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">E-mail</RadzenText>
                                     <InputText id="email" class="form-control" placeholder="testeger@email.com" @bind-Value="registerModel.Email" />
+                                    <ValidationMessage For="@(() => registerModel.Email)" class="view-model-validation-msg" />
                                 </div>
                             </div>
                             
+                        </div>
+
+                        <div class="row mb-2 d-flex justify-content-between">
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Password</RadzenText>
+                                    <RadzenPassword @bind-Value=@registerModel.Password aria-label="enter password" Style="width: 100%;" />
+                                    <ValidationMessage For="@(() => registerModel.Password)" class="view-model-validation-msg" />
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Confirm Password</RadzenText>
+                                    <RadzenPassword @bind-Value=@registerModel.ConfirmPassword aria-label="confirm password" Style="width: 100%;" />
+                                    <ValidationMessage For="@(() => registerModel.ConfirmPassword)" class="view-model-validation-msg" />
+                                </div>
+                            </div>
                         </div>
 
                         <RadzenButton ButtonType="ButtonType.Submit" ButtonStyle="ButtonStyle.Primary" Text="Register" Style="width: 100%;" />
@@ -74,22 +98,25 @@
 </div>
 
 @code{
-    private RegisterModel registerModel = new RegisterModel();
+    private RegisterViewModel registerModel = new RegisterViewModel();
 
     private int value = 1;
 
-    private void HandleRegistration()
+    private async Task HandleRegistration()
     {
-        NavigationManager.NavigateTo("/home");
+        registerModel.PhoneNumber = ConvertToNumbersOnly(registerModel.PhoneNumber);
+
+        var result = await AuthService.RegisterAsync(registerModel);
+
+        if (result.Success)
+        {
+            NavigationManager.NavigateTo("/login");
+        }
     }
 
-    public class RegisterModel
+    public static string ConvertToNumbersOnly(string input)
     {
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-        public DateTime BirthDate { get; set; }
-        public string PhoneNumber { get; set; }
-        public string Email { get; set; }
+        return Regex.Replace(input, @"\D", "");
     }
 }
 
@@ -112,5 +139,11 @@
 
     .login-link{
         color: var(--rz-primary);
+    }
+
+    .view-model-validation-msg {
+        font-size: 11px !important;
+        margin-top: 0.3rem;
+        color: red;
     }
 </style>
