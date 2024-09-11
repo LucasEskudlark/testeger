@@ -2,7 +2,7 @@
 @layout DefaultLayout
 @inject IProjectServiceNV ProjectService
 @inject TooltipService TooltipService
-@attribute [Authorize]
+@attribute [Authorize(Policy = $"{AuthorizationRoles.Manager}")]
 
 
 @if (Project is not null)

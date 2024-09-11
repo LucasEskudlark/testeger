@@ -3,7 +3,7 @@
 @inject IProjectServiceNV ProjectService
 @inject ITestRequestServiceNV TestRequestService
 @inject NavigationManager NavigationManager
-@attribute [Authorize]
+@attribute [Authorize(Policy = $"{AuthorizationRoles.Manager}, {AuthorizationRoles.QA}, {AuthorizationRoles.Developer}")]
 
 @inject HttpClient HttpClient
 

@@ -1,4 +1,4 @@
-﻿@page "/test-case/{TestCaseId}"
+﻿@page "/project/{ProjectId}/test-case/{TestCaseId}"
 @layout DefaultLayout
 @inject NavigationManager NavigationManager
 @inject TooltipService TooltipService
@@ -6,7 +6,7 @@
 @inject ITestCaseServiceNV TestCaseService
 @inject ITestRequestServiceNV TestRequestService
 @inject ITestCaseResultService TestCaseResultService
-
+@attribute [Authorize(Policy = $"{AuthorizationRoles.Manager}, {AuthorizationRoles.QA}, {AuthorizationRoles.Developer}")]
 
 @if (isInitialized)
 {
@@ -17,7 +17,7 @@
             <div class="col-auto">
                 <RadzenBreadCrumb>
                     <RadzenBreadCrumbItem Path="@Testeger.Client.Helpers.BreadCrumbHelper.GetProjectUrl(Request.ProjectId)" Text="Project" />
-                    <RadzenBreadCrumbItem Path="@Testeger.Client.Helpers.BreadCrumbHelper.GetRequestUrl(Request.Id)" Text="@Testeger.Client.Helpers.BreadCrumbHelper.GetRequestText(Request.Number)" />
+                    <RadzenBreadCrumbItem Path="@Testeger.Client.Helpers.BreadCrumbHelper.GetRequestUrl(Request.ProjectId, Request.Id)" Text="@Testeger.Client.Helpers.BreadCrumbHelper.GetRequestText(Request.Number)" />
                     <RadzenBreadCrumbItem Text="@TestCase.Title" />
                 </RadzenBreadCrumb>
             </div>
@@ -65,6 +65,8 @@
 @code {
     [Parameter]
     public string TestCaseId { get; set; }
+    [Parameter]
+    public string ProjectId { get; set; }
     [Parameter]
     public EventCallback OnTestCaseDeleted { get; set; }
     [Parameter]
@@ -118,7 +120,7 @@
         if (TestCase != null)
         {
             await TestCaseService.DeleteTestCaseByIdAsync(TestCase.Id);
-            NavigationManager.NavigateTo(Testeger.Client.Helpers.BreadCrumbHelper.GetRequestUrl(Request.Id));
+            NavigationManager.NavigateTo(Testeger.Client.Helpers.BreadCrumbHelper.GetRequestUrl(Request.ProjectId, Request.Id));
             await OnTestCaseDeleted.InvokeAsync();
         }
     }
