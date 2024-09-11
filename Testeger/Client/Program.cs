@@ -1,10 +1,12 @@
 using Blazored.LocalStorage;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Radzen;
 using Testeger.Client;
 using Testeger.Client.Authentication;
+using Testeger.Client.Authorization;
 using Testeger.Client.Configuration;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
@@ -21,6 +23,8 @@ builder.Services.AddScoped<CustomAuthenticationStateProvider>();
 builder.Services.AddScoped<AuthenticationStateProvider>(provider =>
        provider.GetRequiredService<CustomAuthenticationStateProvider>());
 builder.Services.AddAuthorizationCore();
+builder.Services.AddSingleton<IAuthorizationPolicyProvider, ProjectRolePolicyProvider>();
+builder.Services.AddScoped<IAuthorizationHandler, ProjectRoleAuthorizationHandler>();
 builder.Services.AddBlazoredLocalStorage();
 
 await builder.Build().RunAsync();
