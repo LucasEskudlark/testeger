@@ -24,7 +24,9 @@ public class AppDbContext : IdentityDbContext<ApplicationUser>
             .ApplyConfiguration(new TestRequestMapping())
             .ApplyConfiguration(new TestCaseMapping())
             .ApplyConfiguration(new TestCaseResultMapping())
-            .ApplyConfiguration(new ImageMapping());
+            .ApplyConfiguration(new ImageMapping())
+            .ApplyConfiguration(new ApplicationUserMapping())
+            .ApplyConfiguration(new ProjectUserMapping());
 
         base.OnModelCreating(modelBuilder);
     }
