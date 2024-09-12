@@ -12,4 +12,5 @@ public interface ICustomAuthenticationService
     Task RevokeAsync(string username);
     Task CreateRoleAsync(string roleName);
     Task AddUserToRoleAsync(string email, string roleName);
+    Task AddUserToProjectRoleAsync(string userId, string roleName);
 }

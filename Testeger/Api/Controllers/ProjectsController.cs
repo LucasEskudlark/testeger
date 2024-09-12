@@ -1,9 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
-using Testeger.Application.Helpers;
+using Testeger.Application.Extensions;
 using Testeger.Application.Services.Authentication;
 using Testeger.Application.Services.Project;
-using Testeger.Client.Services.Authentication;
+using Testeger.Shared.Authorization;
 using Testeger.Shared.DTOs.Requests.Common;
 using Testeger.Shared.DTOs.Requests.CreateProject;
 
@@ -25,11 +24,16 @@ public class ProjectsController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> CreateProjectAsync([FromBody] CreateProjectRequest request)
     {
-        var userId = UserHelper.GetUserId(User);
+        var userId = User.GetUserId();
         request.UserId = userId;
 
         var response = await _projectService.CreateProject(request);
+
         await _projectService.AddUserToProjectAsync(response.Id, userId);
+
+        await _authService.AddUserToProjectRoleAsync(
+            User.GetUserId(),
+            AuthorizationRoles.GetRoleForProject(response.Id, AuthorizationRoles.Manager));
 
         return Ok(response);
     }
@@ -53,7 +57,7 @@ public class ProjectsController : ControllerBase
     [HttpGet("user")]
     public async Task<IActionResult> GetProjectsForUserAsync(string? requestUserId)
     {
-        var userId = string.IsNullOrEmpty(requestUserId) ? UserHelper.GetUserId(User) : requestUserId;
+        var userId = string.IsNullOrEmpty(requestUserId) ? User.GetUserId() : requestUserId;
 
         var response = await _projectService.GetProjectsForUserAsync(userId);
 

@@ -1,10 +1,10 @@
 ﻿using System.Security.Claims;
 
-namespace Testeger.Application.Helpers;
+namespace Testeger.Application.Extensions;
 
-public static class UserHelper
+public static class UserExtensions
 {
-    public static string GetUserId(ClaimsPrincipal user)
+    public static string GetUserId(this ClaimsPrincipal user)
     {
         var userId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value 
             ?? throw new InvalidOperationException("UserId can not be null!");

@@ -41,6 +41,23 @@ public class CustomAuthenticationService : ICustomAuthenticationService
         if (!result.Succeeded) throw new InvalidOperationException($"Unable to add user to role {roleName}");
     }
 
+    public async Task AddUserToProjectRoleAsync(string userId, string roleName)
+    {
+        var user = await _userManager.FindByIdAsync(userId)
+            ?? throw new NotFoundException("User not found");
+
+        var roleExist = await _roleManager.RoleExistsAsync(roleName);
+
+        if (!roleExist)
+        {
+            await CreateRoleAsync(roleName);
+        }
+
+        var result = await _userManager.AddToRoleAsync(user, roleName);
+
+        if (!result.Succeeded) throw new InvalidOperationException($"Unable to add user to role {roleName}");
+    }
+
     public async Task<TokenDto> AuthenticateUserAsync(UserLoginRequest request)
     {
         var user = await _userManager.FindByNameAsync(request.Username);
