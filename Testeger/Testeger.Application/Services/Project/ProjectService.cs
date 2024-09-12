@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Testeger.Application.Exceptions;
+using Testeger.Domain.Models.Entities;
 using Testeger.Infra.UnitOfWork;
 using Testeger.Shared.DTOs.Requests.Common;
 using Testeger.Shared.DTOs.Requests.CreateProject;
@@ -41,7 +42,7 @@ public class ProjectService : BaseService, IProjectService
 
     public async Task<GetProjectResponse> GetProjectById(string id)
     {
-        var project = await _unitOfWork.ProjectRepository.GetByIdAsync(id) ?? throw new NotFoundException($"Project with id {id} not found");
+        var project = await FindProjectByIdAsync(id);
 
         var response = _mapper.Map<GetProjectResponse>(project);
 
@@ -50,9 +51,40 @@ public class ProjectService : BaseService, IProjectService
 
     public async Task DeleteProject(string id)
     {
-        var project = await _unitOfWork.ProjectRepository.GetByIdAsync(id) ?? throw new NotFoundException($"Could not delete project. Project with id {id} not found");
+        var project = await FindProjectByIdAsync(id);
 
         await _unitOfWork.ProjectRepository.Delete(project);
         await _unitOfWork.CompleteAsync();
+    }
+
+    public async Task<IEnumerable<GetProjectResponse>> GetProjectsForUserAsync(string userId)
+    {
+        var projects = await _unitOfWork.ProjectRepository.GetProjectsForUserAsync(userId);
+
+        var response = _mapper.Map<IEnumerable<GetProjectResponse>>(projects);
+
+        return response;
+    }
+
+    public async Task AddUserToProjectAsync(string projectId, string userId)
+    {
+        var project = await FindProjectByIdAsync(projectId);
+
+        project.ProjectUsers.Add(
+            new ProjectUser 
+            { 
+                ProjectId  = projectId,
+                UserId = userId
+            });
+
+        await _unitOfWork.CompleteAsync();
+    }
+
+    private async Task<DomainProject> FindProjectByIdAsync(string projectId)
+    {
+        var project = await _unitOfWork.ProjectRepository.GetProjectByIdAsync(projectId) ??
+             throw new NotFoundException($"Project with id {projectId} not found");
+
+        return project;
     }
 }

@@ -52,5 +52,14 @@ public class ProjectServiceNV : BaseService, IProjectServiceNV
         return response;
     }
 
+    public async Task<IEnumerable<ProjectViewModel>> GetProjectsForUserAsync()
+    {
+        var address = BaseAddress + $"/user";
+        
+        var response = await _httpClient.GetFromJsonAsync<IEnumerable<ProjectViewModel>>(address);
+
+        return response;
+    }
+
     private void NotifyStateChanged() => OnChange?.Invoke();
 }

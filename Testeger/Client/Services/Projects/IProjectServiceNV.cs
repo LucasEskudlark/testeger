@@ -14,4 +14,5 @@ public interface IProjectServiceNV
     Task<CreateProjectResponse> CreateProjectAsync(ProjectCreationViewModel request);
     Task<ProjectViewModel> GetProjectByIdAsync(string id);
     Task<PagedResponse<ProjectViewModel>> GetAllProjectsPagedAsync();
+    Task<IEnumerable<ProjectViewModel>> GetProjectsForUserAsync();
 }
