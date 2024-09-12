@@ -17,26 +17,25 @@ public class ProjectRoleAuthorizationHandler : AuthorizationHandler<ProjectRoleR
     protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, ProjectRoleRequirement requirement)
     {
         var projectId = GetProjectIdFromUrl();
-
         if (string.IsNullOrEmpty(projectId))
         {
             return Task.CompletedTask;
         }
 
-        var requiredRoles = new List<string>();
-        var roleArray = requirement.Roles.Split(",", StringSplitOptions.RemoveEmptyEntries).Select(s => s.Trim());
-
-        foreach (var role in roleArray)
-        {
-            var requiredRole = role.Replace("ProjectRole:", "ProjectRole:" + projectId + ":");
-            requiredRoles.Add(requiredRole);
-        }
+        var requiredRoles = requirement.Roles
+            .Split(",", StringSplitOptions.RemoveEmptyEntries)
+            .Select(role => role.Trim().Replace("ProjectRole:", $"ProjectRole:{projectId}:"))
+            .ToList();
 
         var roleClaim = context.User.FindFirst(c => c.Type == "role");
+        if (roleClaim == null)
+        {
+            return Task.CompletedTask;
+        }
 
-        var rolesArray = JsonSerializer.Deserialize<string[]>(roleClaim.Value);
+        var userRoles = DeserializeRoles(roleClaim.Value);
 
-        if (rolesArray != null && rolesArray.Any(requiredRoles.Contains))
+        if (userRoles.Any(requiredRoles.Contains))
         {
             context.Succeed(requirement);
         }
@@ -53,5 +52,18 @@ public class ProjectRoleAuthorizationHandler : AuthorizationHandler<ProjectRoleR
             return segments[2].TrimEnd('/');
         }
         return null;
+    }
+
+    private static IEnumerable<string> DeserializeRoles(string roleClaimValue)
+    {
+        try
+        {
+            var rolesArray = JsonSerializer.Deserialize<string[]>(roleClaimValue);
+            return rolesArray ?? Enumerable.Empty<string>();
+        }
+        catch (JsonException)
+        {
+            return [roleClaimValue];
+        }
     }
 }
