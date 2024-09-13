@@ -1,4 +1,5 @@
-﻿using Testeger.Shared.DTOs.Common;
+﻿using System.Security.Claims;
+using Testeger.Shared.DTOs.Common;
 using Testeger.Shared.DTOs.Requests.Authentication.Login;
 using Testeger.Shared.DTOs.Requests.Authentication.Register;
 
@@ -13,4 +14,5 @@ public interface ICustomAuthenticationService
     Task CreateRoleAsync(string roleName);
     Task AddUserToRoleAsync(string email, string roleName);
     Task AddUserToProjectRoleAsync(string userId, string roleName);
+    Task<TokenDto> ReAuthenticateUserAsync(ClaimsPrincipal user);
 }

@@ -67,21 +67,19 @@ public class CustomAuthenticationService : ICustomAuthenticationService
             throw new InvalidOperationException("Login failed");
         }
 
-        var authClaims = await GetUserClaims(user);
+        var result = await GenerateTokens(user);
 
-        var token = _tokenService.GenerateAccessToken(authClaims);
+        return result;
+    }
 
-        var refreshToken = _tokenService.GenerateRefreshToken();
-        user.RefreshTokenExpiryTime = DateTime.UtcNow.AddMinutes(_jwtSettings.RefreshTokenValidityInMinutes);
-        user.RefreshToken = refreshToken;
-        await _userManager.UpdateAsync(user);
+    public async Task<TokenDto> ReAuthenticateUserAsync(ClaimsPrincipal user)
+    {
+        var applicationUser = await _userManager.GetUserAsync(user)
+            ?? throw new InvalidOperationException("Reauthentication failed");
 
-        return new TokenDto
-        {
-            Token = new JwtSecurityTokenHandler().WriteToken(token),
-            RefreshToken = refreshToken,
-            Expiration = token.ValidTo
-        };
+        var result = await GenerateTokens(applicationUser);
+
+        return result;
     }
 
     public async Task CreateRoleAsync(string roleName)
@@ -194,5 +192,25 @@ public class CustomAuthenticationService : ICustomAuthenticationService
         {
             throw new InvalidOperationException($"Could not create user. User with email {request.Email} already exists");
         }
+    }
+
+    private async Task<TokenDto> GenerateTokens(ApplicationUser user)
+    {
+        var authClaims = await GetUserClaims(user);
+
+        var token = _tokenService.GenerateAccessToken(authClaims);
+
+        var refreshToken = _tokenService.GenerateRefreshToken();
+        user.RefreshTokenExpiryTime = DateTime.UtcNow.AddMinutes(_jwtSettings.RefreshTokenValidityInMinutes);
+        user.RefreshToken = refreshToken;
+
+        await _userManager.UpdateAsync(user);
+
+        return new TokenDto
+        {
+            Token = new JwtSecurityTokenHandler().WriteToken(token),
+            RefreshToken = refreshToken,
+            Expiration = token.ValidTo
+        };
     }
 }
