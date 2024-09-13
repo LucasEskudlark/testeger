@@ -6,6 +6,7 @@
 @inject ITestCaseServiceNV TestCaseService
 @inject ITestRequestServiceNV TestRequestService
 @inject ITestCaseResultService TestCaseResultService
+@inject IPolicyValidatorService PolicyValidatorService
 @attribute [Authorize(Policy = $"{AuthorizationRoles.Manager}, {AuthorizationRoles.QA}, {AuthorizationRoles.Developer}")]
 
 @if (isInitialized)
@@ -27,7 +28,7 @@
                               ButtonStyle="@TestButtonStyle"
                               Size="ButtonSize.Small"
                               Click="@HandleTestButtonClick"
-                              Disabled="@isNotScheduled"
+                              Disabled="@(isNotScheduled || !IsQA)"
                               class="me-2" />
 
                 <RadzenButton Icon="save"
@@ -36,7 +37,8 @@
                               Size="ButtonSize.Small"
                               Click="@Save"
                               MouseEnter="@(args => ShowTooltip(args, "Save the changes made in this request"))"
-                              class="me-2" />
+                              class="me-2"
+                              Disabled="@(!IsManagerOrQA)" />
 
                 <RadzenButton Icon="delete"
                               Text="Delete"
@@ -44,7 +46,8 @@
                               Shade="Shade.Darker"
                               Size="ButtonSize.Small"
                               Click="@HandleTestCaseDeletion"
-                              MouseEnter="@(args => ShowTooltip(args, "Delete this entire request"))" />
+                              MouseEnter="@(args => ShowTooltip(args, "Delete this entire request"))"
+                              Disabled="@(!IsManagerOrQA)" />
             </div>
         </div>
     </div>
@@ -52,7 +55,12 @@
     <div class="container">
         <div class="row d-flex justify-content-between">
             <div class="col-6 pb-2 right-divider">
-                <TestCaseDetailsPage Request="Request" TestCase="TestCase" @ref="TestCaseDetailsComponent" OnFormSubmitted="HandleTestCaseUpdate" />
+                <TestCaseDetailsPage
+                    Request="Request"
+                    TestCase="TestCase"
+                    @ref="TestCaseDetailsComponent"
+                    OnFormSubmitted="HandleTestCaseUpdate"
+                    IsManagerOrQA="@IsManagerOrQA"/>
             </div>
 
             <div class="col-6 pb-2">
@@ -72,6 +80,9 @@
     [Parameter]
     public EventCallback OnTestCaseUpdated { get; set; }
 
+    private bool IsManagerOrQA;
+    private bool IsQA;
+
     private TestCaseViewModel TestCase { get; set; }
     private TestRequestViewModel Request { get; set; }
     private TestCaseResultViewModel LatestTestCaseResult { get; set; }
@@ -88,6 +99,9 @@
 
     protected override async Task OnInitializedAsync()
     {
+        IsManagerOrQA = await PolicyValidatorService.ValidatePolicyAsync($"{AuthorizationRoles.Manager}, {AuthorizationRoles.QA}");
+        IsQA = await PolicyValidatorService.ValidatePolicyAsync(AuthorizationRoles.QA);
+
         await GetTestCase();
         await GetLatestTestCaseResult();
         Request = await TestRequestService.GetTestRequestByIdAsync(TestCase.TestRequestId);
