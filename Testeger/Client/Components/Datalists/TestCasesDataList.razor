@@ -29,7 +29,7 @@
                     </RadzenRow>
                 </RadzenColumn>
                 <RadzenColumn Size="2" SizeLG="2" Class="rz-p-2 d-flex flex-column justify-content-center" Style="max-height: 50px;">
-                    <RadzenButton Click="@(() => OpenTestCaseDetails(TestCase.Id))" Text="Details" Size="ButtonSize.Small" Style="font-size: 10px !important;" />
+                    <RadzenButton Click="@(() => OpenTestCaseDetails(TestCase.ProjectId,TestCase.Id))" Text="Details" Size="ButtonSize.Small" Style="font-size: 10px !important;" />
                 </RadzenColumn>
             </RadzenRow>
         </RadzenCard>
@@ -41,9 +41,9 @@
 
     private TestCaseViewModel? TestCase { get; set; }
 
-    public void OpenTestCaseDetails(string testCaseId)
+    public void OpenTestCaseDetails(string projectId, string testCaseId)
     {
-        NavigationManager.NavigateTo($"/test-case/{testCaseId}");
+        NavigationManager.NavigateTo($"/project/{projectId}/test-case/{testCaseId}");
     }
 
     private string GetTitleTextColor(TestCaseStatus status)

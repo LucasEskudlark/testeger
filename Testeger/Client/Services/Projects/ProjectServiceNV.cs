@@ -1,4 +1,5 @@
 ﻿using System.Net.Http.Json;
+using Testeger.Client.Services.Authentication;
 using Testeger.Client.Services.Notifications;
 using Testeger.Client.ViewModels;
 using Testeger.Client.ViewModels.Projects;
@@ -9,10 +10,16 @@ namespace Testeger.Client.Services.Projects;
 
 public class ProjectServiceNV : BaseService, IProjectServiceNV
 {
+    private readonly ICustomAuthService _authService;
     private const string BaseAddress = "api/projects";
 
-    public ProjectServiceNV(HttpClient httpClient, INotificationService notificationService) : base(httpClient, notificationService)
+    public ProjectServiceNV(
+        HttpClient httpClient,
+        INotificationService notificationService,
+        ICustomAuthService authService)
+        : base(httpClient, notificationService)
     {
+        _authService = authService;
     }
 
     public event Action? OnChange;
@@ -31,6 +38,9 @@ public class ProjectServiceNV : BaseService, IProjectServiceNV
 
         var creationResponse = await response.Content.ReadFromJsonAsync<CreateProjectResponse>();
         _notificationService.ShowSuccessNotification("Success", "Project successfully created.");
+
+        await _authService.ReAuthenticateUserAsync();
+
         OnProjectAdded?.Invoke();
         NotifyStateChanged();
 
@@ -48,6 +58,15 @@ public class ProjectServiceNV : BaseService, IProjectServiceNV
     {
         var address = BaseAddress + $"/{id}";
         var response = await _httpClient.GetFromJsonAsync<ProjectViewModel>(address);
+
+        return response;
+    }
+
+    public async Task<IEnumerable<ProjectViewModel>> GetProjectsForUserAsync()
+    {
+        var address = BaseAddress + $"/user";
+        
+        var response = await _httpClient.GetFromJsonAsync<IEnumerable<ProjectViewModel>>(address);
 
         return response;
     }

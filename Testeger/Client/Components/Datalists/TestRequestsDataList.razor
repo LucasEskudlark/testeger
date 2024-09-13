@@ -63,7 +63,7 @@
 
     public void OpenTestRequest(TestRequestViewModel testRequest)
     {
-        NavigationManager.NavigateTo($"/test-request/{testRequest.Id}");
+        NavigationManager.NavigateTo($"project/{testRequest.ProjectId}/test-request/{testRequest.Id}");
     }
 
     private string GetTitleTextColor(RequestStatus status)

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Testeger.Application.Services.Authentication;
 using Testeger.Shared.DTOs.Common;
 using Testeger.Shared.DTOs.Requests.Authentication.Login;
@@ -33,6 +34,7 @@ public class AuthController : ControllerBase
         return NoContent();
     }
 
+    [Authorize]
     [HttpPost("refresh-token")]
     public async Task<IActionResult> RefreshTokenAsync(TokenDto request)
     {
@@ -41,6 +43,7 @@ public class AuthController : ControllerBase
         return NoContent();
     }
 
+    [Authorize]
     [HttpPost("revoke")]
     public async Task<IActionResult> RevokeAsync(string userName)
     {
@@ -49,6 +52,7 @@ public class AuthController : ControllerBase
         return NoContent();
     }
 
+    [Authorize]
     [HttpPost("create-role")]
     public async Task<IActionResult> CreateRoleAsync(string roleName)
     {
@@ -57,11 +61,21 @@ public class AuthController : ControllerBase
         return NoContent();
     }
 
+    [Authorize(Roles = "admin")]
     [HttpPost("add-user-to-role")]
     public async Task<IActionResult> AddUserToRoleAsync(string email, string roleName)
     {
         await _authService.AddUserToRoleAsync(email, roleName);
 
         return NoContent();
+    }
+
+    [Authorize]
+    [HttpPost("reauthenticate")]
+    public async Task<IActionResult> ReAuthenticateUserAsync()
+    {
+        var response = await _authService.ReAuthenticateUserAsync(User);
+
+        return Ok(response);
     }
 }

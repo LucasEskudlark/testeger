@@ -1,11 +1,11 @@
-﻿@page "/test-request/{RequestId}"
+﻿@page "/project/{ProjectId}/test-request/{RequestId}"
 @layout DefaultLayout
 @inject DialogService DialogService
 @inject ITestRequestServiceNV TestRequestService
 @inject ITestCaseServiceNV TestCaseService
 @inject NavigationManager NavigationManager
 @inject TooltipService TooltipService
-@attribute [Authorize]
+@attribute [Authorize(Policy = $"{AuthorizationRoles.Manager}, {AuthorizationRoles.QA}, {AuthorizationRoles.Developer}")]
 
 @if(Request is not null)
 {
@@ -79,6 +79,9 @@
 
     [Parameter]
     public string? RequestId { get; set; }
+
+    [Parameter]
+    public string? ProjectId { get; set; }
 
     private IEnumerable<TestCaseViewModel> TestCases { get; set; } = new List<TestCaseViewModel>();
 

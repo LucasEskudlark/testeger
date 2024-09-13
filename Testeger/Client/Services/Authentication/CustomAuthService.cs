@@ -62,6 +62,28 @@ public class CustomAuthService : BaseService, ICustomAuthService
 
         return new AuthResult { Success = true };
     }
+
+    public async Task<AuthResult> ReAuthenticateUserAsync()
+    {
+        var address = BaseAddress + "/reauthenticate";
+
+        var response = await _httpClient.PostAsync(address, null);
+        var reAuthResponse = await response.Content.ReadFromJsonAsync<TokenDto>();
+
+        if (!response.IsSuccessStatusCode || reAuthResponse is null)
+        {
+            _notificationService.ShowFailNotification("Error", "Please log in again to be able to access the new project.");
+            return new AuthResult { Success = false };
+        }
+
+        var token = reAuthResponse.Token;
+
+        await _localStorageService.SetItemAsync("token", token);
+        ((CustomAuthenticationStateProvider)_authenticationStateProvider).MarkUserAsAuthenticated(token);
+        _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", token);
+
+        return new AuthResult { Success = true };
+    }
 }
 
 public class AuthResult

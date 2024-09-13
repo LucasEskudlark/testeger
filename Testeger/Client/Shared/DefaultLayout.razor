@@ -51,9 +51,9 @@
 
     protected override async Task OnInitializedAsync()
     {
-        var pagedProjects =  await ProjectService.GetAllProjectsPagedAsync();
-        Projects = pagedProjects.Items;
-        ProjectCount = pagedProjects.Items.Count();
+        var pagedProjects =  await ProjectService.GetProjectsForUserAsync();
+        Projects = pagedProjects;
+        ProjectCount = pagedProjects.Count();
         NavigationManager.LocationChanged += HandleLocationChanged;
         ProjectService.OnChange += StateHasChanged;
         ProjectService.OnProjectAdded += UpdateProjects;

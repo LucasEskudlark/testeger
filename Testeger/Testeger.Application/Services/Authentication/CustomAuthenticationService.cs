@@ -41,6 +41,23 @@ public class CustomAuthenticationService : ICustomAuthenticationService
         if (!result.Succeeded) throw new InvalidOperationException($"Unable to add user to role {roleName}");
     }
 
+    public async Task AddUserToProjectRoleAsync(string userId, string roleName)
+    {
+        var user = await _userManager.FindByIdAsync(userId)
+            ?? throw new NotFoundException("User not found");
+
+        var roleExist = await _roleManager.RoleExistsAsync(roleName);
+
+        if (!roleExist)
+        {
+            await CreateRoleAsync(roleName);
+        }
+
+        var result = await _userManager.AddToRoleAsync(user, roleName);
+
+        if (!result.Succeeded) throw new InvalidOperationException($"Unable to add user to role {roleName}");
+    }
+
     public async Task<TokenDto> AuthenticateUserAsync(UserLoginRequest request)
     {
         var user = await _userManager.FindByNameAsync(request.Username);
@@ -50,21 +67,19 @@ public class CustomAuthenticationService : ICustomAuthenticationService
             throw new InvalidOperationException("Login failed");
         }
 
-        var authClaims = await GetUserClaims(user);
+        var result = await GenerateTokens(user);
 
-        var token = _tokenService.GenerateAccessToken(authClaims);
+        return result;
+    }
 
-        var refreshToken = _tokenService.GenerateRefreshToken();
-        user.RefreshTokenExpiryTime = DateTime.UtcNow.AddMinutes(_jwtSettings.RefreshTokenValidityInMinutes);
-        user.RefreshToken = refreshToken;
-        await _userManager.UpdateAsync(user);
+    public async Task<TokenDto> ReAuthenticateUserAsync(ClaimsPrincipal user)
+    {
+        var applicationUser = await _userManager.GetUserAsync(user)
+            ?? throw new InvalidOperationException("Reauthentication failed");
 
-        return new TokenDto
-        {
-            Token = new JwtSecurityTokenHandler().WriteToken(token),
-            RefreshToken = refreshToken,
-            Expiration = token.ValidTo
-        };
+        var result = await GenerateTokens(applicationUser);
+
+        return result;
     }
 
     public async Task CreateRoleAsync(string roleName)
@@ -177,5 +192,25 @@ public class CustomAuthenticationService : ICustomAuthenticationService
         {
             throw new InvalidOperationException($"Could not create user. User with email {request.Email} already exists");
         }
+    }
+
+    private async Task<TokenDto> GenerateTokens(ApplicationUser user)
+    {
+        var authClaims = await GetUserClaims(user);
+
+        var token = _tokenService.GenerateAccessToken(authClaims);
+
+        var refreshToken = _tokenService.GenerateRefreshToken();
+        user.RefreshTokenExpiryTime = DateTime.UtcNow.AddMinutes(_jwtSettings.RefreshTokenValidityInMinutes);
+        user.RefreshToken = refreshToken;
+
+        await _userManager.UpdateAsync(user);
+
+        return new TokenDto
+        {
+            Token = new JwtSecurityTokenHandler().WriteToken(token),
+            RefreshToken = refreshToken,
+            Expiration = token.ValidTo
+        };
     }
 }

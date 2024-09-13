@@ -9,5 +9,7 @@ public interface IProjectService
     Task<CreateProjectResponse> CreateProject(CreateProjectRequest request);
     Task<GetProjectResponse> GetProjectById(string id);
     Task<PagedResponse<GetProjectResponse>> GetAllProjectsAsync(PagedRequest request);
+    Task<IEnumerable<GetProjectResponse>> GetProjectsForUserAsync(string userId);
+    Task AddUserToProjectAsync(string projectId, string userId);
     Task DeleteProject(string id);
 }

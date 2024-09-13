@@ -32,5 +32,9 @@ public class ProjectMapping : IEntityTypeConfiguration<Project>
             .WithOne(tr => tr.Project)
             .HasForeignKey(tr => tr.ProjectId)
             .OnDelete(DeleteBehavior.Cascade);
+
+        builder.HasMany(p => p.ProjectUsers)
+            .WithOne(pu => pu.Project)
+            .HasForeignKey(pu => pu.ProjectId);
     }
 }

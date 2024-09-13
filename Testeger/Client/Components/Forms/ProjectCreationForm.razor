@@ -71,11 +71,8 @@
 
     private ProjectCreationViewModel newProject = new();
 
-    //private bool IsAbleToProjectCreation => ProjectService.GetProjectCount() < 2;
-
     private async Task NotifyParent()
     {
-        newProject.UserId = Guid.NewGuid().ToString();
         var response = await ProjectServiceNV.CreateProjectAsync(newProject);
 
         DialogService.Close(true);

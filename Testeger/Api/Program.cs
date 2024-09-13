@@ -56,13 +56,14 @@ else
 
 app.UseCustomExceptionMiddleware();
 app.UseHttpsRedirection();
-
 app.UseBlazorFrameworkFiles();
 app.UseStaticFiles();
+app.UseAuthentication();
 
 app.UseCors(BlazorClientPolicy);
 
 app.UseRouting();
+app.UseAuthorization();
 
 app.MapRazorPages();
 app.MapControllers();

@@ -8,4 +8,5 @@ public class Project
     public string? CreatedByUserId { get; set; }
 
     public ICollection<TestRequest>? TestRequests { get; set; }
+    public required ICollection<ProjectUser> ProjectUsers { get; set; }
 }

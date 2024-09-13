@@ -9,9 +9,5 @@ public class CreateProjectRequestValidator : AbstractValidator<CreateProjectRequ
         RuleFor(r => r.Name)
             .NotEmpty()
             .MaximumLength(50);
-
-        RuleFor(r => r.UserId)
-            .NotEmpty()
-            .MaximumLength(36);
     }
 }
