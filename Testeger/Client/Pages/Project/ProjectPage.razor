@@ -3,9 +3,8 @@
 @inject IProjectServiceNV ProjectService
 @inject ITestRequestServiceNV TestRequestService
 @inject NavigationManager NavigationManager
+@inject IPolicyValidatorService PolicyValidatorService
 @attribute [Authorize(Policy = $"{AuthorizationRoles.Manager}, {AuthorizationRoles.QA}, {AuthorizationRoles.Developer}")]
-
-@inject HttpClient HttpClient
 
 <PageTitle>@project?.Name - Testeger</PageTitle>
 
@@ -14,9 +13,25 @@
         <RadzenText TextStyle="TextStyle.H6" TagName="TagName.H6">Project: @project?.Name</RadzenText>
     </div>
     <div class="col-6 d-flex justify-content-end" style="min-width: 450px;">
-        <RadzenButton Click="NavigateToProjectManagementPage" Icon="settings" ButtonStyle="ButtonStyle.Light" class="me-2" />
-        <RadzenButton Click="NavigateToProjectMetricsPage" Icon="analytics" Text="Project Metrics" ButtonStyle="ButtonStyle.Success" class="me-2" />
-        <RadzenButton Click="OpenTestRequestCreationDialog" Icon="add_circle_outline" Text="Add request" ButtonStyle="ButtonStyle.Primary" />
+         <RadzenButton
+             Click="NavigateToProjectManagementPage"
+             Icon="settings"
+             ButtonStyle="ButtonStyle.Light"
+             class="me-2"
+             Disabled="@(!isManager)"/>
+        <RadzenButton
+            Click="NavigateToProjectMetricsPage"
+            Icon="analytics"
+            Text="Project Metrics"
+            ButtonStyle="ButtonStyle.Success"
+            class="me-2"
+            Disabled="@(!isManager)" />
+        <RadzenButton
+            Click="OpenTestRequestCreationDialog"
+            Icon="add_circle_outline"
+            Text="Add request"
+            ButtonStyle="ButtonStyle.Primary"
+            Disabled="@(!isManagerOrQA)" />
     </div>
 </div>
 
@@ -37,12 +52,14 @@
     protected DialogService DialogService { get; set; }
 
     private ProjectViewModel? project;
+    private bool isManager;
+    private bool isManagerOrQA;
 
     private Dictionary<RequestStatus, IEnumerable<TestRequestViewModel>> testRequestsByStatus = new();
 
     protected override async Task OnParametersSetAsync()
     {
-        if (project == null || project.Id != Id) 
+        if (project == null || project.Id != Id)
         {
             project = await ProjectService.GetProjectByIdAsync(Id);
             testRequestsByStatus = await TestRequestService.GetTestRequestsByProjectIdGroupedByStatus(Id);
@@ -52,6 +69,9 @@
 
     protected override async Task OnInitializedAsync()
     {
+        isManager = await PolicyValidatorService.ValidatePolicyAsync(AuthorizationRoles.Manager);
+        isManagerOrQA = await PolicyValidatorService.ValidatePolicyAsync($"{AuthorizationRoles.Manager}, {AuthorizationRoles.QA}");
+
         project = await ProjectService.GetProjectByIdAsync(Id);
         TestRequestService.OnChange += StateHasChanged;
         TestRequestService.OnTestRequestAdded += UpdateTestRequests;

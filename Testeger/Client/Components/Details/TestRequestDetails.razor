@@ -10,7 +10,7 @@
             <div class="row">
                 <div class="col-md-8">
                     <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H3">Title</RadzenText>
-                    <RadzenTextBox @bind-Value="Request.Title" Style="width:100%;" />
+                    <RadzenTextBox @bind-Value="Request.Title" Style="width:100%;" Disabled="@(!IsManagerOrQA)" />
                     <ValidationMessage For="@(() => Request.Title)" class="view-model-validation-msg"/>
                 </div>
                 <div class="col-md-4">
@@ -23,14 +23,14 @@
             <div class="row mt-2">
                 <div class="col-12">
                     <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H3">Description</RadzenText>
-                    <RadzenTextArea @bind-Value="Request.Description" Style="width:100%; height:170px; resize: none;" />
+                    <RadzenTextArea @bind-Value="Request.Description" Style="width:100%; height:170px; resize: none;" Disabled="@(!IsManagerOrQA)" />
                     <ValidationMessage For="@(() => Request.Description)" class="view-model-validation-msg" />
                 </div>
             </div>
             <div class="row mt-2">
                 <div class="col-12">
                     <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H3">Story Link</RadzenText>
-                    <RadzenTextBox @bind-Value="Request.StoryLink" Style="width:100%;" />
+                    <RadzenTextBox @bind-Value="Request.StoryLink" Style="width:100%;" Disabled="@(!IsManagerOrQA)" />
                     <ValidationMessage For="@(() => Request.StoryLink)" class="view-model-validation-msg" />
                 </div>
             </div>
@@ -41,7 +41,8 @@
                                     TextProperty="Name"
                                     ValueProperty="Value"
                                     @bind-Value="Request.Status"
-                                    Style="width:100%;" /> 
+                                    Style="width:100%;"
+                                    Disabled="@(!IsManagerOrQA)" />
                     <ValidationMessage For="@(() => Request.Status)" class="view-model-validation-msg"/>
                 </div>
                 <div class="col-md-4">
@@ -50,7 +51,8 @@
                                     TextProperty="Name"
                                     ValueProperty="Value"
                                     @bind-Value="Request.PriorityLevel"
-                                    Style="width:100%;" />
+                                    Style="width:100%;"
+                                    Disabled="@(!IsManagerOrQA)" />
                     <ValidationMessage For="@(() => Request.PriorityLevel)" class="view-model-validation-msg" />
                 </div>
                 <div class="col-md-4">
@@ -63,7 +65,8 @@
                     <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H3">Due Date</RadzenText>
                     <RadzenDatePicker @bind-Value="Request.DueDate"
                                       Style="width:100%;" Min="@(DateTime.Today)"
-                                      DateFormat="dd/MM/yyyy" />
+                                      DateFormat="dd/MM/yyyy"
+                                      Disabled="@(!IsManagerOrQA)" />
                     <ValidationMessage For="@(() => Request.DueDate)" class="view-model-validation-msg" />
                 </div>
                 <div class="col-md-4">
@@ -91,6 +94,9 @@
 
     [Parameter]
     public EventCallback OnFormSubmitted { get; set; }
+
+    [Parameter]
+    public bool IsManagerOrQA { get; set; }
 
     private EditForm _editForm;
 

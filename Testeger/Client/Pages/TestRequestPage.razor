@@ -5,6 +5,7 @@
 @inject ITestCaseServiceNV TestCaseService
 @inject NavigationManager NavigationManager
 @inject TooltipService TooltipService
+@inject IPolicyValidatorService PolicyValidatorService
 @attribute [Authorize(Policy = $"{AuthorizationRoles.Manager}, {AuthorizationRoles.QA}, {AuthorizationRoles.Developer}")]
 
 @if(Request is not null)
@@ -26,6 +27,7 @@
                               Size="ButtonSize.Small"
                               Click="Save"
                               MouseEnter="@(args => ShowSaveRequestButtonTooltip(args) )"
+                              Disabled="@(!IsManagerOrQA)"
                               class="me-2" />
                 <RadzenButton Icon="delete"
                               Text="Delete"
@@ -33,6 +35,7 @@
                               Shade="Shade.Darker"
                               Size="ButtonSize.Small"
                               Click="HandleTestRequestDeletion"
+                              Disabled="@(!IsManagerOrQA)"
                               MouseEnter="@(args => ShowDeleteRequestButtonTooltip(args) )" />
             </div>
         </div>
@@ -51,7 +54,13 @@
                         <div class="row">
                             <div class="col-12 d-flex justify-content-between">
                                 <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H3">Test Cases</RadzenText>
-                                <RadzenButton Icon="add_circle" Text="Add case" ButtonStyle="ButtonStyle.Primary" Size="ButtonSize.Small" Click="OpenTestCaseCreationDialog" />
+                                <RadzenButton
+                                    Icon="add_circle"
+                                    Text="Add case"
+                                    ButtonStyle="ButtonStyle.Primary"
+                                    Size="ButtonSize.Small"
+                                    Click="OpenTestCaseCreationDialog"
+                                    Disabled="@(!IsManagerOrQA)" />
                             </div>
                         </div>
                         <div class="row">
@@ -70,6 +79,7 @@
     private TestRequestViewModel? Request;
     private TestRequestDetails TestRequestDetailsComponent;
     private string? RequestTitle;
+    private bool IsManagerOrQA;
 
     [Parameter]
     public EventCallback OnRequestDeleted { get; set; }
@@ -88,9 +98,9 @@
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
+        IsManagerOrQA = await PolicyValidatorService.ValidatePolicyAsync($"{AuthorizationRoles.Manager}, {AuthorizationRoles.QA}");
 
         Request = await TestRequestService.GetTestRequestByIdAsync(RequestId);
-
         TestRequestService.OnChange += StateHasChanged;
         TestCaseService.OnTestCaseAdded += UpdateTestCases;
         TestCaseService.OnTestCaseDeleted += UpdateTestCases;
