@@ -3,13 +3,14 @@
 @attribute [Authorize]
 @inject DialogService DialogService
 @inject INotificationService NotificationService
+@inject IUserService UserService
 
 <PageTitle>Home - Testeger</PageTitle>
 
 <div class="container-fluid vh-100">
     <div class="row my-0  pb-4">  
         <div class="col-6 mt-4 ">
-            <RadzenText TextStyle="TextStyle.H5">Hello, Lucas!</RadzenText>
+            <RadzenText TextStyle="TextStyle.H5">Hello, @(Username)!</RadzenText>
             <p class="lead mt-3" style="font-size: 1rem;">Ready to start your next testeger project? Whether you're looking to manage your testing workflow or collaborate with your team, we've got you covered.</p>
 
             <div class="d-grid gap-3 d-sm-flex justify-content-sm-start">
@@ -58,10 +59,18 @@
 @code {
     [CascadingParameter(Name = "ProjectCount")]
     private int ProjectCount { get; set; }
+    private string? Username { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        Username = await UserService.GetUserNameAsync();
+        await base.OnInitializedAsync();
+    }
+
 
     private async Task OpenProjectCreationDialog()
     {
-        if (ProjectCount >= 222222)
+        if (ProjectCount >= 2)
         {
             NotificationService.ShowFailNotification("Not able to create a project", "You can't create more than 2 projects");
             return;
