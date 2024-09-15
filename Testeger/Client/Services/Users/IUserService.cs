@@ -5,5 +5,6 @@ namespace Testeger.Client.Services.Users;
 public interface IUserService
 {
     Task<string> GetUserNameAsync();
-    Task<IEnumerable<UserByRoleViewModel>> GetUsersByRoleAsync(string projectId, string roleName);
+    Task<IEnumerable<UserNameIdViewModel>> GetUsersByRoleAsync(string projectId, string roleName);
+    Task<UserNameIdViewModel> GetUserByIdAsync(string userId);
 }

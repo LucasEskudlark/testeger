@@ -40,14 +40,23 @@ public class UserService : BaseService, IUserService
         return username ?? DefaultUsername;
     }
 
-    public async Task<IEnumerable<UserByRoleViewModel>> GetUsersByRoleAsync(string projectId, string roleName)
+    public async Task<IEnumerable<UserNameIdViewModel>> GetUsersByRoleAsync(string projectId, string roleName)
     {
         int insertPosition = roleName.IndexOf(':') + 1;
         string role = roleName.Insert(insertPosition, projectId + ":");
 
-        var address = BaseAddress + $"/{role}";
+        var address = BaseAddress + $"/role/{role}";
 
-        var response = await _httpClient.GetFromJsonAsync<IEnumerable<UserByRoleViewModel>>(address);
+        var response = await _httpClient.GetFromJsonAsync<IEnumerable<UserNameIdViewModel>>(address);
+
+        return response;
+    }
+
+    public async Task<UserNameIdViewModel> GetUserByIdAsync(string userId)
+    {
+        var address = BaseAddress + $"/{userId}";
+
+        var response = await _httpClient.GetFromJsonAsync<UserNameIdViewModel>(address);
 
         return response;
     }

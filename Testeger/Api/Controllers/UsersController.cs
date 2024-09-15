@@ -14,10 +14,18 @@ public class UsersController : ControllerBase
         _userService = userService;
     }
 
-    [HttpGet("{roleName}")]
+    [HttpGet("role/{roleName}")]
     public async Task<IActionResult> GetUsersByRoleAsync(string roleName)
     {
         var response = await _userService.GetUsersByProjectRoleAsync(roleName);
+
+        return Ok(response);
+    }
+
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetUserByIdAsync(string id)
+    {
+        var response = await _userService.GetUserByIdAsync(id);
 
         return Ok(response);
     }
