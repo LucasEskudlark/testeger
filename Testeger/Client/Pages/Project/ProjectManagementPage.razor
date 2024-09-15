@@ -2,6 +2,7 @@
 @layout DefaultLayout
 @inject IProjectServiceNV ProjectService
 @inject TooltipService TooltipService
+@inject IUserService UserService
 @attribute [Authorize(Policy = $"{AuthorizationRoles.Manager}")]
 
 
@@ -38,7 +39,7 @@
             </div>
             <div class="col-2 d-flex flex-column">
                 <RadzenLabel Text="Created by" Style="@LabelStyle" />
-                <RadzenTextBox Disabled="true" @bind-Value="Project.CreatedByUserId" Style="width: 100%;" />
+                <RadzenTextBox Disabled="true" @bind-Value="CreatedByUserName" Style="width: 100%;" />
             </div>
         </div>
         <div class="row">
@@ -75,6 +76,7 @@
     public string ProjectId { get; set; }
 
     private ProjectViewModel Project { get; set; }
+    private string CreatedByUserName;
 
     // private IList<User> SelectedUsers { get; set; }
 
@@ -86,8 +88,20 @@
     protected override async Task OnInitializedAsync()
     {
         Project = await ProjectService.GetProjectByIdAsync(ProjectId);
+        CreatedByUserName = await GetCreatedByUserName(Project.CreatedByUserId);
 
         ProjectService.OnProjectUpdated += StateHasChanged;
+    }
+
+    private async Task<string> GetCreatedByUserName(string id)
+    {
+        if (id is null || String.IsNullOrEmpty(id))
+        {
+            return String.Empty;
+        }
+
+        var user = await UserService.GetUserByIdAsync(id);
+        return user.Username;
     }
 
     // private async Task RemoveUser()
