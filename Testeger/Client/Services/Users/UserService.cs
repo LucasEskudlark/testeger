@@ -1,12 +1,18 @@
 ﻿using Microsoft.AspNetCore.Components.Authorization;
+using System.Data.Common;
+using System.Net.Http.Json;
+using System.Reflection.Metadata;
 using System.Security.Claims;
+using System.Text.RegularExpressions;
 using Testeger.Client.Services.Notifications;
+using Testeger.Client.ViewModels.Users;
 
 namespace Testeger.Client.Services.Users;
 
 public class UserService : BaseService, IUserService
 {
     private readonly AuthenticationStateProvider _stateProvider;
+    private const string BaseAddress = "api/users";
     private const string DefaultUsername = "Guest";
     private const string NameClaimType = "unique_name";
 
@@ -35,5 +41,17 @@ public class UserService : BaseService, IUserService
         var username = claims.FirstOrDefault(c => c.Type == NameClaimType).Value;
 
         return username ?? DefaultUsername;
+    }
+
+    public async Task<IEnumerable<UserByRoleViewModel>> GetUsersByRoleAsync(string projectId, string roleName)
+    {
+        int insertPosition = roleName.IndexOf(':') + 1;
+        string role = roleName.Insert(insertPosition, projectId + ":");
+
+        var address = BaseAddress + $"/{role}";
+
+        var response = await _httpClient.GetFromJsonAsync<IEnumerable<UserByRoleViewModel>>(address);
+
+        return response;
     }
 }

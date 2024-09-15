@@ -2,6 +2,7 @@
 @inject TooltipService TooltipService
 @inject DialogService DialogService
 @inject ITestRequestServiceNV TestRequestService
+@inject IUserService UserService
 
 <EditForm Model="@Request" OnValidSubmit="HandleValidSubmit" @ref="_editForm">
     <DataAnnotationsValidator />
@@ -98,7 +99,14 @@
     [Parameter]
     public bool IsManagerOrQA { get; set; }
 
+    private IEnumerable<UserByRoleViewModel> UsersThatAreQA;
+
     private EditForm _editForm;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        UsersThatAreQA = await UserService.GetUsersByRoleAsync(Request.ProjectId, AuthorizationRoles.QA);
+    }
 
     // Temporary
     private List<string> names = new()
