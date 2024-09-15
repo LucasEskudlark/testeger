@@ -12,5 +12,4 @@ public class TestCaseCreationViewModel
     public TestCaseDetailsViewModel Details { get; set; } = new();
     public string? TestRequestId { get; set; }
     public string? ProjectId { get; set; }
-    public string? UserId { get; set; }
 }
