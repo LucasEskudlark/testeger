@@ -61,7 +61,7 @@
                 </div>
                 <div class="col-md-4">
                     <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H3">Created By</RadzenText>
-                    <RadzenTextBox Disabled="true" @bind-Value="Request.CreatedByUserId" Style="width:100%;" />
+                    <RadzenTextBox Disabled="true" @bind-Value="CreatedByUserName" Style="width:100%;" />
                 </div>
             </div>
             <div class="row mt-2">
@@ -109,7 +109,21 @@
     protected override async Task OnParametersSetAsync()
     {
         UsersThatAreQA = await UserService.GetUsersByRoleAsync(Request.ProjectId, AuthorizationRoles.QA);
+        CreatedByUserName = await GetCreatedByUserName(Request.CreatedByUserId);
     }
+
+    private async Task<string> GetCreatedByUserName(string id)
+    {
+        if (id is null || String.IsNullOrEmpty(id))
+        {
+            return String.Empty;
+        }
+
+        var user = await UserService.GetUserByIdAsync(id);
+        return user.Username;
+    }
+
+    private string? CreatedByUserName;
 
     private List<EnumItem<PriorityLevel>> GetPriorityLevelValues()
     {

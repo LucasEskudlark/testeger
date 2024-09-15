@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Testeger.Application.Extensions;
 using Testeger.Application.Services.TestRequest;
 using Testeger.Shared.DTOs.Requests.Common;
 using Testeger.Shared.DTOs.Requests.CreateTestRequest;
@@ -20,6 +21,7 @@ public class TestRequestsController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> CreateProjectAsync([FromBody] CreateTestRequestRequest request)
     {
+        request.UserId = User.GetUserId();
         var response = await _testRequestService.CreateTestRequestAsync(request);
 
         return Ok(response);
