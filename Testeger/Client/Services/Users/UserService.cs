@@ -1,9 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components.Authorization;
-using System.Data.Common;
 using System.Net.Http.Json;
-using System.Reflection.Metadata;
 using System.Security.Claims;
-using System.Text.RegularExpressions;
 using Testeger.Client.Services.Notifications;
 using Testeger.Client.ViewModels.Users;
 

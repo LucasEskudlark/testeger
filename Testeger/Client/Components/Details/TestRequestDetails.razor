@@ -16,9 +16,12 @@
                 </div>
                 <div class="col-md-4">
                     <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H3">Assigned to</RadzenText>
-                    @*<RadzenDropDown Data="names"
-                                    @bind-Value="Request.AssignedTo.Name"
-                                    Style="width:100%;" /> *@
+                    <RadzenDropDown Data="@UsersThatAreQA"
+                                    TextProperty="Username"
+                                    ValueProperty="UserId"
+                                    @bind-Value="@Request.UserAssignedId"
+                                    Style="width:100%;"
+                                    Disabled="@(!IsManagerOrQA)" />
                 </div>
             </div>
             <div class="row mt-2">
@@ -107,13 +110,6 @@
     {
         UsersThatAreQA = await UserService.GetUsersByRoleAsync(Request.ProjectId, AuthorizationRoles.QA);
     }
-
-    // Temporary
-    private List<string> names = new()
-    {
-        "Lucas",
-        "Fernando"
-    };
 
     private List<EnumItem<PriorityLevel>> GetPriorityLevelValues()
     {
