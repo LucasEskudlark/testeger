@@ -6,6 +6,7 @@ using Testeger.Application.Services.TestCase;
 using Testeger.Application.Services.TestCaseResult;
 using Testeger.Application.Services.TestRequest;
 using Testeger.Application.Services.Token;
+using Testeger.Application.Services.User;
 
 namespace Testeger.Application.Configuration;
 
@@ -18,6 +19,7 @@ public static class ServicesConfiguration
         services.AddScoped<ITestCaseService, TestCaseService>();
         services.AddScoped<ITestCaseResultService, TestCaseResultService>();
         services.AddScoped<IImageService, ImageService>();
+        services.AddScoped<IUserService, UserService>();
 
         services.AddScoped<ITokenService, TokenService>();
         services.AddScoped<ICustomAuthenticationService, CustomAuthenticationService>();
