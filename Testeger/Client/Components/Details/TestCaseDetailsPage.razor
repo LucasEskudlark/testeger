@@ -27,10 +27,6 @@
                                 Disabled="@(!IsManagerOrQA)" />
                 <ValidationMessage For="@(() => TestCase.Status)" class="view-model-validation-msg" />
             </div>
-            <div class="col-4">
-                <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H3">Need correction?</RadzenText>
-                <RadzenTextBox Disabled="true" @bind-Value="NeedCorrectionString" Style="width:100%;" />
-            </div>
 
             <div class="col-3">
                 <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H3">Created by</RadzenText>
@@ -115,12 +111,6 @@
     private string? CreatedByUserName;
 
     private EditForm? _editForm;
-
-    private string NeedCorrectionString
-    {
-        get => TestCase.NeedCorrection ? "True" : "False";
-        set => TestCase.NeedCorrection = value.Equals("True", StringComparison.OrdinalIgnoreCase);
-    }
 
     public async Task<bool> SubmitForm()
     {
