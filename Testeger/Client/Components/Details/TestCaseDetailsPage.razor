@@ -3,6 +3,7 @@
 @inject TooltipService TooltipService
 @inject DialogService DialogService
 @inject ITestCaseServiceNV TestCaseService
+@inject IUserService UserService
 
 <EditForm Model="TestCase" OnValidSubmit="HandleValidSubmit" @ref="_editForm">
     <DataAnnotationsValidator />
@@ -33,7 +34,7 @@
 
             <div class="col-3">
                 <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H3">Created by</RadzenText>
-                <RadzenTextBox Disabled="true" @bind-Value="TestCase.CreatedByUserId" Style="width:100%;" />
+                <RadzenTextBox Disabled="true" @bind-Value="CreatedByUserName" Style="width:100%;" />
             </div>
         </div>
 
@@ -93,6 +94,25 @@
     public EventCallback OnFormSubmitted { get; set; }
     [Parameter]
     public bool IsManagerOrQA { get; set; }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        CreatedByUserName = await GetCreatedByUserName(TestCase.CreatedByUserId);
+        await base.OnParametersSetAsync();
+    }
+
+    private async Task<string> GetCreatedByUserName(string id)
+    {
+        if(id is null || String.IsNullOrEmpty(id))
+        {
+            return String.Empty;
+        }
+
+        var user = await UserService.GetUserByIdAsync(id);
+        return user.Username;
+    }
+
+    private string? CreatedByUserName;
 
     private EditForm? _editForm;
 

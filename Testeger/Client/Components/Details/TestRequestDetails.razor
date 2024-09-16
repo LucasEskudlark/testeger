@@ -2,6 +2,7 @@
 @inject TooltipService TooltipService
 @inject DialogService DialogService
 @inject ITestRequestServiceNV TestRequestService
+@inject IUserService UserService
 
 <EditForm Model="@Request" OnValidSubmit="HandleValidSubmit" @ref="_editForm">
     <DataAnnotationsValidator />
@@ -15,9 +16,12 @@
                 </div>
                 <div class="col-md-4">
                     <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H3">Assigned to</RadzenText>
-                    @*<RadzenDropDown Data="names"
-                                    @bind-Value="Request.AssignedTo.Name"
-                                    Style="width:100%;" /> *@
+                    <RadzenDropDown Data="@UsersThatAreQA"
+                                    TextProperty="Username"
+                                    ValueProperty="UserId"
+                                    @bind-Value="@Request.UserAssignedId"
+                                    Style="width:100%;"
+                                    Disabled="@(!IsManagerOrQA)" />
                 </div>
             </div>
             <div class="row mt-2">
@@ -57,7 +61,7 @@
                 </div>
                 <div class="col-md-4">
                     <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H3">Created By</RadzenText>
-                    <RadzenTextBox Disabled="true" @bind-Value="Request.CreatedByUserId" Style="width:100%;" />
+                    <RadzenTextBox Disabled="true" @bind-Value="CreatedByUserName" Style="width:100%;" />
                 </div>
             </div>
             <div class="row mt-2">
@@ -98,14 +102,28 @@
     [Parameter]
     public bool IsManagerOrQA { get; set; }
 
+    private IEnumerable<UserNameIdViewModel> UsersThatAreQA;
+
     private EditForm _editForm;
 
-    // Temporary
-    private List<string> names = new()
+    protected override async Task OnParametersSetAsync()
     {
-        "Lucas",
-        "Fernando"
-    };
+        UsersThatAreQA = await UserService.GetUsersByRoleAsync(Request.ProjectId, AuthorizationRoles.QA);
+        CreatedByUserName = await GetCreatedByUserName(Request.CreatedByUserId);
+    }
+
+    private async Task<string> GetCreatedByUserName(string id)
+    {
+        if (id is null || String.IsNullOrEmpty(id))
+        {
+            return String.Empty;
+        }
+
+        var user = await UserService.GetUserByIdAsync(id);
+        return user.Username;
+    }
+
+    private string? CreatedByUserName;
 
     private List<EnumItem<PriorityLevel>> GetPriorityLevelValues()
     {

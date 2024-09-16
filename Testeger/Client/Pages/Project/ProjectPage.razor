@@ -38,7 +38,7 @@
 @foreach (var status in testRequestsByStatus.Keys)
 {
     var requests = testRequestsByStatus[status];
-    <IndividualRow Requests="requests" Status="@status">
+    <IndividualRow Requests="requests" Status="@status" ProjectId="@Id">
         <RowTitle>
             <RadzenText TextStyle="TextStyle.H6" class="rz-mb-0" Style="font-size: 1.1rem;" TagName="TagName.H6">@GetStatusName(status)</RadzenText>
         </RowTitle>
