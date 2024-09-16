@@ -35,6 +35,9 @@ public class ProjectsController : ControllerBase
             User.GetUserId(),
             AuthorizationRoles.GetRoleForProject(response.Id, AuthorizationRoles.Manager));
 
+        await _authService.CreateRoleAsync(AuthorizationRoles.GetRoleForProject(response.Id, AuthorizationRoles.QA));
+        await _authService.CreateRoleAsync(AuthorizationRoles.GetRoleForProject(response.Id, AuthorizationRoles.Developer));
+
         return Ok(response);
     }
 
