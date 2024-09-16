@@ -22,7 +22,6 @@ public class TestCase
     public DateTime CreatedDate { get; set; }
     public DateTime? CompletedDate { get; set; }
     public TestCaseStatus Status { get; set; }
-    public bool NeedCorrection { get; set; }
     public DateTime? ScheduledDate { get; set; }
     public ICollection<TestCaseHistory> History { get; set; }
     public ICollection<TestCaseResult> Results { get; set; }

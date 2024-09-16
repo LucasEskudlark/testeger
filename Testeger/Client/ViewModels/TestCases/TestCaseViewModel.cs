@@ -21,7 +21,6 @@ public class TestCaseViewModel
     [Required(ErrorMessage = "Status is required")]
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public TestCaseStatus Status { get; set; }
-    public bool NeedCorrection { get; set; }
     [Required(ErrorMessage = "Scheduled Date is required")]
     public DateTime ScheduledDate { get; set; }
     public required IEnumerable<TestCaseHistoryViewModel> History { get; set; }

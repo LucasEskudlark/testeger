@@ -16,7 +16,6 @@ public class GetTestCaseResponse
     public DateTime CompletedDate { get; set; }
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public TestCaseStatus Status { get; set; }
-    public bool NeedCorrection { get; set; }
     public DateTime ScheduledDate { get; set; }
     public required IEnumerable<TestCaseHistoryResponse> History { get; set; }
     public required IEnumerable<GetTestCaseResultResponse> Results { get; set; }
