@@ -1,4 +1,5 @@
 ﻿using Testeger.Infra.Repositories.Images;
+using Testeger.Infra.Repositories.Invitations;
 using Testeger.Infra.Repositories.Projects;
 using Testeger.Infra.Repositories.TestCaseResults;
 using Testeger.Infra.Repositories.TestCases;
@@ -13,6 +14,7 @@ public interface IUnitOfWork
     ITestCaseRepository TestCaseRepository { get; }
     ITestCaseResultRepository TestCaseResultRepository { get; }
     IImageRepository ImageRepository { get; }
+    IInvitationRepository InvitationRepository { get; }
 
     Task CompleteAsync();
 }

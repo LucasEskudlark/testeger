@@ -14,7 +14,7 @@ public class Invitation
     public DateTime SentDate { get; set; }
 
     [JsonIgnore]
-    public required ApplicationUser User { get; set; }
+    public ApplicationUser? User { get; set; }
     [JsonIgnore]
-    public required Project Project { get; set; }
+    public Project? Project { get; set; }
 }
