@@ -11,5 +11,10 @@ public class ApplicationUserMapping : IEntityTypeConfiguration<ApplicationUser>
         builder.HasMany(u => u.ProjectUsers)
             .WithOne(pu => pu.User)
             .HasForeignKey(pu => pu.UserId);
+
+        builder.HasMany(u => u.Invitations)
+            .WithOne(i => i.User)
+            .HasForeignKey(i => i.ProjectId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }
