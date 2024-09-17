@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Testeger.Application.Services.Authentication;
+using Testeger.Application.Services.Email;
 using Testeger.Application.Services.Image;
 using Testeger.Application.Services.Project;
 using Testeger.Application.Services.TestCase;
@@ -20,6 +21,8 @@ public static class ServicesConfiguration
         services.AddScoped<ITestCaseResultService, TestCaseResultService>();
         services.AddScoped<IImageService, ImageService>();
         services.AddScoped<IUserService, UserService>();
+
+        services.AddScoped<IEmailService, EmailService>();
 
         services.AddScoped<ITokenService, TokenService>();
         services.AddScoped<ICustomAuthenticationService, CustomAuthenticationService>();
