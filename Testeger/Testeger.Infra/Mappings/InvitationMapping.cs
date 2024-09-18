@@ -29,7 +29,7 @@ public class InvitationMapping : IEntityTypeConfiguration<Invitation>
 
         builder.Property(i => i.InvitationToken)
             .HasColumnName(nameof(Invitation.InvitationToken))
-            .HasMaxLength(128)
+            .HasMaxLength(64)
             .IsRequired();
 
         builder.Property(i => i.IsConfirmed)

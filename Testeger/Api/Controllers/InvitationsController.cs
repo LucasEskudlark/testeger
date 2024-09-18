@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Testeger.Application.Services.Email;
 using Testeger.Application.Services.Invitation;
+using Testeger.Shared.DTOs.Requests.ConfirmInvitation;
 using Testeger.Shared.DTOs.Requests.SendInvitation;
 
 namespace Testeger.Api.Controllers;
@@ -17,10 +17,18 @@ public class InvitationsController : ControllerBase
     }
 
     [HttpPost("send")]
-    public async Task<IActionResult> SendEmailAsync(SendInvitationRequest request)
+    public async Task<IActionResult> SendInvitationAsync(SendInvitationRequest request)
     {
         await _invitationService.SendInvitationAsync(request);
 
         return NoContent();
+    }
+
+    [HttpPost("confirm")]
+    public async Task<IActionResult> ConfirmInvitationAsync(ConfirmInvitationRequest request)
+    {
+        var response = await _invitationService.ConfirmInvitationAsync(request, User);
+
+        return Ok(response);
     }
 }
