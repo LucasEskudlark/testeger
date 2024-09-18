@@ -12,4 +12,11 @@ public class InvitationRepository : Repository<Invitation>, IInvitationRepositor
     {
         _dbSet = _dbContext.Set<Invitation>();
     }
+
+    public async Task<Invitation> GetByIdAndTokenAsync(string id, string token)
+    {
+        var invitation = await _dbSet.FirstOrDefaultAsync(i => i.Id == id && i.InvitationToken == token);
+
+        return invitation;
+    }
 }

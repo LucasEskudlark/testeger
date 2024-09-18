@@ -89,6 +89,19 @@ public class TokenService : ITokenService
         return principal;
     }
 
+    public bool IsTokenExpired(string token)
+    {
+        try
+        {
+            var jwtToken = new JwtSecurityToken(token.Replace("\"", ""));
+            return jwtToken.ValidTo < DateTime.UtcNow;
+        }
+        catch
+        {
+            return true;
+        }
+    }
+
     private string GetSecretKey()
     {
         var secretKey = _jwtSettings.SecretKey;

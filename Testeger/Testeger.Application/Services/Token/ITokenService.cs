@@ -10,4 +10,5 @@ public interface ITokenService
     string GenerateRefreshToken();
     ClaimsPrincipal GetPrincipalFromExpiredToken(string token);
     JwtSecurityToken GenerateInvitationToken(IEnumerable<Claim> claims);
+    bool IsTokenExpired(string token);
 }
