@@ -6,8 +6,8 @@ public class SendInvitationRequestValidator : AbstractValidator<SendInvitationRe
 {
     public SendInvitationRequestValidator()
     {
-        RuleFor(r => r.Emails)
-            .ForEach(e => e.EmailAddress())
+        RuleFor(r => r.Users)
+            .ForEach(e => e.SetValidator(new UserInvitationRequestValidator()))
             .NotEmpty();
 
         RuleFor(r => r.ProjectId)
