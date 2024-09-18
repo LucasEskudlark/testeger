@@ -2,7 +2,7 @@
 
 public class SendInvitationRequest
 {
-    public required List<string> Emails { get; set; }
+    public required List<UserInvitationRequest> Users { get; set; }
     public required string ProjectId { get; set; }
 
 }

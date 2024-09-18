@@ -4,9 +4,12 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using Testeger.Application.Helpers;
+using Testeger.Application.Services.Authentication;
 using Testeger.Application.Services.Email;
+using Testeger.Application.Services.Project;
 using Testeger.Application.Services.Token;
 using Testeger.Infra.UnitOfWork;
+using Testeger.Shared.Authorization;
 using Testeger.Shared.DTOs.Requests.ConfirmInvitation;
 using Testeger.Shared.DTOs.Requests.SendInvitation;
 using Testeger.Shared.DTOs.Responses.Invitation;
@@ -18,31 +21,39 @@ public class InvitationService : BaseService, IInvitationService
 {
     private readonly ITokenService _tokenService;
     private readonly IEmailService _emailService;
+    private readonly IProjectService _projectService;
+    private readonly ICustomAuthenticationService _authService;
 
     private const string ProjectIdClaimType = "project_id";
+    private const string ProjectRoleClaimType = "project_role";
 
     public InvitationService(
         IUnitOfWork unitOfWork,
         IMapper mapper,
         ITokenService tokenService,
-        IEmailService emailService)
+        IEmailService emailService,
+        IProjectService projectService,
+        ICustomAuthenticationService authService)
         : base(unitOfWork, mapper)
     {
         _tokenService = tokenService;
         _emailService = emailService;
+        _projectService = projectService;
+        _authService = authService;
     }
 
     public async Task SendInvitationAsync(SendInvitationRequest request)
     {
-        foreach (string email in request.Emails)
+        foreach (var user in request.Users)
         {
             var invitationId = GenerateGuid();
 
             var parameters = new InvitationParameters
             {
                 InvitationId = invitationId,
-                Email = email,
-                ProjectId = request.ProjectId
+                Email = user.Email,
+                ProjectId = request.ProjectId,
+                Role = AuthorizationRoles.GetRoleFromRoleType(user.RoleType)
             };
 
             var token = GetTokenAsString(parameters);
@@ -52,7 +63,7 @@ public class InvitationService : BaseService, IInvitationService
             var subject = EmailHelper.GetProjectInvitationEmailSubject();
             var body = EmailHelper.GetProjectInvitationEmailBody(token);
 
-            await _emailService.SendEmailAsync(email, subject, body);
+            await _emailService.SendEmailAsync(user.Email, subject, body);
         }
     }
 
@@ -75,12 +86,10 @@ public class InvitationService : BaseService, IInvitationService
 
         await SaveChangesToInvitationAsync(invitationParameters.InvitationId, userId, request.Token);
 
-        // TO DO - IMPLEMENTAR ADIÇÃO DE USUARIO AO PROJETO
-        //var projectUser = new ProjectUser
-        //{
-        //    UserId = userId,
-        //    ProjectId = invitation.ProjectId
-        //};
+        await _projectService.AddUserToProjectAsync(invitationParameters.ProjectId, userId);
+
+        await _authService.AddUserToProjectRoleAsync(userId,
+            AuthorizationRoles.GetRoleForProject(invitationParameters.ProjectId, invitationParameters.Role));
 
         return new() { IsSuccess = true };
     }
@@ -112,7 +121,9 @@ public class InvitationService : BaseService, IInvitationService
             ProjectId = principal.FindFirst(ProjectIdClaimType)?.Value
                 ?? throw new InvalidOperationException("ProjectId claim not found in token."),
             Email = principal.FindFirst(ClaimTypes.Email)?.Value
-                ?? throw new InvalidOperationException("Email claim not found in token.")
+                ?? throw new InvalidOperationException("Email claim not found in token."),
+            Role = principal.FindFirst(ProjectRoleClaimType)?.Value
+                ?? throw new InvalidOperationException("Project role claim not found in token.")
         };
     }
 
@@ -146,7 +157,8 @@ public class InvitationService : BaseService, IInvitationService
             new(ClaimTypes.Email, parameters.Email),
             new(ProjectIdClaimType, parameters.ProjectId),
             new(JwtRegisteredClaimNames.Jti, GenerateGuid()),
-            new(JwtRegisteredClaimNames.Sub, parameters.InvitationId)
+            new(JwtRegisteredClaimNames.Sub, parameters.InvitationId),
+            new(ProjectRoleClaimType, parameters.Role)
         };
 
         return authClaims;
@@ -166,4 +178,5 @@ public class InvitationParameters
     public required string InvitationId { get; set; }
     public required string Email { get; set; }
     public required string ProjectId { get; set; }
+    public required string Role { get; set; }
 }
