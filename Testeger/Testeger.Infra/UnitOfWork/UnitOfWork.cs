@@ -1,5 +1,6 @@
 ﻿using Testeger.Infra.Context;
 using Testeger.Infra.Repositories.Images;
+using Testeger.Infra.Repositories.Invitations;
 using Testeger.Infra.Repositories.Projects;
 using Testeger.Infra.Repositories.TestCaseResults;
 using Testeger.Infra.Repositories.TestCases;
@@ -15,6 +16,7 @@ public class UnitOfWork : IUnitOfWork, IDisposable
     private ITestCaseRepository? _testCaseRepository;
     private ITestCaseResultRepository? _testCaseResultRepository;
     private IImageRepository? _imageRepository;
+    private IInvitationRepository? _invitationRepository;
 
     public UnitOfWork(AppDbContext dbContext)
     {
@@ -58,6 +60,14 @@ public class UnitOfWork : IUnitOfWork, IDisposable
         get
         {
             return _imageRepository ??= new ImageRepository(_dbContext);
+        }
+    }
+
+    public IInvitationRepository InvitationRepository
+    {
+        get
+        {
+            return _invitationRepository ??= new InvitationRepository(_dbContext);
         }
     }
 
