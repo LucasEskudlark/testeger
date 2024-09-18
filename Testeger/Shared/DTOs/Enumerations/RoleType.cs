@@ -4,12 +4,12 @@ namespace Testeger.Shared.DTOs.Enumerations;
 
 public enum RoleType
 {
-    [Description("Project Manager")]
+    [Description("Manager")]
     ProjectManager = 0,
 
-    [Description("Quality Assurance Professional")]
+    [Description("Q.A")]
     QA = 1,
 
-    [Description("Software Developer")]
+    [Description("Developer")]
     Developer = 2
 }

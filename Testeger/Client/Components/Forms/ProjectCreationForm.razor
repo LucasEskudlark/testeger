@@ -2,7 +2,7 @@
 @inject IProjectServiceNV ProjectServiceNV
 
 <EditForm Model="newProject" OnValidSubmit="NotifyParent">
-    <DataAnnotationsValidator />
+    <ObjectGraphDataAnnotationsValidator />
 
     <div class="row mb-4">
         <div class="col-9">
@@ -11,7 +11,7 @@
                        class="form-control inputtext"
                        placeholder="Enter the project name"
                        @bind-Value="newProject.Name" />
-            <ValidationMessage For="@(() => newProject.Name)" />
+            <ValidationMessage For="@(() => newProject.Name)" class="view-model-validation-msg" />
         </div>
     </div>
 
@@ -22,37 +22,41 @@
                 <small style="font-size: 11px;">When creating, you will be automatically assigned the role of project manager.</small>
             </div>
 
-            <RadzenButton Icon="add" Text="Add member" Size="ButtonSize.Small" ButtonStyle="ButtonStyle.Primary" Click="AddMember" class="me-4"></RadzenButton>
+            <RadzenButton
+                Icon="add"
+                Text="Add member"
+                Size="ButtonSize.Small"
+                ButtonStyle="ButtonStyle.Primary"
+                Click="AddMember"
+                Disabled="@(newProject.Users.Count == 5)"
+                class="me-4"></RadzenButton>
         </div>
     </div>
 
     <div class="row mb-2 d-flex flex-column justify-content-start" style="min-height: 250px;">
-        @* @foreach (var member in newProject.Members)
+        @foreach (var user in newProject.Users)
         {
             <div class="row mb-2">
-                <div class="col-8 mb-0 pb-0">
+                <div class="col-9 mb-0 pb-0">
                     <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H3">E-mail</RadzenText>
-                    <InputText @bind-Value="member.Email" placeholder="E-mail" class="form-control inputtext" />
-                    <ValidationMessage For="@(() => member.Email)" />
+                    <InputText @bind-Value="user.Email" placeholder="E-mail" class="form-control inputtext" />
+                    <ValidationMessage For="@(() => user.Email)" class="view-model-validation-msg" />
 
 
                 </div>
-                <div class="col-4 m-0 pb-0">
+                <div class="col-3 m-0 pb-0">
                     <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H3">Role</RadzenText>
-                    <InputSelect @bind-Value="member.Role" class="form-control inputtext">
-                        @foreach (var role in Enum.GetValues<RoleType>())
-                        {
-                            if (CanDisplayRole(role))
-                            {
-                                <option value="@role">@role</option>
-                            }
-                        }
-                    </InputSelect>
-                    <ValidationMessage For="@(() => member.Role)" />
+                    <RadzenDropDown Data="@GetRoleTypeValues()"
+                                     TextProperty="Name"
+                                     ValueProperty="Value"
+                                     @bind-Value="user.Role"
+                                     Style="width:100%;"
+                                     class="form-control inputtext" />
+                    <ValidationMessage For="@(() => user.Role)" class="view-model-validation-msg" />
                 </div>
             </div> 
 
-        }*@
+        }
     </div>
 
     <div class="row">
@@ -80,44 +84,25 @@
         newProject = new();
     }
 
-    // NEED TO BE FIXED WHEN USERS ARE IMPLEMENTED
-    // private List<User> GetMembers()
-    // {
-    //     var members = new List<User>();
-
-    //     foreach (UserViewModel memberVM in newProject.Members)
-    //     {
-    //         var user = new User
-    //         {
-    //             Id = Guid.NewGuid().ToString(),
-    //             Name = "User",
-    //             Email = memberVM.Email,
-    //             Role = memberVM.Role
-    //         };
-
-    //         members.Add(user);
-    //     }
-
-    //     members.Add(GetProjectCreator());
-
-    //     return members;
-    // }
-
-    // private User GetProjectCreator() // Temporary
-    // {
-    //     return new User
-    //         {
-    //             Id = Guid.NewGuid().ToString(),
-    //             Name = "Lucas",
-    //             Email = "lucasbeskudlark@gmail.com",
-    //             Role = RoleType.ProjectManager
-    //         };
-    // }
-
     private void AddMember()
     {
-        // newProject.Members.Add(new UserViewModel());
+        newProject.Users.Add(new UserInvitationViewModel());
     }
 
-    //private bool CanDisplayRole(RoleType role) => role != RoleType.ProjectManager;
+    private List<EnumItem<RoleType>> GetRoleTypeValues()
+    {
+        return Enum.GetValues(typeof(RoleType))
+            .Cast<RoleType>()
+            .Where(status => status != RoleType.ProjectManager)
+            .Select(e => new EnumItem<RoleType> { Value = e, Name = e.ToString() })
+            .ToList();
+    }
 }
+
+<style>
+    .view-model-validation-msg {
+        font-size: 11px !important;
+        margin-top: 0.3rem;
+        color: red;
+    }
+</style>
