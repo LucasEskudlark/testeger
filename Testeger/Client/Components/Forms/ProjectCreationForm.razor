@@ -1,5 +1,6 @@
 ﻿@inject DialogService DialogService
 @inject IProjectServiceNV ProjectServiceNV
+@inject INotificationService NotificationService
 
 <EditForm Model="newProject" OnValidSubmit="NotifyParent">
     <ObjectGraphDataAnnotationsValidator />
@@ -77,6 +78,11 @@
 
     private async Task NotifyParent()
     {
+        if (newProject.Users.Any() && HasDuplicateEmails(newProject.Users))
+        {
+            NotificationService.ShowFailNotification("Could not create project", "You can't add two members with the same email");
+            return;
+        }
         var response = await ProjectServiceNV.CreateProjectAsync(newProject);
 
         DialogService.Close(true);
@@ -96,6 +102,12 @@
             .Where(status => status != RoleType.ProjectManager)
             .Select(e => new EnumItem<RoleType> { Value = e, Name = e.ToString() })
             .ToList();
+    }
+
+    private bool HasDuplicateEmails(List<UserInvitationViewModel> users)
+    {
+        var emails = users.Select(u => u.Email).Where(email => !string.IsNullOrWhiteSpace(email)).ToList();
+        return emails.Count != emails.Distinct().Count();
     }
 }
 
