@@ -1,6 +1,7 @@
 ﻿@inject DialogService DialogService
 @inject IProjectServiceNV ProjectServiceNV
 @inject INotificationService NotificationService
+@inject IInvitationService InvitationService
 
 <EditForm Model="newProject" OnValidSubmit="NotifyParent">
     <ObjectGraphDataAnnotationsValidator />
@@ -50,10 +51,10 @@
                     <RadzenDropDown Data="@GetRoleTypeValues()"
                                      TextProperty="Name"
                                      ValueProperty="Value"
-                                     @bind-Value="user.Role"
+                                     @bind-Value="user.RoleType"
                                      Style="width:100%;"
                                      class="form-control inputtext" />
-                    <ValidationMessage For="@(() => user.Role)" class="view-model-validation-msg" />
+                    <ValidationMessage For="@(() => user.RoleType)" class="view-model-validation-msg" />
                 </div>
             </div> 
 
@@ -83,7 +84,13 @@
             NotificationService.ShowFailNotification("Could not create project", "You can't add two members with the same email");
             return;
         }
+
         var response = await ProjectServiceNV.CreateProjectAsync(newProject);
+
+        if (newProject.Users.Any())
+        {
+            await InvitationService.SendProjectInvitationAsync(newProject.Users, response.Id);
+        }
 
         DialogService.Close(true);
         await OnFormSubmitted.InvokeAsync(response?.Id);

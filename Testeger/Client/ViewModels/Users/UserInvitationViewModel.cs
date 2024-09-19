@@ -9,5 +9,5 @@ public class UserInvitationViewModel
     [EmailAddress(ErrorMessage = "Email needs to be valid.")]
     public string? Email { get; set; }
     [Required(ErrorMessage = "Role is required.")]
-    public RoleType? Role { get; set; }
+    public RoleType? RoleType { get; set; }
 }
