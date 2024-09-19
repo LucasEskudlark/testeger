@@ -5,8 +5,35 @@
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject IInvitationService InvitationService
 
-<div class="row d-flex justify-content-center align-items-center">
-
+<div class="confirmation-container d-flex justify-content-center align-items-center">
+    <RadzenCard Style="max-width: 500px; margin: auto; margin-top: 50px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+        <div class="text-center" style="padding: 30px;">
+            @if (isProcessing)
+            {
+                <RadzenIcon Icon="hourglass_empty" Style="font-size: 72px; color: #2196F3;" />
+                <RadzenText Text="Processing..." Tag="h1" Class="confirmation-header" />
+            }
+            else
+            {
+                @if (!string.IsNullOrEmpty(message))
+                {
+                    @if (isSuccess)
+                    {
+                        <RadzenIcon Icon="check_circle" Style="font-size: 72px; color: #4CAF50;" />
+                        <RadzenText Text="Confirmation Successful!" Tag="h1" Class="confirmation-header" />
+                        <RadzenText Text="@message" Class="confirmation-message" />
+                        <RadzenButton Text="Go to Login" Icon="login" Style="margin-top: 20px; width: 100%;" Click="@GoToLogin" />
+                    }
+                    else
+                    {
+                        <RadzenIcon Icon="error" Style="font-size: 72px; color: #F44336;" />
+                        <RadzenText Text="Confirmation Failed" Tag="h1" Class="confirmation-header" />
+                        <RadzenText Text="@message" Class="confirmation-message" />
+                    }
+                }
+            }
+        </div>
+    </RadzenCard>
 </div>
 
 @code {
@@ -15,6 +42,8 @@
     public string? Token { get; set; }
 
     private string message;
+    private bool isSuccess = false;
+    private bool isProcessing = true;
 
     protected override async Task OnInitializedAsync()
     {
@@ -23,6 +52,8 @@
         if (string.IsNullOrEmpty(Token))
         {
             message = "Invalid invitation link.";
+            isSuccess = false;
+            isProcessing = false;
             return;
         }
 
@@ -31,7 +62,7 @@
 
         if (!user.Identity.IsAuthenticated)
         {
-            NavigationManager.NavigateTo($"/login?returnUrl=/confirm-invitation?token={Token}", true);
+            NavigationManager.NavigateTo($"/login", true);
             return;
         }
 
@@ -39,18 +70,53 @@
 
         if (response.IsTokenExpired)
         {
-            message = "Invitation is expired. You need to be invited again";
+            message = "Invitation is expired. You need to be invited again.";
+            isSuccess = false;
+            isProcessing = false;
             return;
         }
 
         if (!response.IsSuccess)
         {
-            message = "Could not confirm the invitation";
+            message = "Could not confirm the invitation.";
+            isSuccess = false;
+            isProcessing = false;
             return;
         }
 
-        message = "Invitation confirmed. Please log in again.";
+        message = "Your invitation has been confirmed. Please log in again.";
+        isSuccess = true;
+        isProcessing = false;
+
         await ((CustomAuthenticationStateProvider)AuthenticationStateProvider).MarkUserAsLoggedOut();
+    }
+
+    private void GoToLogin()
+    {
         NavigationManager.NavigateTo("/login", true);
     }
 }
+
+
+<style>
+    .confirmation-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .confirmation-header {
+        margin-top: 20px;
+        font-size: 24px;
+        font-weight: bold;
+    }
+
+    .confirmation-message {
+        margin-top: 10px;
+        color: #555;
+    }
+
+    .text-center {
+        text-align: center;
+    }
+</style>
