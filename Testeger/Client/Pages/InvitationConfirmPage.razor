@@ -1,0 +1,56 @@
+﻿@page "/confirm-invitation"
+@using System.Web
+@using Testeger.Client.Authentication
+@inject NavigationManager NavigationManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject IInvitationService InvitationService
+
+<div class="row d-flex justify-content-center align-items-center">
+
+</div>
+
+@code {
+    [Parameter]
+    [SupplyParameterFromQuery]
+    public string? Token { get; set; }
+
+    private string message;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+
+        if (string.IsNullOrEmpty(Token))
+        {
+            message = "Invalid invitation link.";
+            return;
+        }
+
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        if (!user.Identity.IsAuthenticated)
+        {
+            NavigationManager.NavigateTo($"/login?returnUrl=/confirm-invitation?token={Token}", true);
+            return;
+        }
+
+        var response = await InvitationService.ConfirmProjectInvitationAsync(Token);
+
+        if (response.IsTokenExpired)
+        {
+            message = "Invitation is expired. You need to be invited again";
+            return;
+        }
+
+        if (!response.IsSuccess)
+        {
+            message = "Could not confirm the invitation";
+            return;
+        }
+
+        message = "Invitation confirmed. Please log in again.";
+        await ((CustomAuthenticationStateProvider)AuthenticationStateProvider).MarkUserAsLoggedOut();
+        NavigationManager.NavigateTo("/login", true);
+    }
+}
