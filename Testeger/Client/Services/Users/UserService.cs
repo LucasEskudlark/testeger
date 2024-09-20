@@ -60,4 +60,13 @@ public class UserService : BaseService, IUserService
 
         return response;
     }
+
+    public async Task<IEnumerable<UserViewModel>> GetUsersByProjectIdAsync(string projectId)
+    {
+        var address = BaseAddress + $"/project/{projectId}";
+
+        var response = await _httpClient.GetFromJsonAsync<IEnumerable<UserViewModel>>(address);
+
+        return response;
+    }
 }

@@ -1,4 +1,4 @@
-﻿@* <RadzenDataGrid AllowFiltering="false"
+﻿<RadzenDataGrid AllowFiltering="false"
                 AllowColumnResize="false"
                 AllowAlternatingRows="false"
                 FilterMode="FilterMode.Advanced"
@@ -7,31 +7,31 @@
                 AllowPaging="true"
                 PagerHorizontalAlign="HorizontalAlign.Left"
                 ShowPagingSummary="true"
-                Data="@Members"
+                Data="@Users"
                 ColumnWidth="300px"
                 LogicalFilterOperator="LogicalFilterOperator.Or"
                 SelectionMode="DataGridSelectionMode.Single"
                 @bind-Value=@SelectedUsers>
 
     <Columns>
-        <RadzenDataGridColumn Property="Name" Title="Name" Frozen="true" Width="100px" />
+        <RadzenDataGridColumn Property="UserName" Title="Name" Frozen="true" Width="100px" />
         <RadzenDataGridColumn Property="Email" Title="E-mail" Width="200px" />
-        <RadzenDataGridColumn Property="Role" Title="Role" Width="80px" />
+        @* <RadzenDataGridColumn Property="Role" Title="Role" Width="80px" /> *@
     </Columns>
 </RadzenDataGrid>
 
 @code {
     [Parameter]
-    public IEnumerable<User> Members { get; set; }
+    public IEnumerable<UserViewModel> Users { get; set; }
 
     [Parameter]
-    public EventCallback<IList<User>> SelectedUsersChanged { get; set; }
+    public EventCallback<IList<UserViewModel>> SelectedUsersChanged { get; set; }
 
-    private User User { get; set; }
+    private UserViewModel User { get; set; }
 
-    private IList<User> _selectedUsers;
+    private IList<UserViewModel> _selectedUsers;
 
-    private IList<User> SelectedUsers
+    private IList<UserViewModel> SelectedUsers
     {
         get => _selectedUsers;
         set
@@ -44,4 +44,3 @@
         }
     }
 }
- *@
