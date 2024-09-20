@@ -29,4 +29,12 @@ public class UsersController : ControllerBase
 
         return Ok(response);
     }
+
+    [HttpGet("project/{id}")]
+    public async Task<IActionResult> GetUserByProjectIdAsync(string id)
+    {
+        var response = await _userService.GetUsersByProject(id);
+
+        return Ok(response);
+    }
 }

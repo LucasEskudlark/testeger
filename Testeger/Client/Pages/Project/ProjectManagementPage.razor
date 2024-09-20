@@ -63,7 +63,7 @@
                                       MouseEnter="@(args => ShowAddMemberTooltip(args))" />
                     </div>
                 </div>
-                @* <ProjectMembersDataGrid Members="@Project.Members" SelectedUsersChanged="HandleSelectionChange" /> *@
+                <ProjectMembersDataGrid Users="@ProjectUsers" SelectedUsersChanged="HandleSelectionChange" />
             </div>
         </div>
     </div>
@@ -78,17 +78,20 @@
     private ProjectViewModel Project { get; set; }
     private string CreatedByUserName;
 
-    // private IList<User> SelectedUsers { get; set; }
+    private IEnumerable<UserViewModel> ProjectUsers { get; set; }
 
-    // private void HandleSelectionChange(IList<User> selectedUsers)
-    // {
-    //     SelectedUsers = selectedUsers;
-    // }
+    private IList<UserViewModel> SelectedUsers { get; set; }
+
+    private void HandleSelectionChange(IList<UserViewModel> selectedUsers)
+    {
+        SelectedUsers = selectedUsers;
+    }
 
     protected override async Task OnInitializedAsync()
     {
         Project = await ProjectService.GetProjectByIdAsync(ProjectId);
         CreatedByUserName = await GetCreatedByUserName(Project.CreatedByUserId);
+        ProjectUsers = await UserService.GetUsersByProjectIdAsync(ProjectId);
 
         ProjectService.OnProjectUpdated += StateHasChanged;
     }
