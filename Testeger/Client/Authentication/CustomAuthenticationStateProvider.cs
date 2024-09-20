@@ -89,10 +89,11 @@ public class CustomAuthenticationStateProvider : AuthenticationStateProvider
         NotifyAuthenticationStateChanged(authState);
     }
 
-    public void MarkUserAsLoggedOut()
+    public async Task MarkUserAsLoggedOut()
     {
         var anonymousUser = new ClaimsPrincipal(new ClaimsIdentity());
         var authState = Task.FromResult(new AuthenticationState(anonymousUser));
+        await _localStorage.RemoveItemAsync("token");
         NotifyAuthenticationStateChanged(authState);
     }
 }

@@ -250,6 +250,59 @@ namespace Testeger.Infra.Migrations
                     b.ToTable("Image", (string)null);
                 });
 
+            modelBuilder.Entity("Testeger.Domain.Models.Entities.Invitation", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("varchar(256)")
+                        .HasColumnName("Email");
+
+                    b.Property<DateTime>("ExpiryDate")
+                        .HasColumnType("datetime")
+                        .HasColumnName("ExpiryDate");
+
+                    b.Property<string>("InvitationToken")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .HasColumnType("varchar(64)")
+                        .HasColumnName("InvitationToken");
+
+                    b.Property<ulong>("IsConfirmed")
+                        .HasColumnType("bit")
+                        .HasColumnName("IsConfirmed");
+
+                    b.Property<string>("ProjectId")
+                        .HasMaxLength(36)
+                        .HasColumnType("varchar(36)")
+                        .HasColumnName("ProjectId");
+
+                    b.Property<DateTime>("SentDate")
+                        .HasColumnType("datetime")
+                        .HasColumnName("SentDate");
+
+                    b.Property<string>("UserId")
+                        .HasMaxLength(36)
+                        .HasColumnType("varchar(36)")
+                        .HasColumnName("UserId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Email");
+
+                    b.HasIndex("InvitationToken")
+                        .IsUnique();
+
+                    b.HasIndex("ProjectId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Invitations", (string)null);
+                });
+
             modelBuilder.Entity("Testeger.Domain.Models.Entities.Project", b =>
                 {
                     b.Property<string>("Id")
@@ -264,7 +317,7 @@ namespace Testeger.Infra.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime")
-                        .HasDefaultValue(new DateTime(2024, 9, 16, 1, 1, 11, 584, DateTimeKind.Utc).AddTicks(896))
+                        .HasDefaultValue(new DateTime(2024, 9, 18, 0, 45, 10, 490, DateTimeKind.Utc).AddTicks(2465))
                         .HasColumnName("CreatedDate");
 
                     b.Property<string>("Name")
@@ -311,7 +364,7 @@ namespace Testeger.Infra.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime")
-                        .HasDefaultValue(new DateTime(2024, 9, 16, 1, 1, 11, 585, DateTimeKind.Utc).AddTicks(9401))
+                        .HasDefaultValue(new DateTime(2024, 9, 18, 0, 45, 10, 493, DateTimeKind.Utc).AddTicks(3307))
                         .HasColumnName("CreatedDate");
 
                     b.Property<string>("ProjectId")
@@ -405,7 +458,7 @@ namespace Testeger.Infra.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime")
-                        .HasDefaultValue(new DateTime(2024, 9, 16, 1, 1, 11, 584, DateTimeKind.Utc).AddTicks(5577))
+                        .HasDefaultValue(new DateTime(2024, 9, 18, 0, 45, 10, 491, DateTimeKind.Utc).AddTicks(1602))
                         .HasColumnName("CreatedDate");
 
                     b.Property<string>("Description")
@@ -525,6 +578,23 @@ namespace Testeger.Infra.Migrations
                     b.Navigation("TestCaseResult");
                 });
 
+            modelBuilder.Entity("Testeger.Domain.Models.Entities.Invitation", b =>
+                {
+                    b.HasOne("Testeger.Domain.Models.Entities.Project", "Project")
+                        .WithMany("Invitations")
+                        .HasForeignKey("ProjectId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Testeger.Domain.Models.Entities.ApplicationUser", "User")
+                        .WithMany("Invitations")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.Navigation("Project");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Testeger.Domain.Models.Entities.ProjectUser", b =>
                 {
                     b.HasOne("Testeger.Domain.Models.Entities.Project", "Project")
@@ -615,7 +685,7 @@ namespace Testeger.Infra.Migrations
                             b1.Property<DateTime>("ChangedDate")
                                 .ValueGeneratedOnAdd()
                                 .HasColumnType("datetime")
-                                .HasDefaultValue(new DateTime(2024, 9, 16, 1, 1, 11, 588, DateTimeKind.Utc).AddTicks(7676))
+                                .HasDefaultValue(new DateTime(2024, 9, 18, 0, 45, 10, 497, DateTimeKind.Utc).AddTicks(813))
                                 .HasColumnName("ChangedDate");
 
                             b1.Property<string>("NewStatus")
@@ -683,7 +753,7 @@ namespace Testeger.Infra.Migrations
                             b1.Property<DateTime>("ChangedDate")
                                 .ValueGeneratedOnAdd()
                                 .HasColumnType("datetime")
-                                .HasDefaultValue(new DateTime(2024, 9, 16, 1, 1, 11, 585, DateTimeKind.Utc).AddTicks(5257))
+                                .HasDefaultValue(new DateTime(2024, 9, 18, 0, 45, 10, 492, DateTimeKind.Utc).AddTicks(7578))
                                 .HasColumnName("ChangedDate");
 
                             b1.Property<string>("NewStatus")
@@ -711,11 +781,15 @@ namespace Testeger.Infra.Migrations
 
             modelBuilder.Entity("Testeger.Domain.Models.Entities.ApplicationUser", b =>
                 {
+                    b.Navigation("Invitations");
+
                     b.Navigation("ProjectUsers");
                 });
 
             modelBuilder.Entity("Testeger.Domain.Models.Entities.Project", b =>
                 {
+                    b.Navigation("Invitations");
+
                     b.Navigation("ProjectUsers");
 
                     b.Navigation("TestRequests");

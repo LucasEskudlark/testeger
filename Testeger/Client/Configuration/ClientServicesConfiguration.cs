@@ -1,6 +1,7 @@
 ﻿using Testeger.Client.Services.Authentication;
 using Testeger.Client.Services.Authorization;
 using Testeger.Client.Services.Images;
+using Testeger.Client.Services.Invitations;
 using Testeger.Client.Services.Notifications;
 using Testeger.Client.Services.Projects;
 using Testeger.Client.Services.TestCaseResults;
@@ -23,5 +24,6 @@ public static class ClientServicesConfiguration
         services.AddScoped<ICustomAuthService, CustomAuthService>();
         services.AddScoped<IPolicyValidatorService, PolicyValidatorService>();
         services.AddScoped<IUserService, UserService>();
+        services.AddScoped<IInvitationService, InvitationService>();
     }
 }

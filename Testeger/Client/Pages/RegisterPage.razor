@@ -1,7 +1,9 @@
 ﻿@page "/register"
 @using System.Text.RegularExpressions
+@using Testeger.Client.Authentication
 @inject NavigationManager NavigationManager
 @inject ICustomAuthService AuthService
+@inject AuthenticationStateProvider AuthenticationStateProvider
 
 <PageTitle>Register - Testeger</PageTitle>
 
@@ -109,6 +111,7 @@
 
         if (result.Success)
         {
+            await ((CustomAuthenticationStateProvider)AuthenticationStateProvider).MarkUserAsLoggedOut();
             NavigationManager.NavigateTo("/login");
         }
     }

@@ -15,9 +15,6 @@ public class EnumerationMappingProfile : Profile
         CreateMap<ApiEnum.RequestStatus, DomainEnum.RequestStatus>()
             .ConvertUsingEnumMapping();
 
-        CreateMap<ApiEnum.RoleType, DomainEnum.RoleType>()
-            .ConvertUsingEnumMapping();
-
         CreateMap<ApiEnum.TestCaseStatus, DomainEnum.TestCaseStatus>()
             .ConvertUsingEnumMapping();
     }

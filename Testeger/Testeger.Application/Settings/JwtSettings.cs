@@ -2,9 +2,10 @@
 
 public sealed class JwtSettings
 {
-    public string? Audience { get; set; }
-    public string? Issuer { get; set; }
-    public string? SecretKey { get; set; }
-    public double TokenValidityInMinutes { get; set; }
-    public double RefreshTokenValidityInMinutes { get; set; }
+    public string? Audience { get; init; }
+    public string? Issuer { get; init; }
+    public string? SecretKey { get; init; }
+    public double TokenValidityInMinutes { get; init; }
+    public double InvitationTokenValidityInMinutes { get; init; }
+    public double RefreshTokenValidityInMinutes { get; init; }
 }

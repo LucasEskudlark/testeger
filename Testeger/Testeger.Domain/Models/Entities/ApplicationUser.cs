@@ -8,4 +8,5 @@ public class ApplicationUser : IdentityUser
     public DateTime RefreshTokenExpiryTime { get; set; }
 
     public ICollection<ProjectUser>? ProjectUsers { get; set; }
+    public ICollection<Invitation>? Invitations { get; set; }
 }

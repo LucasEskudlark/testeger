@@ -9,4 +9,5 @@ public class Project
 
     public ICollection<TestRequest>? TestRequests { get; set; }
     public required ICollection<ProjectUser> ProjectUsers { get; set; }
+    public required ICollection<Invitation> Invitations { get; set; }
 }
