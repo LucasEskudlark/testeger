@@ -47,10 +47,6 @@ public class TestCaseMapping : IEntityTypeConfiguration<TestCase>
             .HasConversion<string>()
             .IsRequired();
 
-        builder.Property(t => t.NeedCorrection)
-            .HasColumnName("NeedCorrection")
-            .HasColumnType("bit");
-
         builder.Property(t => t.ScheduledDate)
             .HasColumnName("ScheduledDate")
             .HasColumnType("datetime");

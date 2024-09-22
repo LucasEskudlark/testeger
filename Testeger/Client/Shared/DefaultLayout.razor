@@ -70,8 +70,8 @@
 
     private async void UpdateProjects()
     {
-        var pagedProjects = await ProjectService.GetAllProjectsPagedAsync();
-        Projects = pagedProjects.Items;
+        var pagedProjects = await ProjectService.GetProjectsForUserAsync();
+        Projects = pagedProjects;
         StateHasChanged();
     }
 

@@ -3,6 +3,7 @@
 @inject ILocalStorageService LocalStorage
 @inject ICustomAuthService AuthService
 @inject NavigationManager NavigationManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
 
 <PageTitle>Login - Testeger</PageTitle>
 
@@ -62,6 +63,16 @@
     private LoginViewModel loginModel = new LoginViewModel();
     bool value;
 
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+        if (user.Identity.IsAuthenticated)
+        {
+            NavigateToHomePage();
+        }
+    }
+
     private async Task HandleLogin()
     {
         var result = await AuthService.LoginAsync(loginModel);
@@ -70,8 +81,13 @@
 
         if (result.Success)
         {
-            NavigationManager.NavigateTo("/home");
+            NavigateToHomePage();
         }
+    }
+
+    private void NavigateToHomePage()
+    {
+        NavigationManager.NavigateTo("/home");
     }
 }
 

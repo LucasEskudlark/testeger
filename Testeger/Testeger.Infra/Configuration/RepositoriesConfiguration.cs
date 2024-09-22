@@ -1,10 +1,12 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Testeger.Infra.Repositories;
 using Testeger.Infra.Repositories.Images;
+using Testeger.Infra.Repositories.Invitations;
 using Testeger.Infra.Repositories.Projects;
 using Testeger.Infra.Repositories.TestCaseResults;
 using Testeger.Infra.Repositories.TestCases;
 using Testeger.Infra.Repositories.TestRequests;
+using Testeger.Infra.Repositories.Users;
 using Testeger.Infra.UnitOfWork;
 
 using UnitOfWorkClass = Testeger.Infra.UnitOfWork.UnitOfWork;
@@ -21,6 +23,8 @@ public static class RepositoriesConfiguration
         services.AddScoped<ITestRequestRepository, TestRequestRepository>();
         services.AddScoped<ITestCaseResultRepository, TestCaseResultRepository>();
         services.AddScoped<IImageRepository, ImageRepository>();
+        services.AddScoped<IInvitationRepository, InvitationRepository>();
+        services.AddScoped<IUserRepository, UserRepository>();
     }
 
     public static void AddUnitOfWork(this IServiceCollection services)

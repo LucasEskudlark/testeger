@@ -9,4 +9,6 @@ public interface ITokenService
     JwtSecurityToken GenerateAccessToken(IEnumerable<Claim> claims);
     string GenerateRefreshToken();
     ClaimsPrincipal GetPrincipalFromExpiredToken(string token);
+    JwtSecurityToken GenerateInvitationToken(IEnumerable<Claim> claims);
+    bool IsTokenExpired(string token);
 }

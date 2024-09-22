@@ -19,6 +19,16 @@ public class TokenService : ITokenService
 
     public JwtSecurityToken GenerateAccessToken(IEnumerable<Claim> claims)
     {
+        return GenerateJwtToken(claims, _jwtSettings.TokenValidityInMinutes);
+    }
+
+    public JwtSecurityToken GenerateInvitationToken(IEnumerable<Claim> claims)
+    {
+        return GenerateJwtToken(claims, _jwtSettings.InvitationTokenValidityInMinutes);
+    }
+
+    private JwtSecurityToken GenerateJwtToken(IEnumerable<Claim> claims, double tokenValidity)
+    {
         var secretKey = GetSecretKey();
 
         var privateKey = Encoding.UTF8.GetBytes(secretKey);
@@ -28,7 +38,7 @@ public class TokenService : ITokenService
         var tokenDescriptor = new SecurityTokenDescriptor
         {
             Subject = new ClaimsIdentity(claims),
-            Expires = DateTime.UtcNow.AddMinutes(_jwtSettings.TokenValidityInMinutes),
+            Expires = DateTime.UtcNow.AddMinutes(tokenValidity),
             Audience = _jwtSettings.Audience,
             Issuer = _jwtSettings.Issuer,
             SigningCredentials = signingCredentials
@@ -77,6 +87,19 @@ public class TokenService : ITokenService
         }
 
         return principal;
+    }
+
+    public bool IsTokenExpired(string token)
+    {
+        try
+        {
+            var jwtToken = new JwtSecurityToken(token.Replace("\"", ""));
+            return jwtToken.ValidTo < DateTime.UtcNow;
+        }
+        catch
+        {
+            return true;
+        }
     }
 
     private string GetSecretKey()

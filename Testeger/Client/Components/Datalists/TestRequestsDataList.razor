@@ -1,5 +1,6 @@
 ﻿@using Testeger.Client.ViewModels.TestRequests
 @inject NavigationManager NavigationManager
+@inject IUserService UserService
 
 @if (Requests is not null)
 {
@@ -36,7 +37,9 @@
                                 }
                                 else
                                 {
-                                    <RadzenText TextStyle="TextStyle.Caption">A IMPLEMENTAR</RadzenText>
+                                    <RadzenText TextStyle="TextStyle.Caption">
+                                        @ExtractAssignedUserName(Request.UserAssignedId)
+                                    </RadzenText>
                                 }
                             </RadzenColumn>
                         </RadzenRow>
@@ -58,6 +61,29 @@
 
     [Parameter]
     public RequestStatus Status { get; set; }
+    [Parameter]
+    public string? ProjectId { get; set; }
+
+    private IEnumerable<UserNameIdViewModel> ProjectQAMembers { get; set; }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        ProjectQAMembers = await UserService.GetUsersByRoleAsync(ProjectId, $"{AuthorizationRoles.QA}");
+        await base.OnParametersSetAsync();
+    }
+
+    private string ExtractAssignedUserName(string userId)
+    {
+
+        if(ProjectQAMembers is null || !ProjectQAMembers.Any())
+        {
+            return String.Empty;
+        }
+
+        return ProjectQAMembers.Where(u => u.UserId == userId)
+            .Select(u => u.Username)
+            .FirstOrDefault() ?? String.Empty;
+    }
 
     public void OpenTestRequest(TestRequestViewModel testRequest)
     {

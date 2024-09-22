@@ -3,6 +3,7 @@
 @inject TooltipService TooltipService
 @inject DialogService DialogService
 @inject ITestCaseServiceNV TestCaseService
+@inject IUserService UserService
 
 <EditForm Model="TestCase" OnValidSubmit="HandleValidSubmit" @ref="_editForm">
     <DataAnnotationsValidator />
@@ -26,14 +27,10 @@
                                 Disabled="@(!IsManagerOrQA)" />
                 <ValidationMessage For="@(() => TestCase.Status)" class="view-model-validation-msg" />
             </div>
-            <div class="col-4">
-                <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H3">Need correction?</RadzenText>
-                <RadzenTextBox Disabled="true" @bind-Value="NeedCorrectionString" Style="width:100%;" />
-            </div>
 
             <div class="col-3">
                 <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H3">Created by</RadzenText>
-                <RadzenTextBox Disabled="true" @bind-Value="TestCase.CreatedByUserId" Style="width:100%;" />
+                <RadzenTextBox Disabled="true" @bind-Value="CreatedByUserName" Style="width:100%;" />
             </div>
         </div>
 
@@ -94,13 +91,26 @@
     [Parameter]
     public bool IsManagerOrQA { get; set; }
 
-    private EditForm? _editForm;
-
-    private string NeedCorrectionString
+    protected override async Task OnParametersSetAsync()
     {
-        get => TestCase.NeedCorrection ? "True" : "False";
-        set => TestCase.NeedCorrection = value.Equals("True", StringComparison.OrdinalIgnoreCase);
+        CreatedByUserName = await GetCreatedByUserName(TestCase.CreatedByUserId);
+        await base.OnParametersSetAsync();
     }
+
+    private async Task<string> GetCreatedByUserName(string id)
+    {
+        if(id is null || String.IsNullOrEmpty(id))
+        {
+            return String.Empty;
+        }
+
+        var user = await UserService.GetUserByIdAsync(id);
+        return user.Username;
+    }
+
+    private string? CreatedByUserName;
+
+    private EditForm? _editForm;
 
     public async Task<bool> SubmitForm()
     {

@@ -74,7 +74,6 @@
     private async Task NotifyParent()
     {
         testRequestViewModel.ProjectId = ProjectId;
-        testRequestViewModel.UserId = Guid.NewGuid().ToString();
         await TestRequestService.CreateTestRequestAsync(testRequestViewModel);
         DialogService.Close(true);
         await OnFormSubmitted.InvokeAsync();

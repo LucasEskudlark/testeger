@@ -1,4 +1,5 @@
 ﻿using System.Reflection.Metadata;
+using Testeger.Shared.DTOs.Enumerations;
 
 namespace Testeger.Shared.Authorization;
 
@@ -21,5 +22,15 @@ public static class AuthorizationRoles
         string suffix = roleName[(lastColonIndex + 1)..];
 
         return $"{prefix}:{projectId}:{suffix}";
+    }
+
+    public static string GetRoleFromRoleType(RoleType roleType)
+    {
+        return roleType switch
+        {
+            RoleType.ProjectManager => Manager,
+            RoleType.QA => QA,
+            _ => Developer,
+        };
     }
 }

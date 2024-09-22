@@ -3,22 +3,21 @@
 @attribute [Authorize]
 @inject DialogService DialogService
 @inject INotificationService NotificationService
+@inject IUserService UserService
 
 <PageTitle>Home - Testeger</PageTitle>
 
 <div class="container-fluid vh-100">
-    <div class="row my-0 pb-4">
-        <div class="col-12 col-md-6 mt-4">
-            <RadzenText TextStyle="TextStyle.H5">Hello, Lucas!</RadzenText>
-            <p class="lead mt-3" style="font-size: 1rem;">
-                Ready to start your next Testeger project? Whether you're looking to manage your testing workflow or collaborate with your team, we've got you covered.
-            </p>
+    <div class="row my-0  pb-4">  
+        <div class="col-6 mt-4 ">
+            <RadzenText TextStyle="TextStyle.H5">Hello, @(Username)!</RadzenText>
+            <p class="lead mt-3" style="font-size: 1rem;">Ready to start your next testeger project? Whether you're looking to manage your testing workflow or collaborate with your team, we've got you covered.</p>
 
-            <div class="d-grid gap-3 d-md-flex justify-content-md-start">
+            <div class="d-grid gap-3 d-sm-flex justify-content-sm-start">
                 <RadzenButton Text="Create a new project"
                               Size="ButtonSize.Medium"
                               ButtonStyle="ButtonStyle.Primary"
-                              Click="OpenProjectCreationDialog"
+                              Click="OpenProjectCreationDialog" 
                               class="p-3" />
                 <RadzenButton Text="See my invitations"
                               Size="ButtonSize.Medium"
@@ -26,15 +25,15 @@
                               class="p-3" />
             </div>
         </div>
-        <div class="col-12 col-md-6 d-flex justify-content-center align-items-center mt-4 mt-md-0">
-            <img src="images/testeger-horizontal-logo-no-bg.png" alt="Testeger logo" class="img-fluid" style="max-height: 200px;">
+        <div class="col-6 d-flex justify-content-center align-items-center">
+            <img src="images/testeger-horizontal-logo-no-bg.png" alt="Testeger logo" height="200px">
         </div>
     </div>
 
-    <div class="row mt-4">
-        <div class="col-12 col-lg-6 mb-4 mb-lg-0">
-            <div class="card shadow-sm px-0 h-100">
-                <div class="card-header pt-3 row-titlebar d-flex justify-content-center justify-content-lg-start">
+    <div class="row mt-4 vh-100">
+        <div class="col-6 vh-100">
+            <div class="card shadow-sm px-0">
+                <div class="card-header pt-3 row-titlebar d-flex">
                     <RadzenIcon Icon="folder_open" IconColor="@Colors.Primary"></RadzenIcon>
                     <RadzenText TextStyle="TextStyle.H6" class="ms-2 home-card-title">Your projects</RadzenText>
                 </div>
@@ -43,9 +42,9 @@
                 </div>
             </div>
         </div>
-        <div class="col-12 col-lg-6">
-            <div class="card shadow-sm px-0 h-100">
-                <div class="card-header pt-3 row-titlebar d-flex justify-content-center justify-content-lg-start">
+        <div class="col-6">
+            <div class="card shadow-sm px-0">
+                <div class="card-header pt-3 row-titlebar d-flex">
                     <RadzenIcon Icon="notifications" IconColor="@Colors.Primary"></RadzenIcon>
                     <RadzenText TextStyle="TextStyle.H6" class="ms-2 home-card-title">Notifications</RadzenText>
                 </div>
@@ -60,6 +59,14 @@
 @code {
     [CascadingParameter(Name = "ProjectCount")]
     private int ProjectCount { get; set; }
+    private string? Username { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        Username = await UserService.GetUserNameAsync();
+        await base.OnInitializedAsync();
+    }
+
 
     private async Task OpenProjectCreationDialog()
     {

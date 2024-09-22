@@ -12,10 +12,6 @@ public class CreateTestRequestRequestValidator : AbstractValidator<CreateTestReq
             .NotEmpty()
             .MaximumLength(36);
 
-        RuleFor(r => r.UserId)
-            .NotEmpty()
-            .MaximumLength(36);
-
         RuleFor(r => r.Title)
             .NotEmpty()
             .MinimumLength(5)

@@ -86,7 +86,6 @@
     {
         testCaseCreationViewModel.ProjectId = ProjectId;
         testCaseCreationViewModel.TestRequestId = TestRequestId;
-        testCaseCreationViewModel.UserId = Guid.NewGuid().ToString();
         testCaseCreationViewModel.Details = GetTestCaseDetails();
 
         await TestCaseService.CreateTestCaseAsync(testCaseCreationViewModel);
