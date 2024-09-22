@@ -67,7 +67,7 @@
     {
         if (Users.Any() && HasDuplicateEmails(Users))
         {
-            NotificationService.ShowFailNotification("Could not create project", "You can't add two members with the same email");
+            NotificationService.ShowFailNotification("Could not invite users", "You can't add two members with the same email");
             return;
         }
 
@@ -111,14 +111,4 @@
     .rz-dialog-content{
         height: 540px;
     }
-
-    .btn-primary {
-        background-color: var(--rz-primary);
-        border-color: var(--rz-primary);
-    }
-
-        .btn-primary:hover {
-            background-color: #0056b3;
-            border-color: #004085;
-        }
 </style>
