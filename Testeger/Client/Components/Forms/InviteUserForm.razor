@@ -1,0 +1,114 @@
+﻿@using System.ComponentModel.DataAnnotations
+@inject DialogService DialogService
+@inject INotificationService NotificationService
+@inject IInvitationService InvitationService
+
+<EditForm Model="Users" OnValidSubmit="@HandleValidSubmit">
+    <ObjectGraphDataAnnotationsValidator />
+
+    <div class="row mb-3">
+        <div class="col-12 d-flex justify-content-between align-items-center">
+            <RadzenButton Icon="add"
+                            Text="Add member"
+                            Size="ButtonSize.Small"
+                            ButtonStyle="ButtonStyle.Primary"
+                            Click="AddMember"
+                            Disabled="@(Users.Count == 5)"
+                            Shade="Shade.Lighter"
+                            class="me-4"></RadzenButton>
+        </div>
+    </div>
+
+    <div class="row mb-2 d-flex flex-column justify-content-start" style="min-height: 250px;">
+        @foreach (var user in Users)
+        {
+            <div class="row mb-2">
+                <div class="col-9 mb-0 pb-0">
+                    <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H3">E-mail</RadzenText>
+                    <InputText @bind-Value="user.Email" placeholder="E-mail" class="form-control inputtext" />
+                    <ValidationMessage For="@(() => user.Email)" class="view-model-validation-msg" />
+
+
+                </div>
+                <div class="col-3 m-0 pb-0">
+                    <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H3">Role</RadzenText>
+                    <RadzenDropDown Data="@GetRoleTypeValues()"
+                                    TextProperty="Name"
+                                    ValueProperty="Value"
+                                    @bind-Value="user.RoleType"
+                                    Style="width:100%;"
+                                    class="form-control inputtext" />
+                    <ValidationMessage For="@(() => user.RoleType)" class="view-model-validation-msg" />
+                </div>
+            </div>
+        }
+    </div>
+    <div class="row">
+        <div class="col-4">
+            <RadzenButton ButtonType="ButtonType.Submit"
+                          Text="Invite users"
+                          Size="ButtonSize.Medium"
+                          ButtonStyle="ButtonStyle.Primary" />
+        </div>
+    </div>
+
+
+</EditForm>
+
+
+@code {
+    [Parameter]
+    public required string ProjectId { get; set; }
+
+    [ValidateComplexType]
+    private List<UserInvitationViewModel> Users { get; set; } = new();
+
+    private async Task HandleValidSubmit()
+    {
+        if (Users.Any() && HasDuplicateEmails(Users))
+        {
+            NotificationService.ShowFailNotification("Could not invite users", "You can't add two members with the same email");
+            return;
+        }
+
+        if (Users.Any())
+        {
+            await InvitationService.SendProjectInvitationAsync(Users, ProjectId);
+        }
+
+        DialogService.Close(true);
+        Users = new();
+    }
+
+    private List<EnumItem<RoleType>> GetRoleTypeValues()
+    {
+        return Enum.GetValues(typeof(RoleType))
+            .Cast<RoleType>()
+            .Where(status => status != RoleType.ProjectManager)
+            .Select(e => new EnumItem<RoleType> { Value = e, Name = e.ToString() })
+            .ToList();
+    }
+
+    private void AddMember()
+    {
+       Users.Add(new UserInvitationViewModel());
+    }
+
+    private bool HasDuplicateEmails(List<UserInvitationViewModel> users)
+    {
+        var emails = users.Select(u => u.Email).Where(email => !string.IsNullOrWhiteSpace(email)).ToList();
+        return emails.Count != emails.Distinct().Count();
+    }
+}
+
+<style>
+    .view-model-validation-msg {
+        font-size: 11px !important;
+        margin-top: 0.3rem;
+        color: red;
+    }
+
+    .rz-dialog-content{
+        height: 540px;
+    }
+</style>

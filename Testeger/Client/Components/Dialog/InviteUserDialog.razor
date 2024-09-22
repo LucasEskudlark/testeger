@@ -1,0 +1,9 @@
+﻿@page "/invite-user"
+@inject DialogService DialogService
+
+<InviteUserForm ProjectId="@ProjectId"></InviteUserForm>
+
+@code {
+    [Parameter]
+    public required string ProjectId { get; set; }
+}
