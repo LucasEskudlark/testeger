@@ -5,7 +5,7 @@
     <DataAnnotationsValidator />
     <div class="container-fluid">
         <div class="row mb-3 mt-2">
-            <div class="col-5">
+            <div class="col-12 col-md-5">
                 <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H3">Title</RadzenText>
                 <InputText id="title"
                            class="form-control inputtext"
@@ -14,7 +14,7 @@
                 <ValidationMessage For="@(() => testCaseCreationViewModel.Title)" />
             </div>
 
-            <div class="col-3 ms-4">
+            <div class="col-12 col-md-3 ms-md-4 mt-3 mt-md-0">
                 <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H3">Environment</RadzenText>
                 <InputText id="environment"
                            class="form-control inputtext"
@@ -25,7 +25,7 @@
         </div>
 
         <div class="row mb-3">
-            <div class="col-3">
+            <div class="col-12 col-md-6 col-lg-3 mb-3 mb-lg-0">
                 <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H3">Description</RadzenText>
                 <InputTextArea id="description"
                                class="form-control textarea"
@@ -34,7 +34,7 @@
                 <ValidationMessage For="@(() => testCaseCreationViewModel.Details.Description)" />
             </div>
 
-            <div class="col-3">
+            <div class="col-12 col-md-6 col-lg-3 mb-3 mb-lg-0">
                 <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H3">Pre Conditions</RadzenText>
                 <InputTextArea id="preconditions"
                                class="form-control textarea"
@@ -43,7 +43,7 @@
                 <ValidationMessage For="@(() => testCaseCreationViewModel.Details.PreConditions)" />
             </div>
 
-            <div class="col-3">
+            <div class="col-12 col-md-6 col-lg-3 mb-3 mb-lg-0">
                 <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H3">Steps</RadzenText>
                 <InputTextArea id="steps"
                                class="form-control textarea"
@@ -52,18 +52,18 @@
                 <ValidationMessage For="@(() => testCaseCreationViewModel.Details.Steps)" />
             </div>
 
-            <div class="col-3">
+            <div class="col-12 col-md-6 col-lg-3">
                 <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H3">Expected Result</RadzenText>
                 <InputTextArea id="expectedresult"
                                class="form-control textarea"
                                placeholder="Describe the expected outcome of the test."
                                @bind-Value="testCaseCreationViewModel.Details.ExpectedResult" />
                 <ValidationMessage For="@(() => testCaseCreationViewModel.Details.ExpectedResult)" />
-            </div> 
+            </div>
         </div>
 
         <div class="row mb-3 mt-4 d-flex justify-content-end">
-            <div class="col-3 d-flex justify-content-end">
+            <div class="col-12 col-md-3 d-flex justify-content-end">
                 <button type="submit" class="btn btn-primary">Submit</button>
             </div>
         </div>

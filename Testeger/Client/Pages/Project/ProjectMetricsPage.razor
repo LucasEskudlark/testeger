@@ -10,15 +10,15 @@
 
 @if (isInitialized)
 {
-   <div class="container-fluid">
-    <div class="row d-flex justify-content-between mb-4">
-        <div class="col-auto">
-            <RadzenBreadCrumb>
-                <RadzenBreadCrumbItem Path="@BreadCrumbHelper.GetProjectUrl(ProjectId)" Text="Project" />
-                <RadzenBreadCrumbItem Text="Metrics" />
-            </RadzenBreadCrumb>
-        </div>
-        <div class="col-3 d-flex justify-content-end">
+    <div class="container-fluid">
+        <div class="row d-flex justify-content-between mb-4">
+            <div class="col-auto">
+                <RadzenBreadCrumb>
+                    <RadzenBreadCrumbItem Path="@BreadCrumbHelper.GetProjectUrl(ProjectId)" Text="Project" />
+                    <RadzenBreadCrumbItem Text="Metrics" />
+                </RadzenBreadCrumb>
+            </div>
+            <div class="col-auto d-flex justify-content-end">
                 <RadzenDropDown TValue="DateTime?"
                                 Data="FilterOptions"
                                 TextProperty="Text"
@@ -26,18 +26,21 @@
                                 @bind-Value="@FilterDate"
                                 Change="@(args => StateHasChanged())" />
             </div>
-    </div>
+        </div>
+
         @if ((TestCases is null && TestRequests is null) || (!TestCases.Any() && !TestRequests.Any()))
         {
             <div class="row mt-4 d-flex justify-content-center">
                 <div class="col-12">
                     <RadzenCard class="vh-100 d-flex align-items-center justify-content-center">
-
-                        <h5 style="color: #A9ABAE;"><i>There are no metrics for this project yet.</i></h5>
+                        <h5 style="color: #A9ABAE;">
+                            <i>There are no metrics for this project yet.</i>
+                        </h5>
                     </RadzenCard>
                 </div>
             </div>
-        } else
+        }
+        else
         {
             <RadzenCard class="my-3 py-2">
                 <ToggleComponent>
@@ -45,22 +48,21 @@
                         <RadzenText TextStyle="TextStyle.H6" class="mt-2">Test requests metrics:</RadzenText>
                     </Header>
                     <ChildContent>
-                        <div class="row mt-3 d-flex align-items-start">
-                            <div class="col-6">
+                        <div class="row mt-3">
+                            <div class="col-md-6">
                                 <TestRequestGeneralMetricsDatagrid TestRequests="TestRequests" FilterDate="FilterDate" />
                             </div>
-                            <div class="col-6">
-                                <RequestTimeSpentInEachStatusChart TestRequests="TestRequests" TestRequestsByStatus="TestRequestsByStatus"/>
+                            <div class="col-md-6">
+                                <RequestTimeSpentInEachStatusChart TestRequests="TestRequests" TestRequestsByStatus="TestRequestsByStatus" />
                             </div>
                         </div>
-
                         <div class="row mt-4 d-flex justify-content-center mb-4">
-                            <div class="col-10">
+                            <div class="col-md-10">
                                 <TestRequestCountPerStatusChart TestRequestsByStatus="TestRequestsByStatus" FilterDate="FilterDate" />
                             </div>
                         </div>
                     </ChildContent>
-                </ToggleComponent>  
+                </ToggleComponent>
             </RadzenCard>
 
             <RadzenCard class="my-3 py-2">
@@ -70,17 +72,11 @@
                     </Header>
                     <ChildContent>
                         <div class="row mt-3">
-                            <div class="col-6">
+                            <div class="col-md-6">
                                 <TestCaseCountPerStatusChart TestCasesByStatus="TestCasesByStatus" FilterDate="FilterDate" />
                             </div>
-                            <div class="col-6">
+                            <div class="col-md-6">
                                 <TestCaseGeneralMetricsDatagrid TestCases="TestCases" TestRequests="TestRequests" FilterDate="FilterDate" />
-                            </div>
-                        </div>
-
-                        <div class="row mt-4 mb-4">
-                            <div class="col-12">
-                                <TestCaseTimeSpentInEachStatusChart TestCasesByStatus="TestCasesByStatus" TestCases="TestCases" FilterDate="FilterDate" />
                             </div>
                         </div>
                     </ChildContent>
@@ -94,10 +90,10 @@
                     </Header>
                     <ChildContent>
                         <div class="row mt-3 mb-4">
-                            <div class="col-6">
+                            <div class="col-md-6">
                                 <RequestCountPerProjectQAChart />
                             </div>
-                            <div class="col-6 pb-0">
+                            <div class="col-md-6">
                                 <TestCaseCountPerProjectQAChart />
                             </div>
                         </div>
@@ -118,7 +114,7 @@
                 </ToggleComponent>
             </RadzenCard>
         }
-    </div> 
+    </div>
 }
 
 @code {
@@ -161,3 +157,75 @@
         isInitialized = true;
     }
 }
+
+<style>
+    /* Ajustes globais para garantir a flexibilidade dos componentes */
+    .container-fluid, .RadzenCard, .RadzenBreadCrumb {
+        max-width: 100%;
+        width: 100%;
+        padding: 0 15px;
+    }
+
+    /* Evitar min-width fixas para que os elementos se adaptem às telas pequenas */
+    .card, .row, .col-12, .col-md-6 {
+        min-width: unset !important;
+        width: 100% !important;
+    }
+
+    /* Definir margens flexíveis nos cards */
+    .card {
+        margin: 10px 0;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        border-radius: 5px;
+    }
+
+    /* Ajuste do breadcrumb e dropdown para telas pequenas */
+    .breadcrumb, .dropdown {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    /* Garantir que o conteúdo dos botões e textos não seja cortado em telas pequenas */
+    .radzen-text, .radzen-button {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    /* Espaçamento flexível para os grids de métricas */
+    .row .col-md-6 {
+        padding: 0 10px;
+    }
+
+    /* Garantir que os cards tenham espaçamento uniforme */
+    .RadzenCard {
+        padding: 20px;
+        margin-bottom: 20px;
+    }
+
+    /* Centralizar melhor os componentes em telas pequenas */
+    .d-flex {
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: center;
+    }
+
+    /* Ajuste de altura flexível para cards vazios */
+    .vh-100 {
+        height: auto;
+        min-height: 100vh;
+    }
+
+    /* Pequenos ajustes de margem para o cabeçalho dos componentes de Toggle */
+    .RadzenText {
+        margin-top: 10px;
+    }
+
+    /* Deixar charts e grids mais responsivos */
+    .chart-container, .datagrid-container {
+        width: 100%;
+        max-width: 100%;
+    }
+</style>

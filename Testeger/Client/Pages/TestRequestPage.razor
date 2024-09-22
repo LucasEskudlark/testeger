@@ -26,7 +26,7 @@
                               ButtonStyle="ButtonStyle.Primary"
                               Size="ButtonSize.Small"
                               Click="Save"
-                              MouseEnter="@(args => ShowSaveRequestButtonTooltip(args) )"
+                              MouseEnter="@(args => ShowSaveRequestButtonTooltip(args))"
                               Disabled="@(!IsManagerOrQA)"
                               class="me-2" />
                 <RadzenButton Icon="delete"
@@ -36,35 +36,32 @@
                               Size="ButtonSize.Small"
                               Click="HandleTestRequestDeletion"
                               Disabled="@(!IsManagerOrQA)"
-                              MouseEnter="@(args => ShowDeleteRequestButtonTooltip(args) )" />
+                              MouseEnter="@(args => ShowDeleteRequestButtonTooltip(args))" />
             </div>
         </div>
     </div>
-
-
     <div class="container">
         <div class="row d-flex justify-content-between">
-            <div class="col-6 pb-2 right-divider">
-                <TestRequestDetails Request="Request" @ref="TestRequestDetailsComponent" OnFormSubmitted="HandleTestRequestUpdate" /> 
+            <div class="col-12 col-md-6 pb-2 right-divider">
+                <TestRequestDetails Request="Request" @ref="TestRequestDetailsComponent" OnFormSubmitted="HandleTestRequestUpdate" />
             </div>
 
-            <div class="col-6 pb-2">
+            <div class="col-12 col-md-6 pb-2">
                 <RadzenContent>
                     <div class="container-fluid">
                         <div class="row">
-                            <div class="col-12 d-flex justify-content-between">
+                            <div class="col-12 d-flex justify-content-between align-items-center">
                                 <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H3">Test Cases</RadzenText>
-                                <RadzenButton
-                                    Icon="add_circle"
-                                    Text="Add case"
-                                    ButtonStyle="ButtonStyle.Primary"
-                                    Size="ButtonSize.Small"
-                                    Click="OpenTestCaseCreationDialog"
-                                    Disabled="@(!IsManagerOrQA)" />
+                                <RadzenButton Icon="add_circle"
+                                              Text="Add case"
+                                              ButtonStyle="ButtonStyle.Primary"
+                                              Size="ButtonSize.Small"
+                                              Click="OpenTestCaseCreationDialog"
+                                              Disabled="@(!IsManagerOrQA)" />
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col-12 p-0 mt-2" style="min-width: 400px;">
+                        <div class="row mt-2">
+                            <div class="col-12 p-0" style="min-width: 400px;">
                                 <TestCasesDataList TestCases="TestCases" />
                             </div>
                         </div>

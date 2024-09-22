@@ -22,22 +22,22 @@
                     <RadzenBreadCrumbItem Text="@TestCase.Title" />
                 </RadzenBreadCrumb>
             </div>
-            <div class="col-auto d-flex">
+            <div class="col-auto d-flex flex-wrap">
                 <RadzenButton Icon="play_arrow"
                               Text="@TestButtonText"
                               ButtonStyle="@TestButtonStyle"
                               Size="ButtonSize.Small"
                               Click="@HandleTestButtonClick"
                               Disabled="@(isNotScheduled || !IsQA)"
-                              class="me-2" />
+                              class="me-2 mb-2" />
 
                 <RadzenButton Icon="save"
                               Text="Save"
                               ButtonStyle="ButtonStyle.Primary"
                               Size="ButtonSize.Small"
                               Click="@Save"
-                              MouseEnter="@(args => ShowTooltip(args, "Save the changes made in this request"))"
-                              class="me-2"
+                              MouseEnter="@(args => ShowTooltip(args, "Save any changes made to this request"))"
+                              class="me-2 mb-2"
                               Disabled="@(!IsManagerOrQA)" />
 
                 <RadzenButton Icon="delete"
@@ -46,30 +46,29 @@
                               Shade="Shade.Darker"
                               Size="ButtonSize.Small"
                               Click="@HandleTestCaseDeletion"
-                              MouseEnter="@(args => ShowTooltip(args, "Delete this entire request"))"
-                              Disabled="@(!IsManagerOrQA)" />
+                              MouseEnter="@(args => ShowTooltip(args, "Delete this test case permanently"))"
+                              Disabled="@(!IsManagerOrQA)"
+                              class="mb-2" />
             </div>
         </div>
     </div>
 
     <div class="container">
         <div class="row d-flex justify-content-between">
-            <div class="col-6 pb-2 right-divider">
-                <TestCaseDetailsPage
-                    Request="Request"
-                    TestCase="TestCase"
-                    @ref="TestCaseDetailsComponent"
-                    OnFormSubmitted="HandleTestCaseUpdate"
-                    IsManagerOrQA="@IsManagerOrQA"/>
+            <div class="col-12 col-md-6 pb-2 right-divider">
+                <TestCaseDetailsPage Request="Request"
+                                     TestCase="TestCase"
+                                     @ref="TestCaseDetailsComponent"
+                                     OnFormSubmitted="HandleTestCaseUpdate"
+                                     IsManagerOrQA="@IsManagerOrQA" />
             </div>
 
-            <div class="col-6 pb-2">
+            <div class="col-12 col-md-6 pb-2">
                 <TestCaseTestingDetails TestCase="TestCase" />
             </div>
         </div>
     </div>
 }
-
 @code {
     [Parameter]
     public string TestCaseId { get; set; }

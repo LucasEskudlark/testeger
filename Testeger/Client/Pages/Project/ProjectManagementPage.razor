@@ -9,45 +9,52 @@
 {
     <PageTitle>@Project.Name Settings - Testeger</PageTitle>
 
-    <div class="row mb-4" style="min-width: 900px; width: 100%;">
+    <div class="row mb-4">
         <div class="col-6">
             <RadzenBreadCrumb>
                 <RadzenBreadCrumbItem Path="@BreadCrumbHelper.GetProjectUrl(ProjectId)" Text="Project" />
                 <RadzenBreadCrumbItem Text="Manage" />
             </RadzenBreadCrumb>
         </div>
-        <div class="col-6 d-flex justify-content-end" style="min-width: 450px;">
-            <RadzenButton Shade="Shade.Darker" Icon="delete" Text="Delete" ButtonStyle="ButtonStyle.Danger" />
+        <div class="col-6 d-flex justify-content-end">
+            <RadzenButton Shade="Shade.Darker"
+                          Icon="delete"
+                          Text="Delete"
+                          ButtonStyle="ButtonStyle.Danger"
+                          class="ms-2" />
         </div>
     </div>
 
-    <div class="row mt-4 mb-5" style="min-width: 900px;">
-        <div class="col-6">
+    <div class="row mb-4">
+        <div class="col-12">
             <h5><strong>Project: @Project?.Name</strong></h5>
         </div>
     </div>
 
-    <div class="container ms-0 ps-0">
-        <div class="row mb-4 d-flex justify-content-start">
-            <div class="col-2 d-flex flex-column">
+    <div class="container">
+        <div class="row mb-4">
+            <div class="col-md-6 col-12">
                 <RadzenLabel Text="Created Date" Style="@LabelStyle" />
                 <RadzenDatePicker Disabled="true"
                                   @bind-Value="Project.CreatedDate"
-                                  Style="width: 100%;" Min="@(DateTime.Today)"
+                                  Style="width: 100%;"
                                   DateFormat="dd/MM/yyyy" />
             </div>
-            <div class="col-2 d-flex flex-column">
-                <RadzenLabel Text="Created by" Style="@LabelStyle" />
-                <RadzenTextBox Disabled="true" @bind-Value="Project.CreatedByUserId" Style="width: 100%;" />
+            <div class="col-md-6 col-12">
+                <RadzenLabel Text="Created By" Style="@LabelStyle" />
+                <RadzenTextBox Disabled="true"
+                               @bind-Value="Project.CreatedByUserId"
+                               Style="width: 100%;" />
             </div>
         </div>
-        <div class="row">
-            <div class="col-8">
+
+        <div class="row mb-4">
+            <div class="col-12">
                 <div class="row mb-2">
-                    <div class="col-4">
+                    <div class="col-6">
                         <RadzenLabel Text="Project Members" Style="@LabelStyle" />
                     </div>
-                    <div class="col-8 d-flex justify-content-end">
+                    <div class="col-6 d-flex justify-content-end">
                         <RadzenButton Shade="Shade.Darker"
                                       Icon="remove"
                                       Text="Remove"

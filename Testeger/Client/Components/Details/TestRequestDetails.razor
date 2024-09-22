@@ -8,33 +8,31 @@
     <RadzenContent>
         <div class="container-fluid">
             <div class="row">
-                <div class="col-md-8">
+                <div class="col-md-8 mb-3">
                     <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H3">Title</RadzenText>
                     <RadzenTextBox @bind-Value="Request.Title" Style="width:100%;" Disabled="@(!IsManagerOrQA)" />
-                    <ValidationMessage For="@(() => Request.Title)" class="view-model-validation-msg"/>
+                    <ValidationMessage For="@(() => Request.Title)" class="view-model-validation-msg" />
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-4 mb-3">
                     <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H3">Assigned to</RadzenText>
-                    @*<RadzenDropDown Data="names"
-                                    @bind-Value="Request.AssignedTo.Name"
-                                    Style="width:100%;" /> *@
+                    @*<RadzenDropDown Data="names" @bind-Value="Request.AssignedTo.Name" Style="width:100%;" /> *@
                 </div>
             </div>
-            <div class="row mt-2">
+            <div class="row mb-3">
                 <div class="col-12">
                     <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H3">Description</RadzenText>
                     <RadzenTextArea @bind-Value="Request.Description" Style="width:100%; height:170px; resize: none;" Disabled="@(!IsManagerOrQA)" />
                     <ValidationMessage For="@(() => Request.Description)" class="view-model-validation-msg" />
                 </div>
             </div>
-            <div class="row mt-2">
+            <div class="row mb-3">
                 <div class="col-12">
                     <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H3">Story Link</RadzenText>
                     <RadzenTextBox @bind-Value="Request.StoryLink" Style="width:100%;" Disabled="@(!IsManagerOrQA)" />
                     <ValidationMessage For="@(() => Request.StoryLink)" class="view-model-validation-msg" />
                 </div>
             </div>
-            <div class="row mt-2">
+            <div class="row mb-3">
                 <div class="col-md-4">
                     <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H3">Status</RadzenText>
                     <RadzenDropDown Data="@GetRequestStatusValues()"
@@ -43,7 +41,7 @@
                                     @bind-Value="Request.Status"
                                     Style="width:100%;"
                                     Disabled="@(!IsManagerOrQA)" />
-                    <ValidationMessage For="@(() => Request.Status)" class="view-model-validation-msg"/>
+                    <ValidationMessage For="@(() => Request.Status)" class="view-model-validation-msg" />
                 </div>
                 <div class="col-md-4">
                     <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H3">Priority</RadzenText>
@@ -60,7 +58,7 @@
                     <RadzenTextBox Disabled="true" @bind-Value="Request.CreatedByUserId" Style="width:100%;" />
                 </div>
             </div>
-            <div class="row mt-2">
+            <div class="row mb-3">
                 <div class="col-md-4">
                     <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H3">Due Date</RadzenText>
                     <RadzenDatePicker @bind-Value="Request.DueDate"
@@ -81,7 +79,7 @@
                     <RadzenDatePicker Disabled="true"
                                       @bind-Value="Request.CompletedDate"
                                       Style="width:100%;" Min="@(DateTime.Today)"
-                                      DateFormat="dd/MM/yyyy" MouseEnter="@(args => ShowCompletedDateTooltip(args) )" />
+                                      DateFormat="dd/MM/yyyy" MouseEnter="@(args => ShowCompletedDateTooltip(args))" />
                 </div>
             </div>
         </div>

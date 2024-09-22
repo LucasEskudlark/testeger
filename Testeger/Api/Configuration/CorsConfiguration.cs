@@ -9,7 +9,7 @@ public static class CorsConfiguration
             options.AddPolicy(name: blazorPolicy,
                 policy =>
                 {
-                    policy.WithOrigins("https://localhost:49851")
+                    policy.WithOrigins("https://localhost:50351")
                    .AllowAnyHeader()
                    .AllowAnyMethod();
                 });
