@@ -28,6 +28,7 @@ builder.Services.AddRazorPages();
 
 builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection(nameof(JwtSettings)));
 builder.Services.Configure<SmtpSettings>(builder.Configuration.GetSection(nameof(SmtpSettings)));
+builder.Services.Configure<ClientSettings>(builder.Configuration.GetSection(nameof(ClientSettings)));
 builder.Services.AddDatabase(builder.Configuration);
 builder.Services.AddRepositories();
 builder.Services.AddUnitOfWork();
@@ -36,7 +37,7 @@ builder.Services.AddRequestValidators();
 builder.Services.AddAutoMapper(typeof(ProjectMappingProfile));
 
 var BlazorClientPolicy = "BlazorClientPolicy";
-builder.Services.ConfigureCors(BlazorClientPolicy);
+builder.Services.ConfigureCors(builder.Configuration, BlazorClientPolicy);
 builder.Services.ConfigureAuthentication(builder.Configuration);
 
 builder.Services.AddApplicationServices();
