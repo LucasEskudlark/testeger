@@ -1,0 +1,77 @@
+﻿@page "/profile"
+@using Testeger.Client.Authentication
+@attribute [Authorize]
+@layout DefaultLayout
+@inject IUserService UserService
+@inject NavigationManager NavigationManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+@if (User is not null)
+{
+    <PageTitle>@User.UserName - Profile</PageTitle>
+
+    <div class="row d-flex justify-content-center align-items-center vh-100">
+        <div class="col-10 col-md-6 col-lg-4 col-xl-4 mb-5">
+            <div class="row mb-5">
+                <div class="col-12 d-flex justify-content-center">
+                    <img class="rounded-circle shadow-4-strong" alt="avatar2" src="images/profile-picture.png" style="height: 7rem;" />
+                </div>
+            </div>
+
+            <div class="row my-4">
+                <div class="col-12 d-flex flex-column">
+                    <RadzenLabel Text="User Name" Style="@LabelStyle" />
+                    <RadzenTextBox Disabled="true" @bind-Value="@User.UserName" Style="width: 100%;" />
+                </div>
+            </div>
+
+            <div class="row my-4">
+                <div class="col-12 d-flex flex-column">
+                    <RadzenLabel Text="Email" Style="@LabelStyle" />
+                    <RadzenTextBox Disabled="true" @bind-Value="@User.Email" Style="width: 100%;" />
+                </div>
+            </div>
+
+            <div class="row my-4">
+                <div class="col-12 d-flex flex-column">
+                    <RadzenLabel Text="Phone Number" Style="@LabelStyle" />
+                    <RadzenMask Mask="(**) *****-****" CharacterPattern="[0-9]" Placeholder="(00) 00000-0000" Name="Phone" @bind-Value=@User.PhoneNumber
+                                Style="width: 100%;" aria-label="Phone" Disabled="true" />
+                </div>
+            </div>
+
+            <div class="row mb-2 mt-4 d-flex justify-content-center">
+                <div class="col-12 d-flex justify-content-center">
+                    <RadzenButton Shade="Shade.Darker" Icon="logout" Text="Logout" ButtonStyle="ButtonStyle.Danger" Click="@LogOut"/>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+}
+
+
+@code {
+    private const string LabelStyle = "font-weight: 600 !important; color: #333 !important;";
+
+    private UserViewModel? User { get; set; } = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var userId = await UserService.GetUserIdAsync();
+        User = await UserService.GetUserByIdAsync(userId);
+
+        await base.OnInitializedAsync();
+    }
+
+    private async Task LogOut()
+    {
+        await ((CustomAuthenticationStateProvider)AuthenticationStateProvider).MarkUserAsLoggedOut();
+        GoToLogin();
+    }
+
+    private void GoToLogin()
+    {
+        NavigationManager.NavigateTo("/login", true);
+    }
+}

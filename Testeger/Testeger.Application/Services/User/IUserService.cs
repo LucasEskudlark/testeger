@@ -7,6 +7,6 @@ namespace Testeger.Application.Services.User;
 public interface IUserService
 {
     Task<IEnumerable<UserNameIdDto>> GetUsersByProjectRoleAsync(string roleName);
-    Task<UserNameIdDto> GetUserByIdAsync(string userId);
+    Task<GetUserResponse> GetUserByIdAsync(string userId);
     Task<IEnumerable<GetUserResponse>> GetUsersByProject(string projectId);
 }

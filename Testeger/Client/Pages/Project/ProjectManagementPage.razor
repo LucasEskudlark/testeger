@@ -3,6 +3,7 @@
 @inject IProjectServiceNV ProjectService
 @inject TooltipService TooltipService
 @inject IUserService UserService
+@inject DialogService DialogService
 @attribute [Authorize(Policy = $"{AuthorizationRoles.Manager}")]
 
 
@@ -62,9 +63,10 @@
                                       MouseEnter="@(args => ShowRemoveMemberTooltip(args))"
                                       class="me-2" />
                         <RadzenButton Icon="add"
-                                      Text="Add"
+                                      Text="Invite"
                                       Size="ButtonSize.Small"
                                       ButtonStyle="ButtonStyle.Primary"
+                                      Click="OpenUserInvitationDialog"
                                       MouseEnter="@(args => ShowAddMemberTooltip(args))" />
                     </div>
                 </div>
@@ -109,7 +111,16 @@
         }
 
         var user = await UserService.GetUserByIdAsync(id);
-        return user.Username;
+        return user.UserName;
+    }
+
+    public async Task OpenUserInvitationDialog()
+    {
+        await DialogService.OpenAsync<InviteUserDialog>(
+            "Invite user",
+            new Dictionary<string, object>() { { "ProjectId", ProjectId } },
+            new DialogOptions() { Width = "650px", Height = "540px", Resizable = false, Draggable = true }
+        );
     }
 
     // private async Task RemoveUser()
