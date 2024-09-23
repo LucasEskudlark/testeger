@@ -106,7 +106,7 @@
         }
 
         var user = await UserService.GetUserByIdAsync(id);
-        return user.Username;
+        return user.UserName;
     }
 
     public async Task OpenUserInvitationDialog()
