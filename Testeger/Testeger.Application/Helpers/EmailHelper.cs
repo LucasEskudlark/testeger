@@ -2,9 +2,9 @@
 
 public static class EmailHelper
 {
-    public static string GetProjectInvitationEmailBody(string token)
+    public static string GetProjectInvitationEmailBody(string token, string baseUrl)
     {
-        string link = $"https://localhost:49851/confirm-invitation?token={Uri.EscapeDataString(token)}";
+        string link = $"{baseUrl}/confirm-invitation?token={Uri.EscapeDataString(token)}";
         string body = $@"
             <html>
             <body>

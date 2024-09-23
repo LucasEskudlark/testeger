@@ -1,11 +1,13 @@
 ﻿@page "/{TestCaseResultId}/image/{ImageId}"
 @inject DialogService DialogService
+@inject IConfiguration Configuration
+
 @attribute [Authorize]
 
 @if (ImageUrl is not null)
 {
     <div id="img-div" class="d-flex justify-content-center align-items-center">
-        <img id="dialog-img" src="https://localhost:5000/api/images/@ImageUrl" class="full-image" />
+        <img id="dialog-img" src="@BaseAddress/api/images/@ImageUrl" class="full-image" />
     </div>
 }
 
@@ -18,6 +20,13 @@
 
     [Parameter]
     public required string TestCaseResultId { get; set; }
+
+    private string? BaseAddress;
+
+    protected override void OnInitialized()
+    {
+        BaseAddress = Configuration["ApiSettings:BaseAddress"];
+    }
 }
 
 <style>

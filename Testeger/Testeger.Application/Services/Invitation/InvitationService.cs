@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.Extensions.Options;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
@@ -8,6 +9,7 @@ using Testeger.Application.Services.Authentication;
 using Testeger.Application.Services.Email;
 using Testeger.Application.Services.Project;
 using Testeger.Application.Services.Token;
+using Testeger.Application.Settings;
 using Testeger.Infra.UnitOfWork;
 using Testeger.Shared.Authorization;
 using Testeger.Shared.DTOs.Requests.ConfirmInvitation;
@@ -23,6 +25,7 @@ public class InvitationService : BaseService, IInvitationService
     private readonly IEmailService _emailService;
     private readonly IProjectService _projectService;
     private readonly ICustomAuthenticationService _authService;
+    private readonly ClientSettings _clientSettings;
 
     private const string ProjectIdClaimType = "project_id";
     private const string ProjectRoleClaimType = "project_role";
@@ -33,13 +36,15 @@ public class InvitationService : BaseService, IInvitationService
         ITokenService tokenService,
         IEmailService emailService,
         IProjectService projectService,
-        ICustomAuthenticationService authService)
+        ICustomAuthenticationService authService,
+        IOptions<ClientSettings> clientSettings)
         : base(unitOfWork, mapper)
     {
         _tokenService = tokenService;
         _emailService = emailService;
         _projectService = projectService;
         _authService = authService;
+        _clientSettings = clientSettings.Value;
     }
 
     public async Task SendInvitationAsync(SendInvitationRequest request)
@@ -61,7 +66,7 @@ public class InvitationService : BaseService, IInvitationService
             await GenerateAndSaveNewInvitation(parameters, token);
 
             var subject = EmailHelper.GetProjectInvitationEmailSubject();
-            var body = EmailHelper.GetProjectInvitationEmailBody(token);
+            var body = EmailHelper.GetProjectInvitationEmailBody(token, _clientSettings.BaseAddress);
 
             await _emailService.SendEmailAsync(user.Email, subject, body);
         }
