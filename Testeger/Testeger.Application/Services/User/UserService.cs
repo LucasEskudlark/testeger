@@ -33,12 +33,12 @@ public class UserService : BaseService, IUserService
         return users;
     }
 
-    public async Task<UserNameIdDto> GetUserByIdAsync(string userId)
+    public async Task<GetUserResponse> GetUserByIdAsync(string userId)
     {
         var user = await _userManager.FindByIdAsync(userId)
             ?? throw new ArgumentException($"User with id {userId} not found");
 
-        var response = _mapper.Map<UserNameIdDto>(user);
+        var response = _mapper.Map<GetUserResponse>(user);
 
         return response;
     }

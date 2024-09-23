@@ -12,6 +12,7 @@ public class UserService : BaseService, IUserService
     private const string BaseAddress = "api/users";
     private const string DefaultUsername = "Guest";
     private const string NameClaimType = "unique_name";
+    private const string IdClaimType = "nameid";
 
     public UserService(
         HttpClient httpClient,
@@ -52,11 +53,11 @@ public class UserService : BaseService, IUserService
         return response;
     }
 
-    public async Task<UserNameIdViewModel> GetUserByIdAsync(string userId)
+    public async Task<UserViewModel> GetUserByIdAsync(string userId)
     {
         var address = BaseAddress + $"/{userId}";
 
-        var response = await _httpClient.GetFromJsonAsync<UserNameIdViewModel>(address);
+        var response = await _httpClient.GetFromJsonAsync<UserViewModel>(address);
 
         return response;
     }
@@ -68,5 +69,23 @@ public class UserService : BaseService, IUserService
         var response = await _httpClient.GetFromJsonAsync<IEnumerable<UserViewModel>>(address);
 
         return response;
+    }
+
+    public async Task<string> GetUserIdAsync()
+    {
+        var authState = await _stateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        if (user.Identity is null && !user.Identity.IsAuthenticated)
+        {
+            return DefaultUsername;
+        }
+
+        ClaimsIdentity identity = user.Identity as ClaimsIdentity;
+        IEnumerable<Claim> claims = identity.Claims;
+
+        var username = claims.FirstOrDefault(c => c.Type == IdClaimType).Value;
+
+        return username ?? DefaultUsername;
     }
 }
