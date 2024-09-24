@@ -53,9 +53,9 @@
     {
         UserTestRequests = GetUserRequests();
         UserTestCases = GetUserTestCases();
-        AverageTimeToCompleteTestRequest = CalculateAverageTestRequestCompletionTimeInHours(UserTestRequests);
-        AverageTimeToCompleteTestCase = CalculateAverageTestCaseCompletionTimeInHours(UserTestCases);
-        AverageTimeToTestATestCase = CalculateAverageTestCaseTestingTimeInHours(UserTestCases);
+        AverageTimeToCompleteTestRequest = TestRequestMetricsCalculator.CalculateAverageTestRequestCompletionTimeInHours(UserTestRequests);
+        AverageTimeToCompleteTestCase = TestCaseMetricsCalculator.CalculateAverageTestCaseCompletionTimeInHours(UserTestCases);
+        AverageTimeToTestATestCase = TestCaseMetricsCalculator.CalculateAverageTestCaseTestingTimeInHours(UserTestCases);
         areParametersSet = true;
         await base.OnParametersSetAsync();
     }
@@ -88,62 +88,5 @@
         }
 
         return TestRequests.Where(r => string.Equals(r.UserAssignedId, UserId, StringComparison.OrdinalIgnoreCase));
-    }
-
-    private double CalculateAverageTestCaseCompletionTimeInHours(IEnumerable<TestCaseViewModel> testCases)
-    {
-        var completedTestCases = testCases.Where(r => r.CompletedDate != default);
-
-        if (!completedTestCases.Any())
-        {
-            return 0.0;
-        }
-
-        double totalHours = completedTestCases
-            .Select(r => (r.CompletedDate - r.CreatedDate).TotalHours)
-            .Sum();
-
-        double averageHours = totalHours / completedTestCases.Count();
-
-        return Math.Round(averageHours, 2);
-    }
-
-    private double CalculateAverageTestRequestCompletionTimeInHours(IEnumerable<TestRequestViewModel> testRequests)
-    {
-        var completedTestRequests = testRequests.Where(r => r.CompletedDate != DateTime.MinValue);
-
-        if (!completedTestRequests.Any())
-        {
-            return 0.0;
-        }
-
-        double totalHours = completedTestRequests
-            .Select(r => (r.CompletedDate - r.CreatedDate).TotalHours)
-            .Sum();
-
-        double averageHours = totalHours / completedTestRequests.Count();
-
-        return Math.Round(averageHours, 2);
-    }
-
-    private double CalculateAverageTestCaseTestingTimeInHours(IEnumerable<TestCaseViewModel> testCases)
-    {
-        var testedTestCases = testCases.Where(r => r.Results.Count() > 1);
-
-        if (!testedTestCases.Any())
-        {
-            return 0.0;
-        }
-
-        var allTimeSpans = testCases
-            .SelectMany(tc => tc.Results)
-            .Select(tcr => tcr.ElapsedTime)
-            .ToList();
-
-        var totalHoursSpent = allTimeSpans.Sum(ts => ts.TotalHours);
-
-        double averageHours = totalHoursSpent / allTimeSpans.Count;
-
-        return Math.Round(averageHours, 2);
     }
 }

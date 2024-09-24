@@ -16,7 +16,7 @@
             <p>Average time to complete a test request:</p>
         </div>
         <div class="col-3 d-flex justify-content-center">
-            @CalculateAverageRequestCompletionTimeInHours(FilteredRequests).ToHoursAndMinutes()
+            @TestRequestMetricsCalculator.CalculateAverageTestRequestCompletionTimeInHours(FilteredRequests).ToHoursAndMinutes()
         </div>
     </div>
 
@@ -25,7 +25,7 @@
             <p>N° of requests finished after Due Date:</p>
         </div>
         <div class="col-3 d-flex justify-content-center">
-            @CountRequestsCompletedAfterDueDate(FilteredRequests)
+            @TestRequestMetricsCalculator.CountRequestsCompletedAfterDueDate(FilteredRequests)
         </div>
     </div>
 
@@ -34,7 +34,7 @@
             <p>N° of requests finished before Due Date:</p>
         </div>
         <div class="col-3 d-flex justify-content-center">
-            @CountRequestsCompletedBeforeDueDate(FilteredRequests)
+            @TestRequestMetricsCalculator.CountRequestsCompletedBeforeDueDate(FilteredRequests)
         </div>
     </div>
 
@@ -43,7 +43,7 @@
             <p>N° of requests that needed to be fixed:</p>
         </div>
         <div class="col-3 d-flex justify-content-center">
-            @CountRequestsThatNeededToBeFixed(FilteredRequests)
+            @TestRequestMetricsCalculator.CountRequestsThatNeededToBeFixed(FilteredRequests)
         </div>
     </div>
 
@@ -52,7 +52,7 @@
             <p>N° of requests that did not need to be fixed:</p>
         </div>
         <div class="col-3 d-flex justify-content-center">
-            @CountRequestsThatDidntNeedToBeFixed(FilteredRequests)
+            @TestRequestMetricsCalculator.CountRequestsThatDidntNeedToBeFixed(FilteredRequests)
         </div>
     </div>
 
@@ -61,7 +61,7 @@
             <p>Average test requests lead time:</p>
         </div>
         <div class="col-3 d-flex justify-content-center">
-            @CalculateAverageLeadTime(FilteredRequests).ToHoursAndMinutes()
+            @TestRequestMetricsCalculator.CalculateAverageLeadTime(FilteredRequests).ToHoursAndMinutes()
         </div>
     </div>
 
@@ -70,7 +70,7 @@
             <p>Average test requests cycle time:</p>
         </div>
         <div class="col-3 d-flex justify-content-center">
-            @CalculateCycleTime(FilteredRequests).ToHoursAndMinutes()
+            @TestRequestMetricsCalculator.CalculateCycleTime(FilteredRequests).ToHoursAndMinutes()
         </div>
     </div>
 </RadzenCard>
@@ -87,140 +87,6 @@
     protected override void OnParametersSet()
     {
         base.OnParametersSet();
-        FilteredRequests = FilterTestRequestsByDate(TestRequests, FilterDate);
-    }
-
-    private IEnumerable<TestRequestViewModel> FilterTestRequestsByDate(
-        IEnumerable<TestRequestViewModel> requests, DateTime? filterDate)
-    {
-        if (filterDate == null)
-        {
-            return requests;
-        }
-
-        return requests.Where(request =>
-        {
-            var mostRecentChangeDate = request.History
-                .OrderByDescending(history => history.ChangedDate)
-                .FirstOrDefault()?.ChangedDate;
-
-            return mostRecentChangeDate.HasValue && mostRecentChangeDate.Value >= filterDate.Value;
-        });
-    }
-
-    private double CalculateAverageRequestCompletionTimeInHours(IEnumerable<TestRequestViewModel> requests)
-    {
-        var completedRequests = requests.Where(r => r.CompletedDate != default);
-
-        if (!completedRequests.Any())
-        {
-            return 0.0;
-        }
-
-        double totalHours = completedRequests
-            .Select(r => (r.CompletedDate - r.CreatedDate).TotalHours)
-            .Sum();
-
-        double averageHours = totalHours / completedRequests.Count();
-
-        return Math.Round(averageHours, 2);
-    }
-
-    private int CountRequestsCompletedBeforeDueDate(IEnumerable<TestRequestViewModel> requests)
-    {
-        return requests.Count(r => r.CompletedDate != default &&
-                                   r.CompletedDate < r.DueDate);
-    }
-
-    private int CountRequestsCompletedAfterDueDate(IEnumerable<TestRequestViewModel> requests)
-    {
-        return requests.Count(r => r.CompletedDate != default &&
-                                   r.CompletedDate > r.DueDate);
-    }
-
-    private static int CountRequestsThatNeededToBeFixed(IEnumerable<TestRequestViewModel> requests)
-    {
-        return requests.Count(tr => tr.History.Any(h => h.NewStatus == RequestStatus.FixingIssues));
-    }
-
-    private static int CountRequestsThatDidntNeedToBeFixed(IEnumerable<TestRequestViewModel> requests)
-    {
-        return requests.Count(tr => !tr.History.Any(h => h.NewStatus == RequestStatus.FixingIssues));
-    }
-
-    private static double CalculateAverageLeadTime(IEnumerable<TestRequestViewModel> testRequests)
-    {
-        if (!testRequests.Any())
-        {
-            return 0;
-        }
-
-        double totalLeadTime = 0;
-        int count = 0;
-
-        foreach (var request in testRequests)
-        {
-            var started = request.History
-                .Where(h => h.NewStatus == RequestStatus.Waiting)
-                .OrderBy(h => h.ChangedDate)
-                .FirstOrDefault()?.ChangedDate;
-
-            var completed = request.History
-                .Where(h => h.NewStatus == RequestStatus.Completed && h.ChangedDate >= started)
-                .OrderBy(h => h.ChangedDate)
-                .FirstOrDefault()?.ChangedDate;
-
-            if (started.HasValue && completed.HasValue)
-            {
-                totalLeadTime += (completed.Value - started.Value).TotalHours;
-                count++;
-            }
-        }
-
-        if (count > 0)
-        {
-            var result = totalLeadTime / count;
-            return Math.Round(result, 2);
-        }
-
-        return 0;
-    }
-
-    private static double CalculateCycleTime(IEnumerable<TestRequestViewModel> testRequests)
-    {
-        if (!testRequests.Any())
-        {
-            return 0;
-        }
-
-        double totalCycleTime = 0;
-        int count = 0;
-
-        foreach (var request in testRequests)
-        {
-            var started = request.History
-                .Where(h => h.NewStatus == RequestStatus.InProgress)
-                .OrderBy(h => h.ChangedDate)
-                .FirstOrDefault()?.ChangedDate;
-
-            var completed = request.History
-                .Where(h => h.NewStatus == RequestStatus.Completed && h.ChangedDate >= started)
-                .OrderBy(h => h.ChangedDate)
-                .FirstOrDefault()?.ChangedDate;
-
-            if (started.HasValue && completed.HasValue)
-            {
-                totalCycleTime += (completed.Value - started.Value).TotalHours;
-                count++;
-            }
-        }
-
-        if (count > 0)
-        {
-            var result = totalCycleTime / count;
-            return Math.Round(result, 2);
-        }
-
-        return 0;
+        FilteredRequests = TestRequestMetricsCalculator.FilterTestRequestsByDate(TestRequests, FilterDate);
     }
 }
