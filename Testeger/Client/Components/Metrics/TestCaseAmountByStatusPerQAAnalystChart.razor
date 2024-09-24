@@ -1,7 +1,7 @@
 ﻿<h6>Test Case amount by status per QA Analyst</h6>
 <RadzenCard class="py-0">
     <RadzenChart>
-        <RadzenDonutSeries Data="@chartData"
+        <RadzenDonutSeries Data="@ChartData"
                            CategoryProperty="Status"
                            ValueProperty="TestCaseCount"
                            Fills="@(new [] { "#6984c9", "#f2405b", "#009952" })"
@@ -20,27 +20,62 @@
 </RadzenCard>
 
 @code {
-    class DataItem
+    [Parameter]
+    public IEnumerable<TestCaseViewModel>? TestCases { get; set; }
+
+    [Parameter]
+    public required string UserId { get; set; }
+
+    private IEnumerable<TestCaseViewModel>? UserTestCases { get; set; }
+    private DataItem[]? ChartData;
+    private bool areParametersSet;
+
+    protected override async Task OnParametersSetAsync()
     {
-        public string Status { get; set; }
-        public int TestCaseCount { get; set; }
+        UserTestCases = GetUserTestCases();
+        ChartData = GetChartData(UserTestCases);
+        areParametersSet = true;
+        await base.OnParametersSetAsync();
     }
 
-    DataItem[] chartData = new DataItem[] {
-        new DataItem
+    private IEnumerable<TestCaseViewModel> GetUserTestCases()
+    {
+        if (TestCases == null)
         {
-            Status = "Pending",
-            TestCaseCount = 5
-        },
-        new DataItem
-        {
-            Status = "Failed",
-            TestCaseCount = 2
-        },
-        new DataItem
-        {
-            Status = "Completed",
-            TestCaseCount = 12
+            return Enumerable.Empty<TestCaseViewModel>();
         }
-    };
+
+        if (string.IsNullOrEmpty(UserId))
+        {
+            return Enumerable.Empty<TestCaseViewModel>();
+        }
+
+        return TestCases.Where(r => string.Equals(r.CreatedByUserId, UserId, StringComparison.OrdinalIgnoreCase));
+    }
+
+    private DataItem[] GetChartData(IEnumerable<TestCaseViewModel> testCases)
+    {
+        if (testCases == null || !testCases.Any())
+        {
+            return Array.Empty<DataItem>();
+        }
+
+        var result = testCases
+            .GroupBy(tr => tr.Status)
+            .Select(g => new DataItem
+                {
+                    Status = g.Key.ToString(),
+                    TestCaseCount = g.Count()
+                })
+            .ToArray();
+
+        return result;
+    }
+
+
+    private class DataItem
+    {
+        public required string Status { get; set; }
+        public int TestCaseCount { get; set; }
+    }
 }
