@@ -95,10 +95,10 @@
                     <ChildContent>
                         <div class="row mt-3 mb-4">
                             <div class="col-6">
-                                <RequestCountPerProjectQAChart />
+                                <RequestCountPerProjectQAChart TestRequests="@TestRequests" ProjectId="@ProjectId"/>
                             </div>
                             <div class="col-6 pb-0">
-                                <TestCaseCountPerProjectQAChart />
+                                <TestCaseCountPerProjectQAChart TestCases="@TestCases" ProjectId="@ProjectId"/>
                             </div>
                         </div>
                     </ChildContent>
@@ -112,7 +112,7 @@
                     </Header>
                     <ChildContent>
                         <div class="row mt-3 mb-4">
-                            <IndividualProjectQAMetrics />
+                            <IndividualProjectQAMetrics TestRequests="@TestRequests" TestCases="@TestCases" ProjectId="@ProjectId"/>
                         </div>
                     </ChildContent>
                 </ToggleComponent>

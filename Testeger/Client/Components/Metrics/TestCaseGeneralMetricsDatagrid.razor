@@ -27,7 +27,7 @@
             <p>N° of test cases that failed at least once:</p>
         </div>
         <div class="col-3 d-flex justify-content-center">
-            @CountFailedTestCases(FilteredTestCases)
+            @TestCaseMetricsCalculator.CountFailedTestCases(FilteredTestCases)
         </div>
     </div>
 
@@ -36,7 +36,7 @@
             <p>N° of test cases that did not fail:</p>
         </div>
         <div class="col-3 d-flex justify-content-center">
-            @CountNeverFailedTestCases(FilteredTestCases)
+            @TestCaseMetricsCalculator.CountNeverFailedTestCases(FilteredTestCases)
         </div>
     </div>
 
@@ -45,7 +45,7 @@
             <p>Average time to complete a test case:</p>
         </div>
         <div class="col-3 d-flex justify-content-center">
-            @CalculateAverageTestCaseCompletionTimeInHours(FilteredTestCases).ToHoursAndMinutes()
+            @TestCaseMetricsCalculator.CalculateAverageTestCaseCompletionTimeInHours(FilteredTestCases).ToHoursAndMinutes()
         </div>
     </div>
 
@@ -54,7 +54,7 @@
             <p>Average time to test a test case:</p>
         </div>
         <div class="col-3 d-flex justify-content-center">
-            @CalculateAverageTestCaseTestingTimeInHours(FilteredTestCases).ToHoursAndMinutes()
+            @TestCaseMetricsCalculator.CalculateAverageTestCaseTestingTimeInHours(FilteredTestCases).ToHoursAndMinutes()
         </div>
     </div>
 
@@ -75,63 +75,7 @@
     protected override void OnParametersSet()
     {
         base.OnParametersSet();
-        FilteredTestCases = FilterTestCasesByDate(TestCases, FilterDate);
-    }
-
-    private IEnumerable<TestCaseViewModel> FilterTestCasesByDate(IEnumerable<TestCaseViewModel> testCases, DateTime? filterDate)
-    {
-        if (filterDate == null)
-        {
-            return testCases;
-        }
-
-        return testCases.Where(testCase =>
-        {
-            var mostRecentChangeDate = testCase.History
-                .OrderByDescending(history => history.ChangedDate)
-                .FirstOrDefault()?.ChangedDate;
-
-            return mostRecentChangeDate.HasValue && mostRecentChangeDate.Value >= filterDate.Value;
-        });
-    }
-
-    private double CalculateAverageTestCaseCompletionTimeInHours(IEnumerable<TestCaseViewModel> testCases)
-    {
-        var completedTestCases = testCases.Where(r => r.CompletedDate != default);
-
-        if (!completedTestCases.Any())
-        {
-            return 0.0;
-        }
-
-        double totalHours = completedTestCases
-            .Select(r => (r.CompletedDate - r.CreatedDate).TotalHours)
-            .Sum();
-
-        double averageHours = totalHours / completedTestCases.Count();
-
-        return Math.Round(averageHours, 2);
-    }
-
-    private double CalculateAverageTestCaseTestingTimeInHours(IEnumerable<TestCaseViewModel> testCases)
-    {
-        var testedTestCases = testCases.Where(r => r.Results.Count() > 1);
-
-        if (!testedTestCases.Any())
-        {
-            return 0.0;
-        }
-
-        var allTimeSpans = testCases
-            .SelectMany(tc => tc.Results)
-            .Select(tcr => tcr.ElapsedTime)
-            .ToList();
-
-        var totalHoursSpent = allTimeSpans.Sum(ts => ts.TotalHours);
-
-        double averageHours = totalHoursSpent / allTimeSpans.Count;
-
-        return Math.Round(averageHours, 2);
+        FilteredTestCases = TestCaseMetricsCalculator.FilterTestCasesByDate(TestCases, FilterDate);
     }
 
     private double CalculateAverageNumberOfTestCasesPerRequest()
@@ -143,17 +87,5 @@
 
         double averageCount = (double)FilteredTestCases.Count() / TestRequests.Count();
         return Math.Round(averageCount, 2);
-    }
-
-    private static int CountFailedTestCases(IEnumerable<TestCaseViewModel> testCases)
-    {
-        int count = testCases.Count(tc => tc.History.Any(h => h.NewStatus == TestCaseStatus.Failed));
-        return count;
-    }
-
-    private static int CountNeverFailedTestCases(IEnumerable<TestCaseViewModel> testCases)
-    {
-        int count = testCases.Count(tc => !tc.History.Any(h => h.NewStatus == TestCaseStatus.Failed));
-        return count;
     }
 }

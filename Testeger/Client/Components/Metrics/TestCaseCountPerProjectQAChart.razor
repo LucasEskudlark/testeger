@@ -1,7 +1,9 @@
-﻿<h6>Distribution of Test Cases by QA Analyst</h6>
+﻿@inject IUserService UserService
+
+<h6>Distribution of Test Cases by QA Analyst</h6>
 <RadzenCard class="py-0">
     <RadzenChart>
-        <RadzenDonutSeries Data="@revenue" CategoryProperty="Analyst" ValueProperty="TestCaseCount" TotalAngle="180" StartAngle="0">
+        <RadzenDonutSeries Data="@ChartData" CategoryProperty="Analyst" ValueProperty="TestCaseCount" TotalAngle="180" StartAngle="0">
             <ChildContent>
                 <RadzenSeriesDataLabels Visible="false" />
             </ChildContent>
@@ -16,32 +18,50 @@
 </RadzenCard>
 
 @code {
-    class DataItem
+    [Parameter]
+    public IEnumerable<TestCaseViewModel>? TestCases { get; set; }
+
+    [Parameter]
+    public string? ProjectId { get; set; }
+
+    private IEnumerable<UserNameIdViewModel>? UsersThatAreQA;
+    private DataItem[]? ChartData;
+    private const string UnknownUserName = "Not created by QA";
+
+    protected override async Task OnInitializedAsync()
     {
-        public string Analyst { get; set; }
+        UsersThatAreQA = await UserService.GetUsersByRoleAsync(ProjectId, AuthorizationRoles.QA);
+        ChartData = GetChartData(TestCases, UsersThatAreQA);
+        await base.OnInitializedAsync();
+    }
+
+    private class DataItem
+    {
+        public required string Analyst { get; set; }
         public double TestCaseCount { get; set; }
     }
 
-    DataItem[] revenue = new DataItem[] {
-        new DataItem
-        {
-            Analyst = "Lucas",
-            TestCaseCount = 14
-        },
-        new DataItem
-        {
-            Analyst = "Fernando",
-            TestCaseCount = 6
-        },
-        new DataItem
-        {
-            Analyst = "Fulano",
-            TestCaseCount = 23
-        },
-        new DataItem
-        {
-            Analyst = "Ciclano",
-            TestCaseCount = 32
-        }
-    };
+    private DataItem[] GetChartData(IEnumerable<TestCaseViewModel> testCases, IEnumerable<UserNameIdViewModel> users)
+    {
+        var userIdToName = users.ToDictionary(
+        u => u.UserId,
+        u => u.Username,
+        StringComparer.OrdinalIgnoreCase
+        );
+
+        var result = testCases
+            .GroupBy(tr =>
+                userIdToName.TryGetValue(tr.CreatedByUserId ?? string.Empty, out var name)
+                    ? name
+                    : UnknownUserName,
+                StringComparer.OrdinalIgnoreCase)
+            .Select(g => new DataItem
+                {
+                    Analyst = g.Key,
+                    TestCaseCount = g.Count()
+                })
+            .ToArray();
+
+        return result;
+    }
 }

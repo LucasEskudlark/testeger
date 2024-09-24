@@ -1,56 +1,84 @@
 ﻿<h6>Request amount by status per QA Analyst</h6>
-<RadzenCard class="py-0">
-    <RadzenChart>
-        <RadzenDonutSeries Data="@chartData"
-                           CategoryProperty="Status"
-                           ValueProperty="TestRequestCount"
-                           Fills="@(new [] { "#727274", "#6984c9", "#f3bd58", "#f02864", "#009952" })"
-                           TotalAngle="180" StartAngle="180">
-            <ChildContent>
-                <RadzenSeriesDataLabels Visible="false" />
-            </ChildContent>
-            <TitleTemplate>
-                <div class="rz-donut-content">
-                    <div>Request</div>
-                    <div>amount</div>
-                </div>
-            </TitleTemplate>
-        </RadzenDonutSeries>
-    </RadzenChart>
-</RadzenCard>
+
+@if (areParametersSet)
+{
+    <RadzenCard class="py-0">
+        <RadzenChart>
+            <RadzenDonutSeries Data="@ChartData"
+                               CategoryProperty="Status"
+                               ValueProperty="TestRequestCount"
+                               Fills="@(new [] { "#727274", "#6984c9", "#f3bd58", "#f02864", "#009952" })"
+                               TotalAngle="180" StartAngle="180">
+                <ChildContent>
+                    <RadzenSeriesDataLabels Visible="false" />
+                </ChildContent>
+                <TitleTemplate>
+                    <div class="rz-donut-content">
+                        <div>Request</div>
+                        <div>amount</div>
+                    </div>
+                </TitleTemplate>
+            </RadzenDonutSeries>
+        </RadzenChart>
+    </RadzenCard>
+}
 
 @code {
-    class DataItem
+    [Parameter]
+    public required IEnumerable<TestRequestViewModel> TestRequests { get; set; }
+
+    [Parameter]
+    public required string UserId { get; set; }
+
+    private IEnumerable<TestRequestViewModel>? UserTestRequests { get; set; }
+    private DataItem[]? ChartData;
+    private bool areParametersSet;
+
+    protected override async Task OnParametersSetAsync()
     {
-        public string Status { get; set; }
-        public int TestRequestCount { get; set; }
+        UserTestRequests = GetUserRequests();
+        ChartData = GetChartData(UserTestRequests);
+        areParametersSet = true;
+        await base.OnParametersSetAsync();
     }
 
-    DataItem[] chartData = new DataItem[] {
-        new DataItem
+    private IEnumerable<TestRequestViewModel> GetUserRequests()
+    {
+        if (TestRequests == null)
         {
-            Status = "Waiting",
-            TestRequestCount = 2
-        },
-        new DataItem
-        {
-            Status = "In Progress",
-            TestRequestCount = 1
-        },
-        new DataItem
-        {
-            Status = "Ready For Testing",
-            TestRequestCount = 2
-        },
-        new DataItem
-        {
-            Status = "Fixing Issues",
-            TestRequestCount = 1
-        },
-        new DataItem
-        {
-            Status = "Completed",
-            TestRequestCount = 5
+            return Enumerable.Empty<TestRequestViewModel>();
         }
-    };
+
+        if (string.IsNullOrEmpty(UserId))
+        {
+            return Enumerable.Empty<TestRequestViewModel>();
+        }
+
+        return TestRequests.Where(r => string.Equals(r.UserAssignedId, UserId, StringComparison.OrdinalIgnoreCase));
+    }
+
+    private DataItem[] GetChartData(IEnumerable<TestRequestViewModel> testRequests)
+    {
+        if (testRequests == null || !testRequests.Any())
+        {
+            return Array.Empty<DataItem>();
+        }
+
+        var result = testRequests
+            .GroupBy(tr => tr.Status)
+            .Select(g => new DataItem
+                {
+                    Status = g.Key.ToString(),
+                    TestRequestCount = g.Count()
+                })
+            .ToArray();
+
+        return result;
+    }
+
+    private class DataItem
+    {
+        public required string Status { get; set; }
+        public int TestRequestCount { get; set; }
+    }
 }
