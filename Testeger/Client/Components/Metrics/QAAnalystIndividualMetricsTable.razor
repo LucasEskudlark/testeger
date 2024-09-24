@@ -1,35 +1,149 @@
 ﻿@using System.Linq;
 
-<RadzenCard>
-    <div class="row card d-flex flex-row p-2 my-1">
-        <div class="col-9 right-divider">
-            <p>Average time to complete a test request:</p>
+@if (areParametersSet)
+{
+    <RadzenCard>
+        <div class="row card d-flex flex-row p-2 my-1">
+            <div class="col-9 right-divider">
+                <p>Average time to complete a test request:</p>
+            </div>
+            <div class="col-3 d-flex justify-content-center">
+                @AverageTimeToCompleteTestRequest.ToHoursAndMinutes()
+            </div>
         </div>
-        <div class="col-3 d-flex justify-content-center">
-            32h 43min
-        </div>
-    </div>
 
-    <div class="row card d-flex flex-row p-2 my-1">
-        <div class="col-9 right-divider">
-            <p>Average time to complete a test case:</p>
+        <div class="row card d-flex flex-row p-2 my-1">
+            <div class="col-9 right-divider">
+                <p>Average time to complete a test case:</p>
+            </div>
+            <div class="col-3 d-flex justify-content-center">
+                @AverageTimeToCompleteTestCase.ToHoursAndMinutes()
+            </div>
         </div>
-        <div class="col-3 d-flex justify-content-center">
-            3h 04min
-        </div>
-    </div>
 
-    <div class="row card d-flex flex-row p-2 my-1">
-        <div class="col-9 right-divider">
-            <p>Average time to test a test case:</p>
+        <div class="row card d-flex flex-row p-2 my-1">
+            <div class="col-9 right-divider">
+                <p>Average time to test a test case:</p>
+            </div>
+            <div class="col-3 d-flex justify-content-center">
+                @AverageTimeToTestATestCase.ToHoursAndMinutes()
+            </div>
         </div>
-        <div class="col-3 d-flex justify-content-center">
-            0h 54min
-        </div>
-    </div>
 
-</RadzenCard>
+    </RadzenCard>
+}
 
 @code {
-    
+    [Parameter]
+    public IEnumerable<TestCaseViewModel>? TestCases { get; set; }
+    [Parameter]
+    public required IEnumerable<TestRequestViewModel> TestRequests { get; set; }
+    [Parameter]
+    public required string UserId { get; set; }
+
+    private IEnumerable<TestRequestViewModel>? UserTestRequests { get; set; }
+    private IEnumerable<TestCaseViewModel>? UserTestCases { get; set; }
+    private bool areParametersSet;
+
+    private double AverageTimeToCompleteTestRequest;
+    private double AverageTimeToCompleteTestCase;
+    private double AverageTimeToTestATestCase;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        UserTestRequests = GetUserRequests();
+        UserTestCases = GetUserTestCases();
+        AverageTimeToCompleteTestRequest = CalculateAverageTestRequestCompletionTimeInHours(UserTestRequests);
+        AverageTimeToCompleteTestCase = CalculateAverageTestCaseCompletionTimeInHours(UserTestCases);
+        AverageTimeToTestATestCase = CalculateAverageTestCaseTestingTimeInHours(UserTestCases);
+        areParametersSet = true;
+        await base.OnParametersSetAsync();
+    }
+
+    private IEnumerable<TestCaseViewModel> GetUserTestCases()
+    {
+        if (TestCases == null)
+        {
+            return Enumerable.Empty<TestCaseViewModel>();
+        }
+
+        if (string.IsNullOrEmpty(UserId))
+        {
+            return Enumerable.Empty<TestCaseViewModel>();
+        }
+
+        return TestCases.Where(r => string.Equals(r.CreatedByUserId, UserId, StringComparison.OrdinalIgnoreCase));
+    }
+
+    private IEnumerable<TestRequestViewModel> GetUserRequests()
+    {
+        if (TestRequests == null)
+        {
+            return Enumerable.Empty<TestRequestViewModel>();
+        }
+
+        if (string.IsNullOrEmpty(UserId))
+        {
+            return Enumerable.Empty<TestRequestViewModel>();
+        }
+
+        return TestRequests.Where(r => string.Equals(r.UserAssignedId, UserId, StringComparison.OrdinalIgnoreCase));
+    }
+
+    private double CalculateAverageTestCaseCompletionTimeInHours(IEnumerable<TestCaseViewModel> testCases)
+    {
+        var completedTestCases = testCases.Where(r => r.CompletedDate != default);
+
+        if (!completedTestCases.Any())
+        {
+            return 0.0;
+        }
+
+        double totalHours = completedTestCases
+            .Select(r => (r.CompletedDate - r.CreatedDate).TotalHours)
+            .Sum();
+
+        double averageHours = totalHours / completedTestCases.Count();
+
+        return Math.Round(averageHours, 2);
+    }
+
+    private double CalculateAverageTestRequestCompletionTimeInHours(IEnumerable<TestRequestViewModel> testRequests)
+    {
+        var completedTestRequests = testRequests.Where(r => r.CompletedDate != DateTime.MinValue);
+
+        if (!completedTestRequests.Any())
+        {
+            return 0.0;
+        }
+
+        double totalHours = completedTestRequests
+            .Select(r => (r.CompletedDate - r.CreatedDate).TotalHours)
+            .Sum();
+
+        double averageHours = totalHours / completedTestRequests.Count();
+
+        return Math.Round(averageHours, 2);
+    }
+
+    private double CalculateAverageTestCaseTestingTimeInHours(IEnumerable<TestCaseViewModel> testCases)
+    {
+        var testedTestCases = testCases.Where(r => r.Results.Count() > 1);
+
+        if (!testedTestCases.Any())
+        {
+            return 0.0;
+        }
+
+        var allTimeSpans = testCases
+            .SelectMany(tc => tc.Results)
+            .Select(tcr => tcr.ElapsedTime)
+            .ToList();
+
+        var totalHoursSpent = allTimeSpans.Sum(ts => ts.TotalHours);
+
+        double averageHours = totalHoursSpent / allTimeSpans.Count;
+
+        return Math.Round(averageHours, 2);
+    }
 }
