@@ -4,6 +4,7 @@
 @inject TooltipService TooltipService
 @inject IUserService UserService
 @inject DialogService DialogService
+@inject NavigationManager NavigationManager
 @attribute [Authorize(Policy = $"{AuthorizationRoles.Manager}")]
 
 
@@ -19,7 +20,7 @@
             </RadzenBreadCrumb>
         </div>
         <div class="col-6 d-flex justify-content-end" style="min-width: 450px;">
-            <RadzenButton Shade="Shade.Darker" Icon="delete" Text="Delete" ButtonStyle="ButtonStyle.Danger" />
+            <RadzenButton Shade="Shade.Darker" Icon="delete" Text="Delete" ButtonStyle="ButtonStyle.Danger" Click="@ShowConfirmDialog" />
         </div>
     </div>
 
@@ -116,6 +117,26 @@
             new Dictionary<string, object>() { { "ProjectId", ProjectId } },
             new DialogOptions() { Width = "650px", Height = "540px", Resizable = false, Draggable = true }
         );
+    }
+
+    private async Task ShowConfirmDialog()
+    {
+        var result = await DialogService.Confirm("Are you sure?", $"Delete project {Project.Name}", new ConfirmOptions()
+            {
+                OkButtonText = "Yes",
+                CancelButtonText = "No"
+            });
+
+        if (result.HasValue && result.Value)
+        {
+            await DeleteProject();
+        }
+    }
+
+    public async Task DeleteProject()
+    {
+        await ProjectService.DeleteProjectAsync(ProjectId);
+        NavigationManager.NavigateTo($"/home");
     }
 
     // private async Task RemoveUser()
