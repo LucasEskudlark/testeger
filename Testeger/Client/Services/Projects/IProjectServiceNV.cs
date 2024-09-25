@@ -15,4 +15,5 @@ public interface IProjectServiceNV
     Task<ProjectViewModel> GetProjectByIdAsync(string id);
     Task<PagedResponse<ProjectViewModel>> GetAllProjectsPagedAsync();
     Task<IEnumerable<ProjectViewModel>> GetProjectsForUserAsync();
+    Task DeleteProjectAsync(string id);
 }
