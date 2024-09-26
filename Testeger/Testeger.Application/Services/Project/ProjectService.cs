@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Testeger.Application.Exceptions;
+using Testeger.Application.Services.Role;
 using Testeger.Domain.Models.Entities;
 using Testeger.Infra.UnitOfWork;
 using Testeger.Shared.DTOs.Requests.Common;
@@ -12,8 +13,11 @@ namespace Testeger.Application.Services.Project;
 
 public class ProjectService : BaseService, IProjectService
 {
-    public ProjectService(IUnitOfWork unitOfWork, IMapper mapper) : base(unitOfWork, mapper)
+    private readonly IRoleService _roleService;
+
+    public ProjectService(IUnitOfWork unitOfWork, IMapper mapper, IRoleService roleService) : base(unitOfWork, mapper)
     {
+        _roleService = roleService;
     }
 
     public async Task<CreateProjectResponse> CreateProject(CreateProjectRequest request)
@@ -52,6 +56,13 @@ public class ProjectService : BaseService, IProjectService
     public async Task DeleteProject(string id)
     {
         var project = await FindProjectByIdAsync(id);
+        
+        var projectRoles = await _roleService.GetAllProjectRolesAsync(id);
+        foreach (var role in projectRoles)
+        {
+            await _roleService.RemoveAllUsersFromRoleAsync(role.Name);
+            await _roleService.DeleteRoleAsync(role.Name);
+        }
 
         await _unitOfWork.ProjectRepository.Delete(project);
         await _unitOfWork.CompleteAsync();
