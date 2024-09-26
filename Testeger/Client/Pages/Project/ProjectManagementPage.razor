@@ -51,13 +51,13 @@
                         <RadzenLabel Text="Project Members" Style="@LabelStyle" />
                     </div>
                     <div class="col-8 d-flex justify-content-end">
-                        <RadzenButton Shade="Shade.Darker"
+                       @*  <RadzenButton Shade="Shade.Darker"
                                       Icon="remove"
                                       Text="Remove"
                                       Size="ButtonSize.Small"
                                       ButtonStyle="ButtonStyle.Danger"
                                       MouseEnter="@(args => ShowRemoveMemberTooltip(args))"
-                                      class="me-2" />
+                                      class="me-2" /> *@
                         <RadzenButton Icon="add"
                                       Text="Invite"
                                       Size="ButtonSize.Small"
@@ -139,24 +139,8 @@
         NavigationManager.NavigateTo($"/home");
     }
 
-    // private async Task RemoveUser()
-    // {
-    //     if (SelectedUsers == null || !SelectedUsers.Any())
-    //     {
-    //         Console.WriteLine("Empty");
-    //         return;
-    //     }
-
-    //     await ProjectService.RemoveProjectMember(ProjectId, SelectedUsers);
-    // }
-
-    // private static bool ContainsUserWithEmail(List<User> users, string email)
-    // {
-    //     return users.Any(user => user.Email.Equals(email, StringComparison.OrdinalIgnoreCase));
-    // }
-
-    private void ShowRemoveMemberTooltip(ElementReference elementReference, TooltipOptions options = null)
-        => TooltipService.Open(elementReference, "Remove selected members from the project.", options);
+    // private void ShowRemoveMemberTooltip(ElementReference elementReference, TooltipOptions options = null)
+    //     => TooltipService.Open(elementReference, "Remove selected members from the project.", options);
 
     private void ShowAddMemberTooltip(ElementReference elementReference, TooltipOptions options = null)
         => TooltipService.Open(elementReference, "Add member to the project.", options);
