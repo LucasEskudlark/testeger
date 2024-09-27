@@ -1,3 +1,5 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Hosting;
 using SharpGrip.FluentValidation.AutoValidation.Mvc.Extensions;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -7,6 +9,7 @@ using Testeger.Application.Configuration;
 using Testeger.Application.MappingProfiles;
 using Testeger.Application.Settings;
 using Testeger.Infra.Configuration;
+using Testeger.Infra.Context;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -54,6 +57,12 @@ else
     app.UseExceptionHandler("/Error");
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
+}
+
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    dbContext.Database.Migrate();
 }
 
 app.UseCustomExceptionMiddleware();
