@@ -7,7 +7,7 @@
     <ObjectGraphDataAnnotationsValidator />
 
     <div class="row mb-4">
-        <div class="col-9">
+        <div class="col-12">
             <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H3">Name</RadzenText>
             <InputText id="name"
                        class="form-control inputtext"
@@ -17,59 +17,54 @@
         </div>
     </div>
 
-    <div class="row mb-3">
-        <div class="col-12 d-flex justify-content-between align-items-center">
+    <div class="row mb-3 align-items-center">
+        <div class="col-12 d-flex justify-content-between">
             <div class="d-flex flex-column">
                 <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H3" class="mb-0">Project Members</RadzenText>
                 <small style="font-size: 11px;">When creating, you will be automatically assigned the role of project manager.</small>
             </div>
-
-            <RadzenButton
-                Icon="add"
-                Text="Add member"
-                Size="ButtonSize.Small"
-                ButtonStyle="ButtonStyle.Primary"
-                Click="AddMember"
-                Disabled="@(newProject.Users.Count == 5)"
-                class="me-4"></RadzenButton>
+            <RadzenButton Icon="add"
+                          Text="Add member"
+                          Size="ButtonSize.Small"
+                          ButtonStyle="ButtonStyle.Primary"
+                          Click="AddMember"
+                          Disabled="@(newProject.Users.Count == 5)"
+                          class="me-4" />
         </div>
     </div>
 
-    <div class="row mb-2 d-flex flex-column justify-content-start" style="min-height: 250px;">
+    <div class="row mb-2" style="min-height: 250px;">
         @foreach (var user in newProject.Users)
         {
             <div class="row mb-2">
-                <div class="col-9 mb-0 pb-0">
+                <div class="col-12 col-md-9">
                     <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H3">E-mail</RadzenText>
                     <InputText @bind-Value="user.Email" placeholder="E-mail" class="form-control inputtext" />
                     <ValidationMessage For="@(() => user.Email)" class="view-model-validation-msg" />
-
-
                 </div>
-                <div class="col-3 m-0 pb-0">
+                <div class="col-12 col-md-3">
                     <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H3">Role</RadzenText>
                     <RadzenDropDown Data="@GetRoleTypeValues()"
-                                     TextProperty="Name"
-                                     ValueProperty="Value"
-                                     @bind-Value="user.RoleType"
-                                     Style="width:100%;"
-                                     class="form-control inputtext" />
+                                    TextProperty="Name"
+                                    ValueProperty="Value"
+                                    @bind-Value="user.RoleType"
+                                    Style="width: 100%;"
+                                    class="form-control inputtext" />
                     <ValidationMessage For="@(() => user.RoleType)" class="view-model-validation-msg" />
                 </div>
-            </div> 
-
+            </div>
         }
     </div>
 
     <div class="row">
-        <div class="col-4">
+        <div class="col-12">
             <RadzenButton ButtonType="ButtonType.Submit"
                           Text="Create project"
                           Size="ButtonSize.Medium"
-                          ButtonStyle="ButtonStyle.Primary" />
+                          ButtonStyle="ButtonStyle.Primary"
+                          class="w-100" />
         </div>
     </div>
-
 </EditForm>
 @code {
     [Parameter]

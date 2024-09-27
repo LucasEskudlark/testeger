@@ -14,21 +14,24 @@
     <PageTitle>@TestCaseTitle - Testeger</PageTitle>
 
     <div class="container-fluid mb-5 mt-2">
-        <div class="row justify-content-between">
-            <div class="col-auto">
+        <div class="row justify-content-between align-items-center">
+            
+            <div class="col-12 col-md-auto mb-2 mb-md-0">
                 <RadzenBreadCrumb>
                     <RadzenBreadCrumbItem Path="@Testeger.Client.Helpers.BreadCrumbHelper.GetProjectUrl(Request.ProjectId)" Text="Project" />
                     <RadzenBreadCrumbItem Path="@Testeger.Client.Helpers.BreadCrumbHelper.GetRequestUrl(Request.ProjectId, Request.Id)" Text="@Testeger.Client.Helpers.BreadCrumbHelper.GetRequestText(Request.Number)" />
                     <RadzenBreadCrumbItem Text="@TestCase.Title" />
                 </RadzenBreadCrumb>
             </div>
-            <div class="col-auto d-flex flex-wrap">
+
+            >
+            <div class="col-12 col-md-auto d-flex flex-wrap justify-content-end">
                 <RadzenButton Icon="play_arrow"
                               Text="@TestButtonText"
                               ButtonStyle="@TestButtonStyle"
                               Size="ButtonSize.Small"
                               Click="@HandleTestButtonClick"
-                              Disabled="@(isNotScheduled || !IsQA)"
+                              Disabled="@(isNotScheduled || !IsManagerOrQA)"
                               class="me-2 mb-2" />
 
                 <RadzenButton Icon="save"
@@ -54,8 +57,9 @@
     </div>
 
     <div class="container">
-        <div class="row d-flex justify-content-between">
-            <div class="col-12 col-md-6 pb-2 right-divider">
+        <div class="row">
+           
+            <div class="col-12 col-md-6 pb-2 border-md-end">
                 <TestCaseDetailsPage Request="Request"
                                      TestCase="TestCase"
                                      @ref="TestCaseDetailsComponent"
@@ -63,12 +67,14 @@
                                      IsManagerOrQA="@IsManagerOrQA" />
             </div>
 
+      
             <div class="col-12 col-md-6 pb-2">
                 <TestCaseTestingDetails TestCase="TestCase" IsManagerOrQA="@IsManagerOrQA" />
             </div>
         </div>
     </div>
 }
+
 @code {
     [Parameter]
     public string TestCaseId { get; set; }
@@ -170,7 +176,7 @@
     {
         var options = new DialogOptions { Width = "900px", Height = "630px", Resizable = false, Draggable = true };
         await DialogService.OpenAsync<TestCaseTestingDialog>("Testing",
-            new Dictionary<string, object> { 
+            new Dictionary<string, object> {
                 { "TestCase", TestCase },
                 { "LatestTestCaseResult", LatestTestCaseResult },
                 { nameof(TestCaseTestingDialog.OnTestFinished), HandleTestFinished },
