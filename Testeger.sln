@@ -21,6 +21,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Persistence", "Persistence"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Presentation", "Presentation", "{53E45216-5791-4DBE-A7E2-41E5F6A5FB44}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FunctionApi", "Testeger\FunctionApi\FunctionApi.csproj", "{3E076261-D8A0-4296-AFB4-71685BBE9C8E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +53,10 @@ Global
 		{87AAC2CA-5EF8-4219-B05D-D2A489DF18A6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{87AAC2CA-5EF8-4219-B05D-D2A489DF18A6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{87AAC2CA-5EF8-4219-B05D-D2A489DF18A6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3E076261-D8A0-4296-AFB4-71685BBE9C8E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3E076261-D8A0-4296-AFB4-71685BBE9C8E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3E076261-D8A0-4296-AFB4-71685BBE9C8E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3E076261-D8A0-4296-AFB4-71685BBE9C8E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
