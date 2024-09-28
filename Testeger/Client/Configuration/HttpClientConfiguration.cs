@@ -2,13 +2,8 @@
 
 public static class HttpClientConfiguration
 {
-    private const string BaseAddressPath = "ApiSettings:BaseAddress";
-
-    public static void SetupHttpClient(this IServiceCollection services, IConfiguration configuration)
+    public static void SetupHttpClient(this IServiceCollection services, string baseAddress)
     {
-        var baseAddress = configuration[BaseAddressPath]
-            ?? throw new InvalidOperationException("BaseAddress is not configured");
-
         services.AddScoped(sp =>
             new HttpClient
             {
