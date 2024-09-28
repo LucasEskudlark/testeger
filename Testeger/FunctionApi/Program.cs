@@ -7,8 +7,6 @@ namespace FunctionApi
     {
         static void Main(string[] args)
         {
-            FunctionsDebugger.Enable();
-
             var host = new HostBuilder()
                 .ConfigureFunctionsWorkerDefaults()
                 .Build();
