@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Testeger.Application.Services.Image;
 
 namespace Testeger.Api.Controllers;
@@ -14,6 +15,7 @@ public class ImagesController : ControllerBase
         _imageService = imageService;
     }
 
+    [Authorize]
     [HttpPost("upload/{testCaseResultId}")]
     public async Task<IActionResult> UploadImage([FromForm] IEnumerable<IFormFile> files, [FromRoute] string testCaseResultId)
     {
@@ -22,6 +24,7 @@ public class ImagesController : ControllerBase
         return NoContent();
     }
 
+    [Authorize]
     [HttpGet("result/{testCaseResultId}")]
     public async Task<IActionResult> GetTestCaseImagesFilePaths(string testCaseResultId)
     {
