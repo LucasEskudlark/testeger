@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Testeger.Application.Extensions;
 using Testeger.Application.Services.TestCase;
 using Testeger.Shared.DTOs.Requests.Common;
@@ -18,6 +19,7 @@ public class TestCasesController : ControllerBase
         _testCaseService = testCaseService;
     }
 
+    [Authorize]
     [HttpPost]
     public async Task<IActionResult> CreateTestCaseAsync([FromBody] CreateTestCaseRequest request)
     {
@@ -27,6 +29,7 @@ public class TestCasesController : ControllerBase
         return Ok(response);
     }
 
+    [Authorize]
     [HttpGet("{id}")]
     public async Task<IActionResult> GetTestCaseByIdAsync([FromRoute] string id)
     {
@@ -35,6 +38,7 @@ public class TestCasesController : ControllerBase
         return Ok(response);
     }
 
+    [Authorize]
     [HttpGet]
     public async Task<IActionResult> GetAllTestCasesPagedAsync([FromQuery] PagedRequest request)
     {
@@ -43,6 +47,7 @@ public class TestCasesController : ControllerBase
         return Ok(response);
     }
 
+    [Authorize]
     [HttpPost("delete/{id}")]
     public async Task<IActionResult> DeleteTestCaseAsync([FromRoute] string id)
     {
@@ -51,6 +56,7 @@ public class TestCasesController : ControllerBase
         return NoContent();
     }
 
+    [Authorize]
     [HttpGet("request/{testRequestId}")]
     public async Task<IActionResult> GetTestCasesByTestRequestIdAsync([FromRoute] string testRequestId)
     {
@@ -59,6 +65,7 @@ public class TestCasesController : ControllerBase
         return Ok(response);
     }
 
+    [Authorize]
     [HttpGet("project/{projectId}")]
     public async Task<IActionResult> GeTestRequestsByProjectIdAsync(string projectId)
     {
@@ -67,6 +74,7 @@ public class TestCasesController : ControllerBase
         return Ok(response);
     }
 
+    [Authorize]
     [HttpPost("update")]
     public async Task<IActionResult> UpdateTestCaseAsync([FromBody] UpdateTestCaseRequest request)
     {
