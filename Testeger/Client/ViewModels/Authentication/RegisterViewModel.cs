@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Testeger.Client.Attributes;
 
 namespace Testeger.Client.ViewModels.Authentication;
 
@@ -23,4 +24,8 @@ public class RegisterViewModel
 
     [Required(ErrorMessage = "Phone number is required.")]
     public string? PhoneNumber { get; set; }
+
+    [Required(ErrorMessage = "Birth date is required.")]
+    [MinimumAge(18, ErrorMessage = "You must be at least 18 years old.")]
+    public DateTime? BirthDate { get; set; }
 }

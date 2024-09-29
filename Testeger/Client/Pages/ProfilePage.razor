@@ -34,6 +34,16 @@
 
             <div class="row my-4">
                 <div class="col-12 d-flex flex-column">
+                    <RadzenLabel Text="Birth Date" Style="@LabelStyle" />
+                    <RadzenDatePicker @bind-Value="User.BirthDate"
+                                      Style="width:100%;"
+                                      DateFormat="dd/MM/yyyy"
+                                      Disabled="true" />
+                </div>
+            </div>
+
+            <div class="row my-4">
+                <div class="col-12 d-flex flex-column">
                     <RadzenLabel Text="Phone Number" Style="@LabelStyle" />
                     <RadzenMask Mask="(**) *****-****" CharacterPattern="[0-9]" Placeholder="(00) 00000-0000" Name="Phone" @bind-Value=@User.PhoneNumber
                                 Style="width: 100%;" aria-label="Phone" Disabled="true" />

@@ -139,7 +139,8 @@ public class CustomAuthenticationService : ICustomAuthenticationService
             UserName = request.UserName,
             Email = request.Email,
             PhoneNumber = request.PhoneNumber,
-            SecurityStamp = Guid.NewGuid().ToString()
+            SecurityStamp = Guid.NewGuid().ToString(),
+            BirthDate = request.BirthDate
         };
 
         var userCreationResult = await _userManager.CreateAsync(user, request.Password);
@@ -169,7 +170,7 @@ public class CustomAuthenticationService : ICustomAuthenticationService
             new(ClaimTypes.Name, user.UserName!),
             new(ClaimTypes.Email, user.Email!),
             new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-            new Claim(ClaimTypes.NameIdentifier, user.Id)
+            new(ClaimTypes.NameIdentifier, user.Id)
         };
 
         authClaims.AddRange(userRoles.Select(role => new Claim(ClaimTypes.Role, role)));

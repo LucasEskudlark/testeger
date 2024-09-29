@@ -17,6 +17,9 @@ public class UserRegisterRequestValidator : AbstractValidator<UserRegisterReques
             .NotEmpty();
 
         RuleFor(x => x.PhoneNumber)
-            .NotEmpty();    
+            .NotEmpty();
+
+        RuleFor(x => x.BirthDate)
+            .NotEmpty();
     }
 }
