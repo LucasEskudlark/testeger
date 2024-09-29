@@ -22,7 +22,7 @@ namespace FunctionApi
         {
             _logger.LogInformation("Processing request for configuration.");
 
-            string apiUrl = Environment.GetEnvironmentVariable("ApiUrl");
+            string apiUrl = Environment.GetEnvironmentVariable("ApiBaseAddress");
 
             if (string.IsNullOrEmpty(apiUrl))
             {
@@ -32,7 +32,7 @@ namespace FunctionApi
                 return errorResponse;
             }
 
-            var config = new { ApiUrl = apiUrl };
+            var config = new { ApiBaseAddress = apiUrl };
 
             var response = req.CreateResponse(HttpStatusCode.OK);
             response.Headers.Add("Content-Type", "application/json");
