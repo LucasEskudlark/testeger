@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Testeger.Application.Extensions;
 using Testeger.Application.Services.Authentication;
 using Testeger.Application.Services.Project;
@@ -21,6 +22,7 @@ public class ProjectsController : ControllerBase
         _authService = authService;
     }
 
+    [Authorize]
     [HttpPost]
     public async Task<IActionResult> CreateProjectAsync([FromBody] CreateProjectRequest request)
     {
@@ -41,6 +43,7 @@ public class ProjectsController : ControllerBase
         return Ok(response);
     }
 
+    [Authorize]
     [HttpGet("{id}")]
     public async Task<IActionResult> GetProjectByIdAsync(string id)
     {
@@ -49,6 +52,7 @@ public class ProjectsController : ControllerBase
         return Ok(response);
     }
 
+    [Authorize]
     [HttpGet]
     public async Task<IActionResult> GetAllProjectsAsync([FromQuery] PagedRequest request)
     {
@@ -57,6 +61,7 @@ public class ProjectsController : ControllerBase
         return Ok(response);
     }
 
+    [Authorize]
     [HttpGet("user")]
     public async Task<IActionResult> GetProjectsForUserAsync(string? requestUserId)
     {
@@ -67,6 +72,7 @@ public class ProjectsController : ControllerBase
         return Ok(response);
     }
 
+    [Authorize]
     [HttpPost("delete/{id}")]
     public async Task<IActionResult> DeleteProjectAsync(string id)
     {

@@ -34,7 +34,7 @@ public class AuthController : ControllerBase
         return NoContent();
     }
 
-    [Authorize]
+    [Authorize(Roles = "Admin")]
     [HttpPost("refresh-token")]
     public async Task<IActionResult> RefreshTokenAsync(TokenDto request)
     {
@@ -43,7 +43,7 @@ public class AuthController : ControllerBase
         return NoContent();
     }
 
-    [Authorize]
+    [Authorize(Roles = "Admin")]
     [HttpPost("revoke")]
     public async Task<IActionResult> RevokeAsync(string userName)
     {
@@ -52,7 +52,7 @@ public class AuthController : ControllerBase
         return NoContent();
     }
 
-    [Authorize]
+    [Authorize(Roles = "Admin")]
     [HttpPost("create-role")]
     public async Task<IActionResult> CreateRoleAsync(string roleName)
     {
@@ -61,7 +61,7 @@ public class AuthController : ControllerBase
         return NoContent();
     }
 
-    [Authorize(Roles = "admin")]
+    [Authorize(Roles = "Admin")]
     [HttpPost("add-user-to-role")]
     public async Task<IActionResult> AddUserToRoleAsync(string email, string roleName)
     {

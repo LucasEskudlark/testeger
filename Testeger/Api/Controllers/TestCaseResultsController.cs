@@ -1,4 +1,5 @@
 ﻿
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Testeger.Application.Services.TestCaseResult;
 using Testeger.Shared.DTOs.Requests.Common;
@@ -19,6 +20,7 @@ public class TestCaseResultsController : ControllerBase
         _testCaseResultService = testCaseResultService;
     }
 
+    [Authorize]
     [HttpPost]
     public async Task<IActionResult> CreateTestCaseResultAsync([FromBody] CreateTestCaseResultRequest request)
     {
@@ -27,6 +29,7 @@ public class TestCaseResultsController : ControllerBase
         return Ok(response);
     }
 
+    [Authorize]
     [HttpGet]
     public async Task<IActionResult> GetAllTestCaseResultsPagedAsync([FromQuery] PagedRequest request)
     {
@@ -35,6 +38,7 @@ public class TestCaseResultsController : ControllerBase
         return Ok(response);
     }
 
+    [Authorize]
     [HttpGet("{id}")]
     public async Task<IActionResult> GetTestCaseResultByIdAsync(string id)
     {
@@ -43,6 +47,7 @@ public class TestCaseResultsController : ControllerBase
         return Ok(response);
     }
 
+    [Authorize]
     [HttpGet("testcase/{testCaseId}")]
     public async Task<IActionResult> GetResultsByTestCaseIdAsync([FromRoute] string testCaseId)
     {
@@ -51,6 +56,7 @@ public class TestCaseResultsController : ControllerBase
         return Ok(response);
     }
 
+    [Authorize]
     [HttpPost("update")]
     public async Task<IActionResult> UpdateTestCaseResultAsync([FromBody] UpdateTestCaseResultRequest request)
     {
@@ -59,6 +65,7 @@ public class TestCaseResultsController : ControllerBase
         return NoContent();
     }
 
+    [Authorize]
     [HttpPost("finish")]
     public async Task<IActionResult> FinishTestCaseResultAsync([FromBody] FinishTestCaseResultRequest request)
     {
