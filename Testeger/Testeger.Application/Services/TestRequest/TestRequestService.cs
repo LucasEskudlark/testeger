@@ -1,5 +1,10 @@
 ﻿using AutoMapper;
+using Microsoft.Extensions.Options;
 using Testeger.Application.Exceptions;
+using Testeger.Application.Helpers;
+using Testeger.Application.Services.Email;
+using Testeger.Application.Services.User;
+using Testeger.Application.Settings;
 using Testeger.Domain.Enumerations;
 using Testeger.Domain.Models.ValueObjects;
 using Testeger.Infra.UnitOfWork;
@@ -14,8 +19,15 @@ namespace Testeger.Application.Services.TestRequest;
 
 public class TestRequestService : BaseUpdateService<DomainTestRequest, UpdateTestRequestRequest>, ITestRequestService
 {
-    public TestRequestService(IUnitOfWork unitOfWork, IMapper mapper) : base(unitOfWork, mapper)
+    private readonly IEmailService _emailService;
+    private readonly IUserService _userService;
+    private readonly ClientSettings _clientSettings;
+
+    public TestRequestService(IUnitOfWork unitOfWork, IMapper mapper, IEmailService emailService, IUserService userService, IOptions<ClientSettings> clientSettings) : base(unitOfWork, mapper)
     {
+        _emailService = emailService;
+        _userService = userService;
+        _clientSettings = clientSettings.Value;
     }
 
     public async Task<CreateTestRequestResponse> CreateTestRequestAsync(CreateTestRequestRequest request)
@@ -89,7 +101,7 @@ public class TestRequestService : BaseUpdateService<DomainTestRequest, UpdateTes
         }
     }
 
-    protected override void OnPropertyUpdated(DomainTestRequest entity, string propertyName, object oldValue, object newValue)
+    protected override async void OnPropertyUpdated(DomainTestRequest entity, string propertyName, object oldValue, object newValue)
     {
         if (propertyName == "Status")
         {
@@ -99,6 +111,16 @@ public class TestRequestService : BaseUpdateService<DomainTestRequest, UpdateTes
             if ((RequestStatus)newValue is RequestStatus.Completed)
             {
                 entity.CompletedDate = DateTime.Now;
+            }
+
+            if ((RequestStatus)newValue is RequestStatus.FixingIssues)
+            {
+                var user = await _userService.GetUserByIdAsync(entity.CreatedByUserId);
+
+                var body = EmailHelper.GetRequestNeedsFixingEmailBody(_clientSettings.BaseAddress, user.UserName, entity);
+                var subject = EmailHelper.GetRequestNeedsFixingEmailSubject();
+
+                await _emailService.SendEmailAsync(user.Email, subject, body);
             }
         }
     }
