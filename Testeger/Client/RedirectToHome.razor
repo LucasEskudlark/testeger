@@ -1,0 +1,45 @@
+@page "/forbidden"
+@inject NavigationManager NavigationManager
+@layout MainLayout
+
+<div class="forbidden-container">
+    <h1>403</h1>
+    <h3>Access forbidden</h3>
+    <p>Sorry, you don't have permission to access this page</p>
+    <RadzenButton Text="Go to home page"
+                  Size="ButtonSize.Medium"
+                  ButtonStyle="ButtonStyle.Primary"
+                  Click="GoHome" />
+</div>
+
+@code {
+    private void GoHome()
+    {
+        NavigationManager.NavigateTo("/");
+    }
+}
+
+<style>
+    .forbidden-container {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        text-align: center;
+    }
+
+        .forbidden-container h1 {
+            font-size: 6rem;
+        }
+
+        .forbidden-container h1, .forbidden-container h3 {
+            color: #666666;
+        }
+
+        .forbidden-container p {
+            color: #999999;
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+</style>
