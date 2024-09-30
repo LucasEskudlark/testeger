@@ -138,7 +138,11 @@
         return Enum.GetValues(typeof(RequestStatus))
             .Cast<RequestStatus>()
             .Where(status => status != RequestStatus.None)
-            .Select(e => new EnumItem<RequestStatus> { Value = e, Name = e.ToString() })
+            .Select(e => new EnumItem<RequestStatus>
+                {
+                    Value = e,
+                    Name = EnumHelper.AddSpacesToEnumName(e.ToString())
+                })
             .ToList();
     }
 

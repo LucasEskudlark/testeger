@@ -30,7 +30,8 @@
             Click="OpenTestRequestCreationDialog"
             Icon="add_circle_outline"
             Text="Add request"
-            ButtonStyle="ButtonStyle.Primary" />
+            ButtonStyle="ButtonStyle.Primary"
+            Disabled="@(!isManagerOrDeveloper)" />
     </div>
 </div>
 
@@ -53,6 +54,7 @@
     private ProjectViewModel? project;
     private bool isManager;
     private bool isManagerOrQA;
+    private bool isManagerOrDeveloper;
 
     private Dictionary<RequestStatus, IEnumerable<TestRequestViewModel>> testRequestsByStatus = new();
 
@@ -70,6 +72,7 @@
     {
         isManager = await PolicyValidatorService.ValidatePolicyAsync(AuthorizationRoles.Manager);
         isManagerOrQA = await PolicyValidatorService.ValidatePolicyAsync($"{AuthorizationRoles.Manager}, {AuthorizationRoles.QA}");
+        isManagerOrDeveloper = await PolicyValidatorService.ValidatePolicyAsync($"{AuthorizationRoles.Developer}, {AuthorizationRoles.Developer}");
 
         project = await ProjectService.GetProjectByIdAsync(Id);
         TestRequestService.OnChange += StateHasChanged;

@@ -18,6 +18,7 @@ public class TestRequestCreationViewModel
     public string? Description { get; set; }
 
     [Url(ErrorMessage = "Story Link must be a valid URL")]
+    [Required(ErrorMessage = "Story Link is required")]
     public string? StoryLink { get; set; }
 
     [Required(ErrorMessage = "Priority Level is required")]

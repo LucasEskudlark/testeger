@@ -84,7 +84,7 @@
                             </div>
                         </div>
 
-                        <RadzenButton ButtonType="ButtonType.Submit" ButtonStyle="ButtonStyle.Primary" Text="Register" Style="width: 100%;" />
+                        <RadzenButton ButtonType="ButtonType.Submit" ButtonStyle="ButtonStyle.Primary" Text="Register" Style="width: 100%;" Disabled="@isRegistrationBeingProcessed"/>
 
                         <p class="mt-4 mb-1">
                             <small>
@@ -102,12 +102,16 @@
 @code {
     private RegisterViewModel registerModel = new RegisterViewModel();
     private int value = 1;
+    private bool isRegistrationBeingProcessed;
 
     private async Task HandleRegistration()
     {
+        isRegistrationBeingProcessed = true;
         registerModel.PhoneNumber = ConvertToNumbersOnly(registerModel.PhoneNumber);
 
         var result = await AuthService.RegisterAsync(registerModel);
+
+        isRegistrationBeingProcessed = false;
 
         if (result.Success)
         {
