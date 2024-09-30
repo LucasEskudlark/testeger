@@ -24,7 +24,7 @@
                                 <div class="form-group">
                                     <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Username</RadzenText>
                                     <InputText id="userName" class="form-control" placeholder="Username" @bind-Value="registerModel.Username" />
-                                    <ValidationMessage For="@(() => registerModel.Username)" />
+                                    <ValidationMessage For="@(() => registerModel.Username)" class="view-model-validation-msg" />
                                 </div>
                             </div>
                             @* <div class="col-6">
