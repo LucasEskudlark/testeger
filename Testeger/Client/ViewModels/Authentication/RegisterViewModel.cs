@@ -6,6 +6,7 @@ namespace Testeger.Client.ViewModels.Authentication;
 public class RegisterViewModel
 {
     [Required(ErrorMessage = "Username is required.")]
+    [UsernameValidation(ErrorMessage = "The username cannot contain spaces or special characters, and can only contain letters, numbers, and underscores.")]
     [StringLength(50, MinimumLength = 5, ErrorMessage = "Username must be between 5 and 50 characters.")]
     public string? Username { get; set; }
 
