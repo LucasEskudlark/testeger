@@ -39,7 +39,7 @@
                     </div>
                     
 
-                    <RadzenButton ButtonType="ButtonType.Submit" ButtonStyle="ButtonStyle.Primary" Text="Sign in" Style="width: 100%;" />
+                    <RadzenButton ButtonType="ButtonType.Submit" ButtonStyle="ButtonStyle.Primary" Text="Sign in" Style="width: 100%;" Disabled="@isLoginBeingProcessed" />
 
                     <p>
                         <small class="d-flex justify-content-end mt-1">
@@ -61,6 +61,7 @@
 
 @code {
     private LoginViewModel loginModel = new LoginViewModel();
+    private bool isLoginBeingProcessed;
     bool value;
 
     protected override async Task OnInitializedAsync()
@@ -75,9 +76,12 @@
 
     private async Task HandleLogin()
     {
+        isLoginBeingProcessed = true;
         var result = await AuthService.LoginAsync(loginModel);
 
         await AuthStateProvider.GetAuthenticationStateAsync();
+
+        isLoginBeingProcessed = false;
 
         if (result.Success)
         {
