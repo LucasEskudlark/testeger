@@ -66,7 +66,7 @@ public class InvitationService : BaseService, IInvitationService
             await GenerateAndSaveNewInvitation(parameters, token);
 
             var subject = EmailHelper.GetProjectInvitationEmailSubject();
-            var body = EmailHelper.GetProjectInvitationEmailBody(token, _clientSettings.BaseAddress);
+            var body = EmailHelper.GetProjectInvitationEmailBody(token, _clientSettings.BaseAddress, user.RoleType);
 
             await _emailService.SendEmailAsync(user.Email, subject, body);
         }
