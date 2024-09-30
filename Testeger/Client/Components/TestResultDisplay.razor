@@ -56,7 +56,7 @@
 
     protected override void OnInitialized()
     {
-        BaseAddress = Configuration["ApiSettings:BaseAddress"];
+        BaseAddress = Configuration["ApiSettings:ApiBaseAddress"];
     }
 
     private async Task OpenDialog(string imageUrl, string testCaseResultId, string imageId)
