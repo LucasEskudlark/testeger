@@ -45,7 +45,7 @@
         {
             dataArray[i++] = new DataItem
                 {
-                    Status = entry.Key.ToString(),
+                    Status = EnumHelper.AddSpacesToEnumName(entry.Key.ToString()),
                     RequestCount = entry.Value.Count(),
                 };
         }

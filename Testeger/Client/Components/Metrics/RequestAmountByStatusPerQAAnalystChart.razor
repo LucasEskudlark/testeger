@@ -68,7 +68,7 @@
             .GroupBy(tr => tr.Status)
             .Select(g => new DataItem
                 {
-                    Status = g.Key.ToString(),
+                    Status = EnumHelper.AddSpacesToEnumName(g.Key.ToString()),
                     TestRequestCount = g.Count()
                 })
             .ToArray();
