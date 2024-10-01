@@ -72,4 +72,40 @@ public static class TestCaseMetricsCalculator
             return mostRecentChangeDate.HasValue && mostRecentChangeDate.Value >= filterDate.Value;
         });
     }
+
+    public static Dictionary<TestCaseStatus, TimeSpan> CalculateAverageTimeInEachStatus(IEnumerable<TestCaseViewModel> testRequests)
+    {
+        var totalTimeInStatus = new Dictionary<TestCaseStatus, TimeSpan>();
+        var countInStatus = new Dictionary<TestCaseStatus, int>();
+
+        foreach (var testRequest in testRequests)
+        {
+            var orderedHistory = testRequest.History.OrderBy(h => h.ChangedDate).ToList();
+
+            for (int i = 0; i < orderedHistory.Count; i++)
+            {
+                var currentStatus = orderedHistory[i].NewStatus;
+                var startTime = orderedHistory[i].ChangedDate;
+                var endTime = i < orderedHistory.Count - 1 ? orderedHistory[i + 1].ChangedDate : DateTime.Now;
+                var duration = endTime - startTime;
+
+                if (!totalTimeInStatus.ContainsKey(currentStatus))
+                {
+                    totalTimeInStatus[currentStatus] = TimeSpan.Zero;
+                    countInStatus[currentStatus] = 0;
+                }
+
+                totalTimeInStatus[currentStatus] += duration;
+                countInStatus[currentStatus]++;
+            }
+        }
+
+        var averageTimeInStatus = new Dictionary<TestCaseStatus, TimeSpan>();
+        foreach (var status in totalTimeInStatus.Keys)
+        {
+            averageTimeInStatus[status] = TimeSpan.FromTicks(totalTimeInStatus[status].Ticks / countInStatus[status]);
+        }
+
+        return averageTimeInStatus;
+    }
 }

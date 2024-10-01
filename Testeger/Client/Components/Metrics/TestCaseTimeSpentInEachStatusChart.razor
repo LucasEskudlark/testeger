@@ -2,36 +2,39 @@
 
 <h6>Average time a test case spends in each status:</h6>
 <RadzenCard>
-    <div class="row">
-        <div class="col-6">
-            <RadzenChart>
-                <RadzenPieSeries Data="@GetPieChartData()" Title="HoursSpent" CategoryProperty="Status" ValueProperty="HoursSpent">
-                </RadzenPieSeries>
-            </RadzenChart>
-        </div>
+    @if (areParametersSet)
+    {
+        <div class="row">
+            <div class="col-6">
+                <RadzenChart>
+                    <RadzenPieSeries Data="@GetPieChartData()" Title="HoursSpent" CategoryProperty="Status" ValueProperty="HoursSpent">
+                    </RadzenPieSeries>
+                </RadzenChart>
+            </div>
 
-        <div class="col-6 d-flex align-items-center">
-            <div class="row ms-2">
-                <div class="row card d-flex flex-row p-2 my-1">
-                    <div class="col-9 right-divider">
-                        <p>Average time spent in the "Pending" Status:</p>
+            <div class="col-6 d-flex align-items-center">
+                <div class="row ms-2">
+                    <div class="row card d-flex flex-row p-2 my-1">
+                        <div class="col-9 right-divider">
+                            <p>Average time spent in the "Pending" Status:</p>
+                        </div>
+                        <div class="col-3 d-flex justify-content-center">
+                            @TestCaseTimeInEachStatus.GetTestCaseTimeByStatus(TestCaseStatus.Pending)
+                        </div>
                     </div>
-                    <div class="col-3 d-flex justify-content-center">
-                        @CalculateAverageTimeInSpecificStatus(FilteredTestCases, TestCaseStatus.Pending).ToHoursAndMinutes()
-                    </div>
-                </div>
 
-                <div class="row card d-flex flex-row p-2 my-1">
-                    <div class="col-9 right-divider">
-                        <p>Average time spent in the "Failed" Status:</p>
-                    </div>
-                    <div class="col-3 d-flex justify-content-center">
-                        @CalculateAverageTimeInSpecificStatus(FilteredTestCases, TestCaseStatus.Failed).ToHoursAndMinutes()
+                    <div class="row card d-flex flex-row p-2 my-1">
+                        <div class="col-9 right-divider">
+                            <p>Average time spent in the "Failed" Status:</p>
+                        </div>
+                        <div class="col-3 d-flex justify-content-center">
+                            @TestCaseTimeInEachStatus.GetTestCaseTimeByStatus(TestCaseStatus.Failed)
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+    }
 </RadzenCard>
 
 @code {
@@ -44,12 +47,16 @@
     [Parameter]
     public DateTime? FilterDate { get; set; }
 
+    private Dictionary<TestCaseStatus, TimeSpan> TestCaseTimeInEachStatus;
+    private bool areParametersSet;
     private IEnumerable<TestCaseViewModel> FilteredTestCases { get; set; } = Enumerable.Empty<TestCaseViewModel>();
 
     protected override void OnParametersSet()
     {
         base.OnParametersSet();
         FilteredTestCases = FilterTestCasesByDate(TestCases, FilterDate);
+        TestCaseTimeInEachStatus = TestCaseMetricsCalculator.CalculateAverageTimeInEachStatus(FilteredTestCases);
+        areParametersSet = true;
     }
 
     private IEnumerable<TestCaseViewModel> FilterTestCasesByDate(IEnumerable<TestCaseViewModel> testCases, DateTime? filterDate)
@@ -86,49 +93,11 @@
                 dataArray[i++] = new DataItem
                     {
                         Status = entry.Key.ToString(),
-                        HoursSpent = CalculateAverageTimeInSpecificStatus(FilteredTestCases, entry.Key),
+                        HoursSpent = TestCaseTimeInEachStatus.GetTestCaseTimeByStatusForChart(entry.Key),
                     };
             }
         }
 
         return dataArray;
-    }
-
-    public double CalculateAverageTimeInSpecificStatus(IEnumerable<TestCaseViewModel> testCases, TestCaseStatus status)
-    {
-        List<double> durations = new List<double>();
-
-        foreach (var testCase in testCases)
-        {
-            var historyEntries = testCase.History
-                .Where(h => h.NewStatus == status)
-                .OrderBy(h => h.ChangedDate)
-                .ToList();
-
-            for (int i = 0; i < historyEntries.Count; i++)
-            {
-                var currentEntry = historyEntries[i];
-                DateTime startDate = currentEntry.ChangedDate;
-
-                DateTime endDate;
-                if (i + 1 < historyEntries.Count)
-                {
-                    endDate = historyEntries[i + 1].ChangedDate;
-                }
-                else
-                {
-                    endDate = DateTime.Now;
-                }
-
-                durations.Add((endDate - startDate).TotalHours);
-            }
-        }
-
-        if (durations.Count == 0)
-        {
-            return 0.0;
-        }
-
-        return Math.Round(durations.Average(), 2);
     }
 }
