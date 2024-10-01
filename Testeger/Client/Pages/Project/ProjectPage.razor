@@ -72,7 +72,7 @@
     {
         isManager = await PolicyValidatorService.ValidatePolicyAsync(AuthorizationRoles.Manager);
         isManagerOrQA = await PolicyValidatorService.ValidatePolicyAsync($"{AuthorizationRoles.Manager}, {AuthorizationRoles.QA}");
-        isManagerOrDeveloper = await PolicyValidatorService.ValidatePolicyAsync($"{AuthorizationRoles.Developer}, {AuthorizationRoles.Developer}");
+        isManagerOrDeveloper = await PolicyValidatorService.ValidatePolicyAsync($"{AuthorizationRoles.Manager}, {AuthorizationRoles.Developer}");
 
         project = await ProjectService.GetProjectByIdAsync(Id);
         TestRequestService.OnChange += StateHasChanged;
