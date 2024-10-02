@@ -13,3 +13,6 @@ global using Testeger.Domain.Models.Entities;
 global using Testeger.Domain.Models.Pagination;
 global using Testeger.Shared.DTOs.Responses;
 global using Testeger.Shared.DTOs.Requests.Common;
+global using DomainTestRequest = Testeger.Domain.Models.Entities.TestRequest;
+global using DomainProject = Testeger.Domain.Models.Entities.Project;
+global using DomainTestCase = Testeger.Domain.Models.Entities.TestCase;

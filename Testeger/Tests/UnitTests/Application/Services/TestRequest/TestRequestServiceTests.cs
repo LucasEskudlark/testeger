@@ -1,6 +1,5 @@
 ﻿using Testeger.Shared.DTOs.Requests.CreateTestRequest;
 using Testeger.Shared.DTOs.Responses.TestRequest;
-using DomainTestRequest = Testeger.Domain.Models.Entities.TestRequest;
 namespace UnitTests.Application.Services.TestRequest;
 
 public class TestRequestServiceTests : BaseServiceTests
@@ -188,7 +187,7 @@ public class TestRequestServiceTests : BaseServiceTests
     }
 
     [Fact]
-    public async Task gETTestRequestsByProjectIdAsync_GivenInvalidProject_ShouldThrowNotFoundException()
+    public async Task GetTestRequestsByProjectIdAsync_GivenInvalidProject_ShouldThrowNotFoundException()
     {
         _unitOfWork
            .Setup(u => u.ProjectRepository.GetByIdAsync(It.IsAny<string>()))
