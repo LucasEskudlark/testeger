@@ -1,0 +1,15 @@
+﻿global using AutoFixture;
+global using AutoMapper;
+global using Moq;
+global using Testeger.Infra.UnitOfWork;
+global using FluentAssertions;
+global using Microsoft.Extensions.Options;
+global using Testeger.Application.Exceptions;
+global using Testeger.Application.Services.Email;
+global using Testeger.Application.Services.TestRequest;
+global using Testeger.Application.Services.User;
+global using Testeger.Application.Settings;
+global using Testeger.Domain.Models.Entities;
+global using Testeger.Domain.Models.Pagination;
+global using Testeger.Shared.DTOs.Responses;
+global using Testeger.Shared.DTOs.Requests.Common;
