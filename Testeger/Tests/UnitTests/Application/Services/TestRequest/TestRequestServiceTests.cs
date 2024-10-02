@@ -60,7 +60,7 @@ public class TestRequestServiceTests : BaseServiceTests
     public async Task CreateTestRequestAsync_GivenValidRequest_ShouldReturnExpectedResponse()
     {
         var project = _fixture
-            .Build<Project>()
+            .Build<DomainProject>()
             .With(x => x.Id, FakeProjectId)
             .Create();
 
@@ -104,7 +104,7 @@ public class TestRequestServiceTests : BaseServiceTests
     {
         _unitOfWork
            .Setup(u => u.ProjectRepository.GetByIdAsync(It.IsAny<string>()))
-           .ReturnsAsync(null as Project);
+           .ReturnsAsync(null as DomainProject);
 
         var request = _fixture.Build<CreateTestRequestRequest>()
             .With(x => x.ProjectId, FakeProjectId)
@@ -191,7 +191,7 @@ public class TestRequestServiceTests : BaseServiceTests
     {
         _unitOfWork
            .Setup(u => u.ProjectRepository.GetByIdAsync(It.IsAny<string>()))
-           .ReturnsAsync(null as Project);
+           .ReturnsAsync(null as DomainProject);
 
         await _testRequestService
             .Invoking(service => service.GetTestRequestsByProjectIdAsync(It.IsAny<string>()))

@@ -195,7 +195,7 @@ public class TestCaseServiceTests : BaseServiceTests
     {
         _unitOfWork
            .Setup(u => u.ProjectRepository.GetByIdAsync(It.IsAny<string>()))
-           .ReturnsAsync(null as Project);
+           .ReturnsAsync(null as DomainProject);
 
         await _testCaseService
             .Invoking(service => service.GetTestCasesByProjectIdAsync(It.IsAny<string>()))
