@@ -17,3 +17,4 @@ global using DomainTestRequest = Testeger.Domain.Models.Entities.TestRequest;
 global using DomainProject = Testeger.Domain.Models.Entities.Project;
 global using DomainTestCase = Testeger.Domain.Models.Entities.TestCase;
 global using DomainTestCaseResult = Testeger.Domain.Models.Entities.TestCaseResult;
+global using DomainInvitation = Testeger.Domain.Models.Entities.Invitation;
