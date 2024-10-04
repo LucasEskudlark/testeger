@@ -89,7 +89,8 @@ public class TestCaseResultService : BaseService, ITestCaseResultService
 
     private async Task ValidateTestCaseExistence(string testCaseId)
     {
-        _ = await _unitOfWork.TestCaseRepository.GetTestCaseByIdAsync(testCaseId);
+        _ = await _unitOfWork.TestCaseRepository.GetTestCaseByIdAsync(testCaseId)
+            ?? throw new NotFoundException($"TestCase with id {testCaseId} not found"); ;
     }
 
     private async Task<int> GetTestCaseResultNumberAsync(string testCaseId)

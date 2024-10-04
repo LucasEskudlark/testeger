@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Testeger.Application.Services.Authentication;
 using Testeger.Application.Services.Email;
+using Testeger.Application.Services.File;
 using Testeger.Application.Services.Image;
 using Testeger.Application.Services.Invitation;
 using Testeger.Application.Services.Project;
@@ -30,5 +31,6 @@ public static class ServicesConfiguration
 
         services.AddScoped<ITokenService, TokenService>();
         services.AddScoped<ICustomAuthenticationService, CustomAuthenticationService>();
+        services.AddScoped<IFileSystem, FileSystem>();
     }
 }
