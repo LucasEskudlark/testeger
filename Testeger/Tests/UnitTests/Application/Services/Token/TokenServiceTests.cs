@@ -3,7 +3,6 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using Testeger.Application.Services.Token;
-using Testeger.Application.Settings;
 
 namespace UnitTests.Application.Services.Token;
 
@@ -14,7 +13,7 @@ public class TokenServiceTests
 
     public TokenServiceTests()
     {
-        _jwtSettings = SetupJwtSettings();
+        _jwtSettings = TestUtils.SetupJwtSettings();
         IOptions<JwtSettings> options = Options.Create(_jwtSettings);
         _tokenService = new(options);
     }
@@ -123,18 +122,5 @@ public class TokenServiceTests
         var isExpired = _tokenService.IsTokenExpired(tokenString);
 
         isExpired.Should().BeTrue();
-    }
-
-    public static JwtSettings SetupJwtSettings()
-    {
-        return new()
-        {
-            Audience = "TestAudience",
-            Issuer = "TestIssues",
-            SecretKey = "model-secret-key-with-enough-bits-for-sha256",
-            TokenValidityInMinutes = 1,
-            InvitationTokenValidityInMinutes = 1,
-            RefreshTokenValidityInMinutes = 1
-        };
     }
 }

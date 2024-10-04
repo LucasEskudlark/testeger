@@ -29,4 +29,17 @@ public static class TestUtils
 
         return token;
     }
+
+    public static JwtSettings SetupJwtSettings()
+    {
+        return new()
+        {
+            Audience = "TestAudience",
+            Issuer = "TestIssues",
+            SecretKey = "model-secret-key-with-enough-bits-for-sha256",
+            TokenValidityInMinutes = 1,
+            InvitationTokenValidityInMinutes = 1,
+            RefreshTokenValidityInMinutes = 1
+        };
+    }
 }
