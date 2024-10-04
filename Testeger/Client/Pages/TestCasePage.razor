@@ -14,30 +14,33 @@
     <PageTitle>@TestCaseTitle - Testeger</PageTitle>
 
     <div class="container-fluid mb-5 mt-2">
-        <div class="row justify-content-between">
-            <div class="col-auto">
+        <div class="row justify-content-between align-items-center">
+            
+            <div class="col-12 col-md-auto mb-2 mb-md-0">
                 <RadzenBreadCrumb>
                     <RadzenBreadCrumbItem Path="@Testeger.Client.Helpers.BreadCrumbHelper.GetProjectUrl(Request.ProjectId)" Text="Project" />
                     <RadzenBreadCrumbItem Path="@Testeger.Client.Helpers.BreadCrumbHelper.GetRequestUrl(Request.ProjectId, Request.Id)" Text="@Testeger.Client.Helpers.BreadCrumbHelper.GetRequestText(Request.Number)" />
                     <RadzenBreadCrumbItem Text="@TestCase.Title" />
                 </RadzenBreadCrumb>
             </div>
-            <div class="col-auto d-flex">
+
+            >
+            <div class="col-12 col-md-auto d-flex flex-wrap justify-content-end">
                 <RadzenButton Icon="play_arrow"
                               Text="@TestButtonText"
                               ButtonStyle="@TestButtonStyle"
                               Size="ButtonSize.Small"
                               Click="@HandleTestButtonClick"
-                              Disabled="@(isNotScheduled || !IsQA)"
-                              class="me-2" />
+                              Disabled="@(isNotScheduled || !IsManagerOrQA)"
+                              class="me-2 mb-2" />
 
                 <RadzenButton Icon="save"
                               Text="Save"
                               ButtonStyle="ButtonStyle.Primary"
                               Size="ButtonSize.Small"
                               Click="@Save"
-                              MouseEnter="@(args => ShowTooltip(args, "Save the changes made in this request"))"
-                              class="me-2"
+                              MouseEnter="@(args => ShowTooltip(args, "Save any changes made to this request"))"
+                              class="me-2 mb-2"
                               Disabled="@(!IsManagerOrQA)" />
 
                 <RadzenButton Icon="delete"
@@ -46,24 +49,26 @@
                               Shade="Shade.Darker"
                               Size="ButtonSize.Small"
                               Click="@HandleTestCaseDeletion"
-                              MouseEnter="@(args => ShowTooltip(args, "Delete this entire request"))"
-                              Disabled="@(!IsManagerOrQA)" />
+                              MouseEnter="@(args => ShowTooltip(args, "Delete this test case permanently"))"
+                              Disabled="@(!IsManagerOrQA)"
+                              class="mb-2" />
             </div>
         </div>
     </div>
 
     <div class="container">
-        <div class="row d-flex justify-content-between">
-            <div class="col-6 pb-2 right-divider">
-                <TestCaseDetailsPage
-                    Request="Request"
-                    TestCase="TestCase"
-                    @ref="TestCaseDetailsComponent"
-                    OnFormSubmitted="HandleTestCaseUpdate"
-                    IsManagerOrQA="@IsManagerOrQA"/>
+        <div class="row">
+           
+            <div class="col-12 col-md-6 pb-2 border-md-end">
+                <TestCaseDetailsPage Request="Request"
+                                     TestCase="TestCase"
+                                     @ref="TestCaseDetailsComponent"
+                                     OnFormSubmitted="HandleTestCaseUpdate"
+                                     IsManagerOrQA="@IsManagerOrQA" />
             </div>
 
-            <div class="col-6 pb-2">
+      
+            <div class="col-12 col-md-6 pb-2">
                 <TestCaseTestingDetails TestCase="TestCase" IsManagerOrQA="@IsManagerOrQA" />
             </div>
         </div>
@@ -171,7 +176,7 @@
     {
         var options = new DialogOptions { Width = "900px", Height = "630px", Resizable = false, Draggable = true };
         await DialogService.OpenAsync<TestCaseTestingDialog>("Testing",
-            new Dictionary<string, object> { 
+            new Dictionary<string, object> {
                 { "TestCase", TestCase },
                 { "LatestTestCaseResult", LatestTestCaseResult },
                 { nameof(TestCaseTestingDialog.OnTestFinished), HandleTestFinished },

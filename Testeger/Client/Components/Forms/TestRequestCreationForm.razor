@@ -5,19 +5,18 @@
 {
     <EditForm Model="@testRequestViewModel" OnValidSubmit="@NotifyParent" class="p-3">
         <DataAnnotationsValidator />
-        <div class="mb-3 row">
-            <div class="col-12">
-                <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H3">Title</RadzenText>
-                <InputText id="title"
-                           class="form-control inputtext"
-                           placeholder="Enter a concise title for the test request."
-                           @bind-Value="testRequestViewModel.Title" />
-                <ValidationMessage For="@(() => testRequestViewModel.Title)" />
-            </div>
+
+        <div class="mb-3">
+            <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H3">Title</RadzenText>
+            <InputText id="title"
+                       class="form-control inputtext"
+                       placeholder="Enter a concise title for the test request."
+                       @bind-Value="testRequestViewModel.Title" />
+            <ValidationMessage For="@(() => testRequestViewModel.Title)" />
         </div>
 
-        <div class="mb-3 row">
-            <div class="col-4">
+        <div class="row mb-3">
+            <div class="col-12 col-md-4">
                 <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H3">Due Date</RadzenText>
                 <RadzenDatePicker @bind-Value="testRequestViewModel.DueDate"
                                   Min="@(DateTime.Today)"
@@ -27,7 +26,7 @@
                 <ValidationMessage For="@(() => testRequestViewModel.DueDate)" />
             </div>
 
-            <div class="col-4">
+            <div class="col-12 col-md-4">
                 <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H3">Priority Level</RadzenText>
                 <InputSelect id="priorityLevel"
                              class="form-select inputtext"
@@ -41,15 +40,13 @@
             </div>
         </div>
 
-        <div class="mb-3 row">
-            <div class="col-10">
-                <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H3">Story link</RadzenText>
-                <InputText id="storylink"
-                           class="form-control inputtext"
-                           placeholder="Enter the URL to the story in your project management tool"
-                           @bind-Value="testRequestViewModel.StoryLink" />
-                <ValidationMessage For="@(() => testRequestViewModel.StoryLink)" />
-            </div>
+        <div class="mb-3">
+            <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H3">Story link</RadzenText>
+            <InputText id="storylink"
+                       class="form-control inputtext"
+                       placeholder="Enter the URL to the story in your project management tool"
+                       @bind-Value="testRequestViewModel.StoryLink" />
+            <ValidationMessage For="@(() => testRequestViewModel.StoryLink)" />
         </div>
 
         <div class="mb-3">

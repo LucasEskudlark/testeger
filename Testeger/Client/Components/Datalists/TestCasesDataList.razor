@@ -6,8 +6,11 @@
     <Template Context="TestCase">
         <RadzenCard Style="width: 100%; max-height: 50px !important; margin: 0; padding: 0 !important;">
             <RadzenRow Gap="0" Style="padding: 0;">
-                <RadzenColumn Size="4" SizeLG="4" class="@GetTitleBackgroundColor(TestCase.Status)" Style="max-height: 50px;">
-                    <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H5" class="@GetTitleTextColor(TestCase.Status)">@(TestCase.Title)</RadzenText>
+                <RadzenColumn Size="4" SizeMD="4" SizeLG="4" class="@GetTitleBackgroundColor(TestCase.Status)" style="max-height: 50px; overflow: hidden">
+                    <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H5" class="@GetTitleTextColor(TestCase.Status)"
+                                style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                        @(TestCase.Title)
+                    </RadzenText>
                 </RadzenColumn>
                 <RadzenColumn Size="6" SizeLG="6" Class="rz-p-2" Style="max-height: 50px;">
                     <RadzenRow Gap="5">

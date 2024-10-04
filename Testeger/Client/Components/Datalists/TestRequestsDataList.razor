@@ -1,4 +1,4 @@
-﻿@using Testeger.Client.ViewModels.TestRequests
+﻿﻿@using Testeger.Client.ViewModels.TestRequests
 @inject NavigationManager NavigationManager
 @inject IUserService UserService
 
@@ -12,8 +12,11 @@
                     <RadzenColumn Size="1" SizeLG="1" Class="d-flex flex-column justify-content-center align-items-center" Style="@GetNumberBackgroundColor(Status)">
                         <RadzenText TextStyle="TextStyle.H6" TagName="TagName.H6" class="@GetNumberTextColor(Status)">#@(Request.Number)</RadzenText>
                     </RadzenColumn>
-                    <RadzenColumn Size="3" SizeLG="3" class="@GetTitleBackgroundColor(Status)" Style="max-height: 50px;">
-                        <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H5" class="@GetTitleTextColor(Status)">@(Request.Title)</RadzenText>
+                    <RadzenColumn Size="3" SizeLG="3" class="@GetTitleBackgroundColor(Status)" style="max-height: 50px; overflow: hidden;">
+                        <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H5" class="@GetTitleTextColor(Status)"
+                                    style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                            @(Request.Title)
+                        </RadzenText>
                     </RadzenColumn>
                     <RadzenColumn Size="7" SizeLG="7" Class="rz-p-2" Style="max-height: 50px;">
                         <RadzenRow Gap="5">
@@ -77,7 +80,7 @@
     private string ExtractAssignedUserName(string userId)
     {
 
-        if(ProjectQAMembers is null || !ProjectQAMembers.Any())
+        if (ProjectQAMembers is null || !ProjectQAMembers.Any())
         {
             return String.Empty;
         }

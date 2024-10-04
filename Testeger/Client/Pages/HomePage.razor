@@ -8,8 +8,8 @@
 <PageTitle>Home - Testeger</PageTitle>
 
 <div class="container-fluid vh-100">
-    <div class="row my-0  pb-4">  
-        <div class="col-6 mt-4 ">
+    <div class="row my-0 pb-4 align-items-center">
+        <div class="col-12 col-md-6 mt-4">
             <RadzenText TextStyle="TextStyle.H5">Hello, @(Username)!</RadzenText>
             <p class="lead mt-3" style="font-size: 1rem;">Ready to start your next testeger project? Whether you're looking to manage your testing workflow or collaborate with your team, we've got you covered.</p>
 
@@ -25,7 +25,7 @@
                               class="p-3" /> *@
             </div>
         </div>
-        <div class="col-6 d-flex justify-content-center align-items-center">
+        <div class="col-12 col-md-6 d-flex justify-content-center align-items-center">
             <img src="images/testeger-horizontal-logo-no-bg.png" alt="Testeger logo" height="200px">
         </div>
     </div>
@@ -66,11 +66,11 @@
         Username = await UserService.GetUserNameAsync();
         await base.OnInitializedAsync();
     }
-
+     
 
     private async Task OpenProjectCreationDialog()
     {
-        if (ProjectCount >= 2)
+        if (ProjectCount >= 5)
         {
             NotificationService.ShowFailNotification("Not able to create a project", "You can't create more than 2 projects");
             return;
@@ -81,17 +81,16 @@
             null,
             new DialogOptions() { Width = "700px", Height = "540px", Resizable = false, Draggable = true }
         );
-
         StateHasChanged();
     }
 }
 
 <style>
-    .home-card-title{
+    .home-card-title {
         font-size: 1.1rem;
     }
 
-    .rz-p-4{
-        height: 100vh !important;
+    .vh-100 {
+        min-height: 100vh;
     }
 </style>

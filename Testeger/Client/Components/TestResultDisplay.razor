@@ -1,4 +1,4 @@
-﻿@using Testeger.Client.ViewModels.TestCaseResults
+﻿﻿@using Testeger.Client.ViewModels.TestCaseResults
 @inject DialogService DialogService
 @inject IConfiguration Configuration
 
@@ -14,14 +14,15 @@
                     {
                         <RadzenIcon Icon="close" IconColor="@Colors.DangerDark" class="me-0 ms-lg-5"></RadzenIcon>
                         <small class="result-p ms-1" style="color: var(--rz-danger-darker);">Failed</small>
-                    } else
+                    }
+                    else
                     {
                         <RadzenIcon Icon="check" IconColor="@Colors.Success" class="me-0 ms-lg-5"></RadzenIcon>
                         <small class="result-p ms-1" style="color: var(--rz-success);">Passed</small>
                     }
                 </div>
             </div>
-           
+
         </Header>
         <ChildContent>
             <div class="row my-2 ms-1 me-2 pb-0">
@@ -38,9 +39,9 @@
                         @foreach (var image in Result.Images)
                         {
                             <img id="small-img" src="@BaseAddress/api/images/@image.FilePath"
-                            alt="Test Case Image"
-                            class="shadow-sm mx-1"
-                            @onclick="(() => OpenDialog(image.FilePath, image.TestCaseResultId, image.Id))" />
+                                 alt="Test Case Image"
+                                 class="shadow-sm mx-1"
+                                 @onclick="(() => OpenDialog(image.FilePath, image.TestCaseResultId, image.Id))" />
                         }
                     }
                 </div>
