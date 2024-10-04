@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using MailKit.Net.Smtp;
+using Microsoft.Extensions.DependencyInjection;
 using Testeger.Application.Services.Authentication;
 using Testeger.Application.Services.Email;
 using Testeger.Application.Services.File;
@@ -31,6 +32,8 @@ public static class ServicesConfiguration
 
         services.AddScoped<ITokenService, TokenService>();
         services.AddScoped<ICustomAuthenticationService, CustomAuthenticationService>();
+
+        services.AddTransient<ISmtpClient, SmtpClient>();
         services.AddScoped<IFileSystem, FileSystem>();
     }
 }
