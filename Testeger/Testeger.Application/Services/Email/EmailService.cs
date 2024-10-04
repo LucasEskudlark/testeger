@@ -8,10 +8,12 @@ namespace Testeger.Application.Services.Email;
 public class EmailService : IEmailService
 {
     private readonly SmtpSettings _stmpSettings;
+    private readonly ISmtpClient _smtpClient;
 
-    public EmailService(IOptions<SmtpSettings> stmpSettings)
+    public EmailService(IOptions<SmtpSettings> stmpSettings, ISmtpClient smtpClient)
     {
         _stmpSettings = stmpSettings.Value;
+        _smtpClient = smtpClient;
     }
 
     public async Task SendEmailAsync(string email, string subject, string body)
@@ -26,12 +28,10 @@ public class EmailService : IEmailService
             Text = body
         };
 
-        using var smtp = new SmtpClient();
+        await _smtpClient.ConnectAsync(_stmpSettings.Server, _stmpSettings.Port, _stmpSettings.UseSsl);
+        await _smtpClient.AuthenticateAsync(_stmpSettings.Username, _stmpSettings.Password);
 
-        await smtp.ConnectAsync(_stmpSettings.Server, _stmpSettings.Port, _stmpSettings.UseSsl);
-        await smtp.AuthenticateAsync(_stmpSettings.Username, _stmpSettings.Password);
-
-        await smtp.SendAsync(message);
-        await smtp.DisconnectAsync(true);
+        await _smtpClient.SendAsync(message);
+        await _smtpClient.DisconnectAsync(true);
     }
 }

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Testeger.Application.Services.User;
 
 namespace Testeger.Api.Controllers;
@@ -14,6 +15,7 @@ public class UsersController : ControllerBase
         _userService = userService;
     }
 
+    [Authorize]
     [HttpGet("role/{roleName}")]
     public async Task<IActionResult> GetUsersByRoleAsync(string roleName)
     {
@@ -22,6 +24,7 @@ public class UsersController : ControllerBase
         return Ok(response);
     }
 
+    [Authorize]
     [HttpGet("{id}")]
     public async Task<IActionResult> GetUserByIdAsync(string id)
     {
@@ -30,6 +33,7 @@ public class UsersController : ControllerBase
         return Ok(response);
     }
 
+    [Authorize]
     [HttpGet("project/{id}")]
     public async Task<IActionResult> GetUserByProjectIdAsync(string id)
     {

@@ -2,46 +2,50 @@
 
 <h6>Average time a request spends in each status:</h6>
 <RadzenCard>
-    <RadzenChart>
-        <RadzenPieSeries Data="@GetPieChartData()" Title="HoursSpent" CategoryProperty="Status" ValueProperty="HoursSpent">
-        </RadzenPieSeries>
-    </RadzenChart>
+    @if (areParametersSet)
+    {
+        <RadzenChart>
+            <RadzenPieSeries Data="@GetPieChartData()" Title="HoursSpent" CategoryProperty="Status" ValueProperty="HoursSpent">
+            </RadzenPieSeries>
+        </RadzenChart>
 
-    <div class="row card d-flex flex-row p-2 my-1">
-        <div class="col-9 right-divider">
-            <p>Average time spent in the "Waiting" Status:</p>
+        <div class="row card d-flex flex-row p-2 my-1">
+            <div class="col-9 right-divider">
+                <p>Average time spent in the "Waiting" Status:</p>
+            </div>
+            <div class="col-3 d-flex justify-content-center">
+                @RequestTimeInEachStatus.GetRequestTimeByStatus(RequestStatus.Waiting)
+            </div>
         </div>
-        <div class="col-3 d-flex justify-content-center">
-            @CalculateAverageTimeInSpecificStatus(FilteredRequests, RequestStatus.Waiting).ToHoursAndMinutes()
-        </div>
-    </div>
 
-    <div class="row card d-flex flex-row p-2 my-1">
-        <div class="col-9 right-divider">
-            <p>Average time spent in the "In Progress" Status:</p>
+        <div class="row card d-flex flex-row p-2 my-1">
+            <div class="col-9 right-divider">
+                <p>Average time spent in the "In Progress" Status:</p>
+            </div>
+            <div class="col-3 d-flex justify-content-center">
+                @RequestTimeInEachStatus.GetRequestTimeByStatus(RequestStatus.InProgress)
+            </div>
         </div>
-        <div class="col-3 d-flex justify-content-center">
-            @CalculateAverageTimeInSpecificStatus(FilteredRequests, RequestStatus.InProgress).ToHoursAndMinutes()
-        </div>
-    </div>
 
-    <div class="row card d-flex flex-row p-2 my-1">
-        <div class="col-9 right-divider">
-            <p>Average time spent in the "Ready for Test" Status:</p>
+        <div class="row card d-flex flex-row p-2 my-1">
+            <div class="col-9 right-divider">
+                <p>Average time spent in the "Ready for Test" Status:</p>
+            </div>
+            <div class="col-3 d-flex justify-content-center">
+                @RequestTimeInEachStatus.GetRequestTimeByStatus(RequestStatus.ReadyForTesting)
+            </div>
         </div>
-        <div class="col-3 d-flex justify-content-center">
-            @CalculateAverageTimeInSpecificStatus(FilteredRequests, RequestStatus.ReadyForTesting).ToHoursAndMinutes()
-        </div>
-    </div>
 
-    <div class="row card d-flex flex-row p-2 my-1">
-        <div class="col-9 right-divider">
-            <p>Average time spent in the "Fixing Issues" Status:</p>
+        <div class="row card d-flex flex-row p-2 my-1">
+            <div class="col-9 right-divider">
+                <p>Average time spent in the "Fixing Issues" Status:</p>
+            </div>
+            <div class="col-3 d-flex justify-content-center">
+                @RequestTimeInEachStatus.GetRequestTimeByStatus(RequestStatus.FixingIssues)
+            </div>
         </div>
-        <div class="col-3 d-flex justify-content-center">
-            @CalculateAverageTimeInSpecificStatus(FilteredRequests, RequestStatus.FixingIssues).ToHoursAndMinutes()
-        </div>
-    </div>
+    }
+    
 </RadzenCard>
 
 @code {
@@ -54,12 +58,17 @@
     [Parameter]
     public DateTime? FilterDate { get; set; }
 
+    private Dictionary<RequestStatus, TimeSpan> RequestTimeInEachStatus;
+    private bool areParametersSet;
+
     private IEnumerable<TestRequestViewModel> FilteredRequests { get; set; } = Enumerable.Empty<TestRequestViewModel>();
 
-    protected override void OnParametersSet()
+    protected override async void OnParametersSet()
     {
         base.OnParametersSet();
         FilteredRequests = FilterTestRequestsByDate(TestRequests, FilterDate);
+        RequestTimeInEachStatus = TestRequestMetricsCalculator.CalculateAverageTimeInEachStatus(FilteredRequests);
+        areParametersSet = true;
     }
 
     private IEnumerable<TestRequestViewModel> FilterTestRequestsByDate(
@@ -96,50 +105,12 @@
             {
                 dataArray[i++] = new DataItem
                     {
-                        Status = entry.Key.ToString(),
-                        HoursSpent = CalculateAverageTimeInSpecificStatus(FilteredRequests, entry.Key),
+                        Status = EnumHelper.AddSpacesToEnumName(entry.Key.ToString()),
+                        HoursSpent = RequestTimeInEachStatus.GetRequestTimeByStatusForChart(entry.Key),
                     };
             }
         }
 
         return dataArray;
-    }
-
-    public double CalculateAverageTimeInSpecificStatus(IEnumerable<TestRequestViewModel> requests, RequestStatus status)
-    {
-        List<double> durations = new List<double>();
-
-        foreach (var request in requests)
-        {
-            var historyEntries = request.History
-                .Where(h => h.NewStatus == status)
-                .OrderBy(h => h.ChangedDate)
-                .ToList();
-
-            for (int i = 0; i < historyEntries.Count; i++)
-            {
-                var currentEntry = historyEntries[i];
-                DateTime startDate = currentEntry.ChangedDate;
-
-                DateTime endDate;
-                if (i + 1 < historyEntries.Count)
-                {
-                    endDate = historyEntries[i + 1].ChangedDate;
-                }
-                else
-                {
-                    endDate = DateTime.Now;
-                }
-
-                durations.Add((endDate - startDate).TotalHours);
-            }
-        }
-
-        if (durations.Count == 0)
-        {
-            return 0.0;
-        }
-
-        return Math.Round(durations.Average(), 2);
     }
 }

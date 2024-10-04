@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Testeger.Application.Services.Invitation;
 using Testeger.Shared.DTOs.Requests.ConfirmInvitation;
 using Testeger.Shared.DTOs.Requests.SendInvitation;
@@ -16,6 +17,7 @@ public class InvitationsController : ControllerBase
         _invitationService = invitationService;
     }
 
+    [Authorize]
     [HttpPost("send")]
     public async Task<IActionResult> SendInvitationAsync(SendInvitationRequest request)
     {
@@ -24,6 +26,7 @@ public class InvitationsController : ControllerBase
         return NoContent();
     }
 
+    [Authorize]
     [HttpPost("confirm")]
     public async Task<IActionResult> ConfirmInvitationAsync(ConfirmInvitationRequest request)
     {

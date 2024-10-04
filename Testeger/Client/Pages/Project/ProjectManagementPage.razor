@@ -4,6 +4,7 @@
 @inject TooltipService TooltipService
 @inject IUserService UserService
 @inject DialogService DialogService
+@inject NavigationManager NavigationManager
 @attribute [Authorize(Policy = $"{AuthorizationRoles.Manager}")]
 
 
@@ -19,11 +20,7 @@
             </RadzenBreadCrumb>
         </div>
         <div class="col-6 d-flex justify-content-end">
-            <RadzenButton Shade="Shade.Darker"
-                          Icon="delete"
-                          Text="Delete"
-                          ButtonStyle="ButtonStyle.Danger"
-                          class="ms-2" />
+            <RadzenButton Shade="Shade.Darker" Icon="delete" Text="Delete" ButtonStyle="ButtonStyle.Danger" Click="@ShowConfirmDialog" />
         </div>
     </div>
 
@@ -55,13 +52,13 @@
                         <RadzenLabel Text="Project Members" Style="@LabelStyle" />
                     </div>
                     <div class="col-6 d-flex justify-content-end">
-                        <RadzenButton Shade="Shade.Darker"
+                       @*  <RadzenButton Shade="Shade.Darker"
                                       Icon="remove"
                                       Text="Remove"
                                       Size="ButtonSize.Small"
                                       ButtonStyle="ButtonStyle.Danger"
                                       MouseEnter="@(args => ShowRemoveMemberTooltip(args))"
-                                      class="me-2" />
+                                      class="me-2" /> *@
                         <RadzenButton Icon="add"
                                       Text="Invite"
                                       Size="ButtonSize.Small"
@@ -123,24 +120,28 @@
         );
     }
 
-    // private async Task RemoveUser()
-    // {
-    //     if (SelectedUsers == null || !SelectedUsers.Any())
-    //     {
-    //         Console.WriteLine("Empty");
-    //         return;
-    //     }
+    private async Task ShowConfirmDialog()
+    {
+        var result = await DialogService.Confirm("Are you sure?", $"Delete project {Project.Name}", new ConfirmOptions()
+            {
+                OkButtonText = "Yes",
+                CancelButtonText = "No"
+            });
 
-    //     await ProjectService.RemoveProjectMember(ProjectId, SelectedUsers);
-    // }
+        if (result.HasValue && result.Value)
+        {
+            await DeleteProject();
+        }
+    }
 
-    // private static bool ContainsUserWithEmail(List<User> users, string email)
-    // {
-    //     return users.Any(user => user.Email.Equals(email, StringComparison.OrdinalIgnoreCase));
-    // }
+    public async Task DeleteProject()
+    {
+        await ProjectService.DeleteProjectAsync(ProjectId);
+        NavigationManager.NavigateTo($"/home");
+    }
 
-    private void ShowRemoveMemberTooltip(ElementReference elementReference, TooltipOptions options = null)
-        => TooltipService.Open(elementReference, "Remove selected members from the project.", options);
+    // private void ShowRemoveMemberTooltip(ElementReference elementReference, TooltipOptions options = null)
+    //     => TooltipService.Open(elementReference, "Remove selected members from the project.", options);
 
     private void ShowAddMemberTooltip(ElementReference elementReference, TooltipOptions options = null)
         => TooltipService.Open(elementReference, "Add member to the project.", options);

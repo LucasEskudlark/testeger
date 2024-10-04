@@ -1,19 +1,20 @@
-﻿namespace Testeger.Client.Configuration;
+﻿using System.Net.Http.Headers;
+
+namespace Testeger.Client.Configuration;
 
 public static class HttpClientConfiguration
 {
-    private const string BaseAddressPath = "ApiSettings:BaseAddress";
-
-    public static void SetupHttpClient(this IServiceCollection services, IConfiguration configuration)
+    public static void SetupHttpClient(this IServiceCollection services, string baseAddress)
     {
-        var baseAddress = configuration[BaseAddressPath]
-            ?? throw new InvalidOperationException("BaseAddress is not configured");
-
         services.AddScoped(sp =>
-            new HttpClient
+        {
+            var client = new HttpClient
             {
                 BaseAddress = new Uri(baseAddress)
-            });
+            };
+            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            return client;
+        });
 
         services.AddHttpClient();
     }

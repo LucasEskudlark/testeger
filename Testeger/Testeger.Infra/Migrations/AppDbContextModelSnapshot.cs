@@ -162,6 +162,9 @@ namespace Testeger.Infra.Migrations
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
 
+                    b.Property<DateTime>("BirthDate")
+                        .HasColumnType("datetime(6)");
+
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .HasColumnType("longtext");
@@ -317,7 +320,7 @@ namespace Testeger.Infra.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime")
-                        .HasDefaultValue(new DateTime(2024, 9, 18, 0, 45, 10, 490, DateTimeKind.Utc).AddTicks(2465))
+                        .HasDefaultValue(new DateTime(2024, 9, 29, 14, 2, 25, 599, DateTimeKind.Utc).AddTicks(9203))
                         .HasColumnName("CreatedDate");
 
                     b.Property<string>("Name")
@@ -364,7 +367,7 @@ namespace Testeger.Infra.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime")
-                        .HasDefaultValue(new DateTime(2024, 9, 18, 0, 45, 10, 493, DateTimeKind.Utc).AddTicks(3307))
+                        .HasDefaultValue(new DateTime(2024, 9, 29, 14, 2, 25, 603, DateTimeKind.Utc).AddTicks(1045))
                         .HasColumnName("CreatedDate");
 
                     b.Property<string>("ProjectId")
@@ -458,7 +461,7 @@ namespace Testeger.Infra.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime")
-                        .HasDefaultValue(new DateTime(2024, 9, 18, 0, 45, 10, 491, DateTimeKind.Utc).AddTicks(1602))
+                        .HasDefaultValue(new DateTime(2024, 9, 29, 14, 2, 25, 600, DateTimeKind.Utc).AddTicks(9625))
                         .HasColumnName("CreatedDate");
 
                     b.Property<string>("Description")
@@ -685,7 +688,7 @@ namespace Testeger.Infra.Migrations
                             b1.Property<DateTime>("ChangedDate")
                                 .ValueGeneratedOnAdd()
                                 .HasColumnType("datetime")
-                                .HasDefaultValue(new DateTime(2024, 9, 18, 0, 45, 10, 497, DateTimeKind.Utc).AddTicks(813))
+                                .HasDefaultValue(new DateTime(2024, 9, 29, 14, 2, 25, 607, DateTimeKind.Utc).AddTicks(762))
                                 .HasColumnName("ChangedDate");
 
                             b1.Property<string>("NewStatus")
@@ -753,7 +756,7 @@ namespace Testeger.Infra.Migrations
                             b1.Property<DateTime>("ChangedDate")
                                 .ValueGeneratedOnAdd()
                                 .HasColumnType("datetime")
-                                .HasDefaultValue(new DateTime(2024, 9, 18, 0, 45, 10, 492, DateTimeKind.Utc).AddTicks(7578))
+                                .HasDefaultValue(new DateTime(2024, 9, 29, 14, 2, 25, 602, DateTimeKind.Utc).AddTicks(4582))
                                 .HasColumnName("ChangedDate");
 
                             b1.Property<string>("NewStatus")

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Testeger.Application.Exceptions;
+using Testeger.Application.Services.File;
 using Testeger.Infra.UnitOfWork;
 using DomainImage = Testeger.Domain.Models.Entities.Image;
 
@@ -8,15 +9,17 @@ namespace Testeger.Application.Services.Image;
 
 public class ImageService : BaseService, IImageService
 {
+    private readonly IFileSystem _fileSystem;
     private readonly string _targetFilePath;
     private const string BaseDirectory = "UploadedImages";
 
-    public ImageService(IUnitOfWork unitOfWork, IMapper mapper) : base(unitOfWork, mapper)
+    public ImageService(IUnitOfWork unitOfWork, IMapper mapper, IFileSystem fileSystem) : base(unitOfWork, mapper)
     {
         var currentDirectory = Directory.GetCurrentDirectory();
         var parentDirectory = Directory.GetParent(currentDirectory)?.FullName ?? currentDirectory;
 
         _targetFilePath = Path.Combine(parentDirectory, BaseDirectory);
+        _fileSystem = fileSystem;
     }
 
     public async Task UploadTestCaseResultImagesAsync(IEnumerable<IFormFile> files, string testCaseResultId)
@@ -59,12 +62,12 @@ public class ImageService : BaseService, IImageService
         var fullPath = Path.Combine("../", imagePath);
         fullPath = Path.GetFullPath(fullPath);
 
-        if (!File.Exists(fullPath))
+        if (!_fileSystem.FileExists(fullPath))
         {
             throw new NotFoundException($"No images related with the path informed were found");
         }
 
-        var imageFileStream = await Task.Run(() => File.OpenRead(fullPath));
+        var imageFileStream = await Task.Run(() => _fileSystem.OpenRead(fullPath));
         var contentType = GetContentType(fullPath);
 
         return (imageFileStream, contentType);

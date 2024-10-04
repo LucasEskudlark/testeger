@@ -35,6 +35,86 @@
                     <h5 style="color: #A9ABAE;"><i>There are no metrics for this project yet.</i></h5>
                 </RadzenCard>
             </div>
+        } else
+        {
+            <RadzenCard class="my-3 py-2">
+                <ToggleComponent>
+                    <Header>
+                        <RadzenText TextStyle="TextStyle.H6" class="mt-2">Test requests metrics:</RadzenText>
+                    </Header>
+                    <ChildContent>
+                        <div class="row mt-3 d-flex align-items-start">
+                            <div class="col-6">
+                                <TestRequestGeneralMetricsDatagrid TestRequests="TestRequests" FilterDate="FilterDate" />
+                            </div>
+                            <div class="col-6">
+                                <RequestTimeSpentInEachStatusChart TestRequests="TestRequests" TestRequestsByStatus="TestRequestsByStatus"/>
+                            </div>
+                        </div>
+
+                        <div class="row mt-4 d-flex justify-content-center mb-4">
+                            <div class="col-10">
+                                <TestRequestCountPerStatusChart TestRequestsByStatus="TestRequestsByStatus" FilterDate="FilterDate" />
+                            </div>
+                        </div>
+                    </ChildContent>
+                </ToggleComponent>  
+            </RadzenCard>
+
+            <RadzenCard class="my-3 py-2">
+                <ToggleComponent>
+                    <Header>
+                        <RadzenText TextStyle="TextStyle.H6" class="mt-2">Test cases metrics:</RadzenText>
+                    </Header>
+                    <ChildContent>
+                        <div class="row mt-3">
+                            <div class="col-6">
+                                <TestCaseCountPerStatusChart TestCasesByStatus="TestCasesByStatus" FilterDate="FilterDate" />
+                            </div>
+                            <div class="col-6">
+                                <TestCaseGeneralMetricsDatagrid TestCases="TestCases" TestRequests="TestRequests" FilterDate="FilterDate" />
+                            </div>
+                        </div>
+
+                        <div class="row mt-4 mb-4">
+                            <div class="col-12">
+                                <TestCaseTimeSpentInEachStatusChart TestCasesByStatus="TestCasesByStatus" TestCases="TestCases" FilterDate="FilterDate" />
+                            </div>
+                        </div>
+                    </ChildContent>
+                </ToggleComponent>
+            </RadzenCard>
+
+            <RadzenCard class="my-3 py-2">
+                <ToggleComponent>
+                    <Header>
+                        <RadzenText TextStyle="TextStyle.H6" class="mt-2">Team metrics:</RadzenText>
+                    </Header>
+                    <ChildContent>
+                        <div class="row mt-3 mb-4">
+                            <div class="col-6">
+                                <RequestCountPerProjectQAChart TestRequests="@TestRequests" ProjectId="@ProjectId"/>
+                            </div>
+                            <div class="col-6 pb-0">
+                                <TestCaseCountPerProjectQAChart TestCases="@TestCases" ProjectId="@ProjectId"/>
+                            </div>
+                        </div>
+                    </ChildContent>
+                </ToggleComponent>
+            </RadzenCard>
+
+            <RadzenCard class="my-3 py-2">
+                <ToggleComponent>
+                    <Header>
+                        <RadzenText TextStyle="TextStyle.H6" class="mt-2">Individual metrics:</RadzenText>
+                    </Header>
+                    <ChildContent>
+                        <div class="row mt-3 mb-4">
+                            <IndividualProjectQAMetrics TestRequests="@TestRequests" TestCases="@TestCases" ProjectId="@ProjectId"/>
+                        </div>
+                    </ChildContent>
+                </ToggleComponent>
+            </RadzenCard>
         }
         else
         {

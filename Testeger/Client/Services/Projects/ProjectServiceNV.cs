@@ -71,5 +71,21 @@ public class ProjectServiceNV : BaseService, IProjectServiceNV
         return response;
     }
 
+    public async Task DeleteProjectAsync(string id)
+    {
+        var address = BaseAddress + $"/delete/{id}";
+
+        var response = await _httpClient.PostAsJsonAsync(address, id);
+
+        if (!response.IsSuccessStatusCode)
+        {
+            _notificationService.ShowFailNotification("Error", "Could not delete project.");
+        }
+
+        _notificationService.ShowSuccessNotification("Success", "Project successfully deleted.");
+        OnProjectDeleted?.Invoke();
+        NotifyStateChanged();
+    }
+
     private void NotifyStateChanged() => OnChange?.Invoke();
 }

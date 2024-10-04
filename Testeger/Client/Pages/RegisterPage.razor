@@ -15,7 +15,7 @@
                     <h3 class="mb-5">Create an account</h3>
 
                 </div>
-                
+
                 <EditForm Model="registerModel" OnValidSubmit="HandleRegistration">
                     <DataAnnotationsValidator />
                     <div class="register-container">
@@ -24,26 +24,27 @@
                                 <div class="form-group">
                                     <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Username</RadzenText>
                                     <InputText id="userName" class="form-control" placeholder="Username" @bind-Value="registerModel.Username" />
-                                    <ValidationMessage For="@(() => registerModel.Username)" />
+                                    <ValidationMessage For="@(() => registerModel.Username)" class="view-model-validation-msg" />
                                 </div>
                             </div>
                             @* <div class="col-6">
-                                <div class="form-group">
-                                    <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Last Name</RadzenText>
-                                    <InputText id="lastName" class="form-control" placeholder="Last" @bind-Value="registerModel.LastName" />
-                                </div>
+                            <div class="form-group">
+                            <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Last Name</RadzenText>
+                            <InputText id="lastName" class="form-control" placeholder="Last" @bind-Value="registerModel.LastName" />
+                            </div>
                             </div> *@
                         </div>
 
                         <div class="row mb-2 d-flex justify-content-between">
                             <div class="col-6">
-                                @* <div class="form-group">
-                                    <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Birth date</RadzenText>
-                                    <RadzenDatePicker @bind-Value="registerModel.BirthDate"
-                                                      Style="width:100%;" Max="@(DateTime.Today)"
-                                                      DateFormat="dd/MM/yyyy"
-                                                      Placeholder="01/01/0001" />
-                                </div> *@
+                                <div class="form-group">
+                                <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Birth date</RadzenText>
+                                <RadzenDatePicker @bind-Value="registerModel.BirthDate"
+                                Style="width:100%;" Max="@(DateTime.Today)"
+                                DateFormat="dd/MM/yyyy"
+                                Placeholder="01/01/0001" />
+                                <ValidationMessage For="@(() => registerModel.BirthDate)" class="view-model-validation-msg" />
+                                </div>
                             </div>
                             <div class="col-6">
                                 <div class="form-group">
@@ -63,7 +64,7 @@
                                     <ValidationMessage For="@(() => registerModel.Email)" class="view-model-validation-msg" />
                                 </div>
                             </div>
-                            
+
                         </div>
 
                         <div class="row mb-2 d-flex justify-content-between">
@@ -83,7 +84,7 @@
                             </div>
                         </div>
 
-                        <RadzenButton ButtonType="ButtonType.Submit" ButtonStyle="ButtonStyle.Primary" Text="Register" Style="width: 100%;" />
+                        <RadzenButton ButtonType="ButtonType.Submit" ButtonStyle="ButtonStyle.Primary" Text="Register" Style="width: 100%;" Disabled="@isRegistrationBeingProcessed"/>
 
                         <p class="mt-4 mb-1">
                             <small>
@@ -98,16 +99,19 @@
     </div>
 </div>
 
-@code{
+@code {
     private RegisterViewModel registerModel = new RegisterViewModel();
-
     private int value = 1;
+    private bool isRegistrationBeingProcessed;
 
     private async Task HandleRegistration()
     {
+        isRegistrationBeingProcessed = true;
         registerModel.PhoneNumber = ConvertToNumbersOnly(registerModel.PhoneNumber);
 
         var result = await AuthService.RegisterAsync(registerModel);
+
+        isRegistrationBeingProcessed = false;
 
         if (result.Success)
         {
@@ -139,7 +143,7 @@
         font-size: 15px;
     }
 
-    .login-link{
+    .login-link {
         color: var(--rz-primary);
     }
 

@@ -26,7 +26,7 @@
                             </RadzenColumn>
                             <RadzenColumn Size="3" SizeMD="3" SizeLG="3" Class="d-flex flex-column justify-content-center">
                                 <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H5" Class="rz-mb-0">Status</RadzenText>
-                                <RadzenText TextStyle="TextStyle.Caption">@(Request.Status)</RadzenText>
+                                <RadzenText TextStyle="TextStyle.Caption">@(EnumHelper.AddSpacesToEnumName(Request.Status.ToString()))</RadzenText>
                             </RadzenColumn>
                             <RadzenColumn Size="3" SizeMD="3" SizeLG="3" Class="d-flex flex-column justify-content-center">
                                 <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H5" Class="rz-mb-0">Due Date</RadzenText>

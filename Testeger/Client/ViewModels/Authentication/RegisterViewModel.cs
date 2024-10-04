@@ -1,10 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Testeger.Client.Attributes;
 
 namespace Testeger.Client.ViewModels.Authentication;
 
 public class RegisterViewModel
 {
     [Required(ErrorMessage = "Username is required.")]
+    [UsernameValidation(ErrorMessage = "The username cannot contain spaces or special characters, and can only contain letters, numbers, and underscores.")]
     [StringLength(50, MinimumLength = 5, ErrorMessage = "Username must be between 5 and 50 characters.")]
     public string? Username { get; set; }
 
@@ -23,4 +25,8 @@ public class RegisterViewModel
 
     [Required(ErrorMessage = "Phone number is required.")]
     public string? PhoneNumber { get; set; }
+
+    [Required(ErrorMessage = "Birth date is required.")]
+    [MinimumAge(18, ErrorMessage = "You must be at least 18 years old.")]
+    public DateTime? BirthDate { get; set; }
 }
