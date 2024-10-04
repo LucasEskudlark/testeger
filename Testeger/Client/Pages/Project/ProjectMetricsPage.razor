@@ -10,15 +10,15 @@
 
 @if (isInitialized)
 {
-    <div class="container-fluid">
-        <div class="row d-flex justify-content-between mb-4">
-            <div class="col-auto">
+    <div style="width: 1400px; margin: 0 auto;">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 40px;">
+            <div style="width: 400px;">
                 <RadzenBreadCrumb>
                     <RadzenBreadCrumbItem Path="@BreadCrumbHelper.GetProjectUrl(ProjectId)" Text="Project" />
                     <RadzenBreadCrumbItem Text="Metrics" />
                 </RadzenBreadCrumb>
             </div>
-            <div class="col-3 d-flex justify-content-end">
+            <div style="width: 300px; display: flex; justify-content: flex-end;">
                 <RadzenDropDown TValue="DateTime?"
                                 Data="FilterOptions"
                                 TextProperty="Text"
@@ -27,36 +27,34 @@
                                 Change="@(args => StateHasChanged())" />
             </div>
         </div>
+
         @if ((TestCases is null && TestRequests is null) || (!TestCases.Any() && !TestRequests.Any()))
         {
-            <div class="row mt-4 d-flex justify-content-center">
-                <div class="col-12">
-                    <RadzenCard class="vh-100 d-flex align-items-center justify-content-center">
-
-                        <h5 style="color: #A9ABAE;"><i>There are no metrics for this project yet.</i></h5>
-                    </RadzenCard>
-                </div>
+            <div style="margin-top: 40px; display: flex; justify-content: center;">
+                <RadzenCard style="height: 400px; display: flex; align-items: center; justify-content: center;">
+                    <h5 style="color: #A9ABAE;"><i>There are no metrics for this project yet.</i></h5>
+                </RadzenCard>
             </div>
         }
         else
         {
-            <RadzenCard class="my-3 py-2">
+            <RadzenCard style="margin: 20px 0; padding: 20px; width: 1400px;">
                 <ToggleComponent>
                     <Header>
-                        <RadzenText TextStyle="TextStyle.H6" class="mt-2">Test requests metrics:</RadzenText>
+                        <RadzenText TextStyle="TextStyle.H6" style="margin-top: 20px;">Test requests metrics:</RadzenText>
                     </Header>
                     <ChildContent>
-                        <div class="row mt-3 d-flex align-items-start">
-                            <div class="col-6">
+                        <div style="margin-top: 30px; display: flex;">
+                            <div style="width: 600px;">
                                 <TestRequestGeneralMetricsDatagrid TestRequests="TestRequests" FilterDate="FilterDate" />
                             </div>
-                            <div class="col-6">
+                            <div style="width: 600px;">
                                 <RequestTimeSpentInEachStatusChart TestRequests="TestRequests" TestRequestsByStatus="TestRequestsByStatus" />
                             </div>
                         </div>
 
-                        <div class="row mt-4 d-flex justify-content-center mb-4">
-                            <div class="col-10">
+                        <div style="margin-top: 40px; display: flex; justify-content: center; margin-bottom: 40px;">
+                            <div style="width: 1000px;">
                                 <TestRequestCountPerStatusChart TestRequestsByStatus="TestRequestsByStatus" FilterDate="FilterDate" />
                             </div>
                         </div>
@@ -64,41 +62,39 @@
                 </ToggleComponent>
             </RadzenCard>
 
-            <RadzenCard class="my-3 py-2">
+            <RadzenCard style="margin: 20px 0; padding: 20px; width: 1400px;">
                 <ToggleComponent>
                     <Header>
-                        <RadzenText TextStyle="TextStyle.H6" class="mt-2">Test cases metrics:</RadzenText>
+                        <RadzenText TextStyle="TextStyle.H6" style="margin-top: 20px;">Test cases metrics:</RadzenText>
                     </Header>
                     <ChildContent>
-                        <div class="row mt-3">
-                            <div class="col-6">
+                        <div style="margin-top: 30px; display: flex;">
+                            <div style="width: 600px;">
                                 <TestCaseCountPerStatusChart TestCasesByStatus="TestCasesByStatus" FilterDate="FilterDate" />
                             </div>
-                            <div class="col-6">
+                            <div style="width: 600px;">
                                 <TestCaseGeneralMetricsDatagrid TestCases="TestCases" TestRequests="TestRequests" FilterDate="FilterDate" />
                             </div>
                         </div>
 
-                        <div class="row mt-4 mb-4">
-                            <div class="col-12">
-                                <TestCaseTimeSpentInEachStatusChart TestCasesByStatus="TestCasesByStatus" TestCases="TestCases" FilterDate="FilterDate" />
-                            </div>
+                        <div style="margin-top: 40px;">
+                            <TestCaseTimeSpentInEachStatusChart TestCasesByStatus="TestCasesByStatus" TestCases="TestCases" FilterDate="FilterDate" />
                         </div>
                     </ChildContent>
                 </ToggleComponent>
             </RadzenCard>
 
-            <RadzenCard class="my-3 py-2">
+            <RadzenCard style="margin: 20px 0; padding: 20px; width: 1400px;">
                 <ToggleComponent>
                     <Header>
-                        <RadzenText TextStyle="TextStyle.H6" class="mt-2">Team metrics:</RadzenText>
+                        <RadzenText TextStyle="TextStyle.H6" style="margin-top: 20px;">Team metrics:</RadzenText>
                     </Header>
                     <ChildContent>
-                        <div class="row mt-3 mb-4">
-                            <div class="col-6">
+                        <div style="margin-top: 30px; display: flex;">
+                            <div style="width: 600px;">
                                 <RequestCountPerProjectQAChart TestRequests="@TestRequests" ProjectId="@ProjectId" />
                             </div>
-                            <div class="col-6 pb-0">
+                            <div style="width: 600px;">
                                 <TestCaseCountPerProjectQAChart TestCases="@TestCases" ProjectId="@ProjectId" />
                             </div>
                         </div>
@@ -106,13 +102,13 @@
                 </ToggleComponent>
             </RadzenCard>
 
-            <RadzenCard class="my-3 py-2">
+            <RadzenCard style="margin: 20px 0; padding: 20px; width: 1400px;">
                 <ToggleComponent>
                     <Header>
-                        <RadzenText TextStyle="TextStyle.H6" class="mt-2">Individual metrics:</RadzenText>
+                        <RadzenText TextStyle="TextStyle.H6" style="margin-top: 20px;">Individual metrics:</RadzenText>
                     </Header>
                     <ChildContent>
-                        <div class="row mt-3 mb-4">
+                        <div style="margin-top: 30px;">
                             <IndividualProjectQAMetrics TestRequests="@TestRequests" TestCases="@TestCases" ProjectId="@ProjectId" />
                         </div>
                     </ChildContent>
