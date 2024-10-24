@@ -4,7 +4,7 @@
 @inject ITestRequestServiceNV TestRequestService
 @inject ITestCaseServiceNV TestCaseService
 @inject IProjectServiceNV ProjectService
-@attribute [Authorize(Policy = $"{AuthorizationRoles.Manager}")]
+@attribute [Authorize(Policy = $"{AuthorizationRoles.Manager}, {AuthorizationRoles.QA}, {AuthorizationRoles.Developer}")]
 
 <PageTitle>@Project?.Name Metrics - Testeger</PageTitle>
 
